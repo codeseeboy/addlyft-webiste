@@ -1,12 +1,12 @@
 import Link from "next/link";
-import { Arrow, BrandMark } from "./Brand";
+import { Arrow, BrandMark, Wordmark } from "./Brand";
 
 const COLS = [
   {
     title: "Products",
     links: [
-      { href: "/go", label: "ADD-LYFT Go" },
-      { href: "/reach", label: "ADD-LYFT Reach" },
+      { href: "/go", label: "Addlyft Go" },
+      { href: "/reach", label: "Addlyft Reach" },
       { href: "/pricing", label: "Pricing" },
       { href: "/network", label: "Store network" },
     ],
@@ -24,7 +24,7 @@ const COLS = [
     title: "Get started",
     links: [
       { href: "/contact?intent=store", label: "List your store" },
-      { href: "/contact?intent=brand", label: "Run a campaign" },
+      { href: "/contact?intent=advertiser", label: "Advertise with Reach" },
       { href: "/contact?intent=partner", label: "Partnerships" },
       { href: "/contact?intent=press", label: "Press" },
     ],
@@ -37,14 +37,12 @@ export default function Footer() {
       <div className="shell-wide">
         <div className="ftr__grid">
           <div className="ftr__brand">
-            <span className="brand" style={{ color: "var(--night-ink)" }}>
-              <BrandMark />
-              ADD-LYFT
+            <span className="brand">
+              <Wordmark />
             </span>
-            <p className="ftr__tag">Grow Local. Reach Further.</p>
+            <p className="ftr__tag">The marketing platform small retail has been waiting for.</p>
             <p className="t-sm" style={{ color: "var(--night-ink-2)" }}>
-              Measurable local retail media — built for the people behind the counter and the
-              brands who want to stand beside them.
+              AI-powered marketing for small retail — built for the people behind the counter and the local businesses who want to be heard in them.
             </p>
             <Link href="/contact" className="tlink tlink--night" style={{ marginTop: "0.35rem" }}>
               Start a conversation
@@ -67,7 +65,7 @@ export default function Footer() {
         </div>
 
         <div className="ftr__bar">
-          <span>© {new Date().getFullYear()} ADD-LYFT. All rights reserved.</span>
+          <span>© {new Date().getFullYear()} Addlyft. All rights reserved.</span>
           <span className="ftr__bar-links">
             <Link href="/legal/privacy">Privacy</Link>
             <Link href="/legal/terms">Terms</Link>
@@ -76,22 +74,18 @@ export default function Footer() {
         </div>
       </div>
 
+      {/*
+       * The brand reveal at the end of the scroll — the client liked how
+       * Anthropic shows its mark on the way down. Same lockup as the header,
+       * at full width: the A is the logo and the type carries on from it.
+       */}
       <div className="ftr__word" aria-hidden="true">
-        <svg viewBox="0 0 1000 128" preserveAspectRatio="xMidYMax meet">
-          <text
-            className="w-fill"
-            x="0"
-            y="112"
-            textLength="1000"
-            lengthAdjust="spacingAndGlyphs"
-            fontFamily="var(--f-sans)"
-            fontSize="140"
-            fontWeight="600"
-            letterSpacing="-6"
-          >
-            ADD-LYFT
-          </text>
-        </svg>
+        <span className="ftr__word-mark">
+          <BrandMark className="" />
+        </span>
+        <span className="ftr__word-type">
+          <span className="ftr__word-pale">dd</span>lyft
+        </span>
       </div>
     </footer>
   );

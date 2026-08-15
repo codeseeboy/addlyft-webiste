@@ -5,7 +5,7 @@ import { Reveal } from "@/components/site/Motion";
 
 export const metadata: Metadata = {
   title: "Terms",
-  description: "The terms that govern the ADD-LYFT network for store owners and advertisers.",
+  description: "The terms that govern the Addlyft network for store owners and advertisers.",
 };
 
 const SECTIONS: [string, string[]][] = [
@@ -26,7 +26,7 @@ const SECTIONS: [string, string[]][] = [
   [
     "The revenue guarantee",
     [
-      "Stores active on the Full Bundle plan are guaranteed $49 per month per location. The guarantee begins after three continuous months on the network and is paid quarterly.",
+      "Every active Addlyft Go store is guaranteed $49 per month per location. The guarantee begins after three continuous months on the network and is paid quarterly.",
       "A store is considered active when its channels are connected and available to serve during its stated opening hours.",
     ],
   ],
@@ -34,7 +34,7 @@ const SECTIONS: [string, string[]][] = [
     "Content standards",
     [
       "Every message is reviewed before it plays. We decline material that is misleading, unlawful, unsafe, or unsuitable for a public retail space, and we will explain a rejection rather than leave it unexplained.",
-      "Advertisers keep ownership of the creative they submit and grant ADD-LYFT the permission needed to play it on the stores booked.",
+      "Advertisers keep ownership of the creative they submit and grant Addlyft the permission needed to play it on the stores booked.",
     ],
   ],
   [
@@ -65,7 +65,7 @@ export default function TermsPage() {
           </h1>
           <Reveal delay={0.12}>
             <p className="t-lead legal__lede">
-              A plain-language summary of the agreement between ADD-LYFT and the businesses on
+              A plain-language summary of the agreement between Addlyft and the businesses on
               the network. The full contract is provided at sign-up and is available on request
               beforehand.
             </p>

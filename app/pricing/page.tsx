@@ -1,73 +1,62 @@
 import type { Metadata } from "next";
-import Link from "next/link";
 import CtaBand from "@/components/site/CtaBand";
 import { FaqSection } from "@/components/site/Faq";
-import { Arrow } from "@/components/site/Brand";
 import { Reveal, RevealGroup, RevealItem } from "@/components/site/Motion";
-import { GO_PLANS, GUARANTEE_NOTE, REACH_FACTS, REACH_POINTS } from "@/lib/pricing";
+import GoPlan from "@/components/pricing/GoPlan";
+import { ReachEstimator, ReachPlanGrid, VolumeTable } from "@/components/pricing/ReachPlans";
+import { AI_TOPUPS, GO_PRICE, GUARANTEE_NOTE, money } from "@/lib/pricing";
 
 export const metadata: Metadata = {
   title: "Pricing",
   description:
-    "Store owners subscribe by location from $39.99 a month with a seven-day free trial. Brands pay for stores and plays, starting at five stores.",
+    "Addlyft Go is one all-in-one plan — $99.99/month billed annually, $129.99 monthly, audio, video and social included. Addlyft Reach starts at $29.99 for five stores.",
 };
-
-const COMPARE: { row: string; single: string; dual: string; bundle: string }[] = [
-  { row: "In-store audio · 15s", single: "Included", dual: "Included", bundle: "Included" },
-  { row: "In-store screen · 10s", single: "—", dual: "Included", bundle: "Included" },
-  { row: "Social posts", single: "—", dual: "—", bundle: "Included" },
-  { row: "Ready-made promotion library", single: "Included", dual: "Included", bundle: "Included" },
-  { row: "Custom promotion builds", single: "1 / month", dual: "2 / month", bundle: "Unlimited" },
-  { row: "Scheduling by day & time slot", single: "Included", dual: "Included", bundle: "Included" },
-  { row: "Performance reporting", single: "Core", dual: "By hour", bundle: "By hour & channel" },
-  { row: "Multiple locations", single: "—", dual: "—", bundle: "Included" },
-  { row: "$49 / month revenue guarantee", single: "—", dual: "—", bundle: "Included" },
-  { row: "Referral earnings", single: "Up to 40%", dual: "Up to 40%", bundle: "Up to 40%" },
-  { row: "Free trial", single: "7 days", dual: "7 days", bundle: "7 days" },
-];
 
 const FAQ = [
   {
-    q: "Is the free trial really free?",
-    a: "Yes. Seven days, and the payment method is not charged during them. The exact date of the first charge is shown before you confirm the plan, and cancelling inside the window costs nothing.",
+    q: "Why is Addlyft Go a single plan?",
+    a: "Because splitting audio, video and social into separate subscriptions helped nobody. Every store gets all three channels for one price. There is no tier to outgrow and nothing to bolt on later.",
   },
   {
-    q: "How does the $49 guarantee actually work?",
+    q: "What is the difference between annual and monthly?",
+    a: `Exactly ${money(GO_PRICE.saving)} a month. Annual is ${money(GO_PRICE.annualPerMonth)} per month paid once for the year; monthly is ${money(GO_PRICE.monthly)} charged each month. Same product either way.`,
+  },
+  {
+    q: "Is the free trial really free?",
+    a: `Yes — ${GO_PRICE.trialDays} days, no card required, and the payment method is not charged during them. The exact first-charge date is shown before you confirm a plan.`,
+  },
+  {
+    q: "How does the $49 guarantee work?",
     a: GUARANTEE_NOTE,
   },
   {
-    q: "Can I change plan later?",
-    a: "Yes, in either direction. Upgrades take effect immediately and downgrades take effect at the next billing cycle, so you are never charged twice for the same month.",
+    q: "How is Addlyft Reach priced?",
+    a: "Each plan's headline price covers a base of five stores. For more stores you pay the plan price divided by five, multiplied by your store count — then the volume discount is applied automatically, up to 50% at a hundred stores.",
   },
   {
-    q: "How are advertisers billed?",
-    a: "By campaign, monthly. Cost is a function of how many stores you book and how often the message plays, and the cost per thousand is displayed beside every option before you commit to it.",
-  },
-  {
-    q: "Are there setup fees or contracts?",
-    a: "No setup fee, and no minimum term for either side. Stores are billed monthly per location; advertisers are billed per cycle and can stop between cycles.",
+    q: "What happens when I run out of AI generations?",
+    a: "Buy a top-up pack at any time: 10 for $9.90, 25 for $19.99, or 50 for $34.99. They are one-off purchases, not subscriptions. You can also use the free template library, which costs no generations at all.",
   },
 ];
 
 export default function PricingPage() {
   return (
     <>
-      <section className="phero">
+      <section className="phero phero--tight">
         <div className="shell">
           <div className="phero__grid">
             <div>
               <Reveal>
                 <span className="kicker">Pricing</span>
               </Reveal>
-              <h1 className="t-d1 phero__title">
-                Two sides of the network, <span className="em">two honest price lists.</span>
-              </h1>
+              <h1 className="t-d1 phero__title">Transparent pricing. No surprises.</h1>
             </div>
             <div className="phero__aside">
-              <Reveal delay={0.15}>
+              <Reveal delay={0.12}>
                 <p className="t-lead">
-                  Store owners subscribe by location. Brands pay for stores and plays. Nobody has
-                  to sign a twelve-month insertion order to find out what fifteen seconds costs.
+                  Store owners pay one flat price for everything. Advertisers pay for the
+                  stores they pick and how often they play. No per-impression billing, no rate
+                  card theatre.
                 </p>
               </Reveal>
             </div>
@@ -75,133 +64,104 @@ export default function PricingPage() {
         </div>
       </section>
 
-      <section className="shell bay-sm">
-        <div className="sec-head" style={{ marginBottom: "clamp(2rem, 4vw, 3rem)" }}>
+      {/* ------------------------------------------------------------- GO */}
+      <section className="shell bay-sm" id="go">
+        <div className="sec-head" style={{ marginBottom: "1.5rem" }}>
           <Reveal>
-            <span className="kicker kicker--teal">For store owners · Go</span>
+            <span className="kicker kicker--teal">For store owners · Addlyft Go</span>
           </Reveal>
           <Reveal delay={0.06}>
-            <h2 className="t-d2">Priced per store, per month.</h2>
+            <h2 className="t-d2">One plan. Audio, video and social — all of it.</h2>
           </Reveal>
         </div>
 
-        <RevealGroup className="peek__plans" stagger={0.08}>
-          {GO_PLANS.map((p) => (
-            <RevealItem key={p.id}>
-              <article className="plan" data-featured={!!p.featured}>
-                <header className="plan__head">
-                  <span className="mono plan__name">{p.name}</span>
-                  {p.featured && <span className="tag tag--teal">Most chosen</span>}
-                </header>
-                <p className="plan__price">
-                  {p.price}
-                  <span>{p.cadence}</span>
-                </p>
-                <p className="t-sm plan__blurb">{p.blurb}</p>
-                <ul className="plan__channels">
-                  {p.includes.map((c) => (
-                    <li key={c}>{c}</li>
-                  ))}
-                </ul>
-                <Link
-                  href="/contact?intent=store"
-                  className={`btn ${p.featured ? "btn--teal" : "btn--ghost"} plan__cta`}
-                >
-                  Start with {p.name}
-                  <Arrow className="btn__ico" />
-                </Link>
-              </article>
-            </RevealItem>
-          ))}
-        </RevealGroup>
+        <Reveal delay={0.08} y={22}>
+          <GoPlan />
+        </Reveal>
 
         <Reveal delay={0.1}>
           <p className="t-xs earn__note">{GUARANTEE_NOTE}</p>
         </Reveal>
       </section>
 
-      <section className="shell bay-sm">
-        <Reveal>
-          <div className="tablewrap">
-            <table className="ptable">
-              <caption className="sr-only">Comparison of ADD-LYFT Go plans</caption>
-              <thead>
-                <tr>
-                  <th scope="col">What you get</th>
-                  <th scope="col">Single</th>
-                  <th scope="col">Dual</th>
-                  <th scope="col">Full Bundle</th>
-                </tr>
-              </thead>
-              <tbody>
-                {COMPARE.map((r) => (
-                  <tr key={r.row}>
-                    <th scope="row">{r.row}</th>
-                    <td data-off={r.single === "—"}>{r.single}</td>
-                    <td data-off={r.dual === "—"}>{r.dual}</td>
-                    <td data-off={r.bundle === "—"}>{r.bundle}</td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
-        </Reveal>
-      </section>
-
-      <section className="bay on-paper2">
+      {/* ---------------------------------------------------------- REACH */}
+      <section className="bay-sm on-paper2" id="reach">
         <div className="shell">
-          <div className="sec-head" style={{ marginBottom: "clamp(2rem, 4vw, 3rem)" }}>
-            <Reveal>
-              <span className="kicker kicker--reach">For brands · Reach</span>
-            </Reveal>
-            <Reveal delay={0.06}>
-              <h2 className="t-d2">Priced by stores and plays.</h2>
+          <div className="sec-head sec-head--split" style={{ marginBottom: "1.5rem" }}>
+            <div>
+              <Reveal>
+                <span className="kicker kicker--reach">For advertisers · Addlyft Reach</span>
+              </Reveal>
+              <Reveal delay={0.06}>
+                <h2 className="t-d2" style={{ marginTop: "0.9rem" }}>
+                  Five plans. Built for every advertiser.
+                </h2>
+              </Reveal>
+            </div>
+            <Reveal delay={0.1}>
+              <p className="t-sm">
+                Each plan covers five stores as its base. Add more at the per-store rate and
+                volume discounts of up to 50% apply automatically — no promo code.
+              </p>
             </Reveal>
           </div>
 
-          <div className="peek__reach" style={{ marginTop: 0 }}>
-            <Reveal>
-              <div className="peek__reach-copy">
-                <RevealGroup className="bullets" stagger={0.06}>
-                  {REACH_POINTS.map((p) => (
-                    <RevealItem className="bullet" key={p} as="div">
-                      <span />
-                      <p className="t-sm">{p}</p>
-                    </RevealItem>
-                  ))}
-                </RevealGroup>
-                <div className="btn-row" style={{ marginTop: "2rem" }}>
-                  <Link href="/contact?intent=brand" className="btn btn--reach btn--lg">
-                    Get a campaign quote
-                    <Arrow className="btn__ico" />
-                  </Link>
-                </div>
-              </div>
-            </Reveal>
+          <Reveal delay={0.08} y={22}>
+            <ReachPlanGrid />
+          </Reveal>
 
-            <Reveal delay={0.1}>
-              <dl className="peek__facts">
-                {REACH_FACTS.map(([k, v]) => (
-                  <div key={k}>
-                    <dt className="mono">{k}</dt>
-                    <dd>{v}</dd>
-                  </div>
-                ))}
-              </dl>
+          <div className="grid-2" style={{ marginTop: "clamp(1.75rem, 3.5vw, 2.75rem)" }}>
+            <Reveal>
+              <h3 className="t-d3" style={{ marginBottom: "0.9rem" }}>
+                More stores, bigger discount
+              </h3>
+              <VolumeTable />
+            </Reveal>
+            <Reveal delay={0.08}>
+              <h3 className="t-d3" style={{ marginBottom: "0.9rem" }}>
+                Estimate your campaign
+              </h3>
+              <ReachEstimator />
             </Reveal>
           </div>
         </div>
       </section>
 
-      <FaqSection
-        items={FAQ}
-        kicker="Pricing questions"
-        title={
-          <>
-            The small print, <span className="em">said out loud.</span>
-          </>
-        }
-      />
+      {/* ------------------------------------------------------- top-ups */}
+      <section className="shell bay-sm">
+        <div className="sec-head" style={{ marginBottom: "1.25rem" }}>
+          <Reveal>
+            <span className="kicker">AI top-ups</span>
+          </Reveal>
+          <Reveal delay={0.06}>
+            <h2 className="t-d2">Need more than your monthly generations?</h2>
+          </Reveal>
+          <Reveal delay={0.1}>
+            <p className="t-sm measure">
+              Every Addlyft Go plan includes 90 AI generations a month — 30 per channel. A
+              generation is spent when you create a new ad, and again if you ask for a retry,
+              so you always keep control of what actually gets published. Top-up packs are
+              one-off purchases, never a subscription, and the free template library costs no
+              generations at all.
+            </p>
+          </Reveal>
+        </div>
+
+        <RevealGroup className="grid-3" stagger={0.07}>
+          {AI_TOPUPS.map((t) => (
+            <RevealItem key={t.count}>
+              <div className="topup">
+                <span className="mono topup__n num">{t.count} extra generations</span>
+                <p className="topup__price num">{money(t.price)}</p>
+                <p className="t-xs num">{money(t.each)} per generation</p>
+                {t.save && <span className="tag tag--teal">{t.save}</span>}
+              </div>
+            </RevealItem>
+          ))}
+        </RevealGroup>
+      </section>
+
+      <FaqSection items={FAQ} kicker="Pricing questions" title="The small print, said out loud." />
 
       <CtaBand />
     </>

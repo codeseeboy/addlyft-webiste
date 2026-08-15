@@ -35,6 +35,27 @@ All images licensed under the Unsplash License (free for commercial use, no attr
 | street-evening.jpg | Barney Goodman | https://unsplash.com/photos/sunny-city-street-with-people-and-astrid-miyu-shop-FKpcXIJmhSU |
 | team.jpg | Jud Mackrill | https://unsplash.com/photos/four-coworkers-smiling-around-laptop-at-table-Of_m3hMsoAA |
 
+| reach-auto.jpg | Crosby Hinze | https://unsplash.com/photos/a-red-car-is-parked-in-a-showroom-bC5NNbwuoB0 |
+| reach-auto-wide.jpg | Richard R | https://unsplash.com/photos/a-silver-sports-car-in-a-showroom-with-blue-and-white-balloons-vaXGYYI1XC8 |
+| reach-realestate.jpg | Praswin Prakashan | https://unsplash.com/photos/a-red-house-with-a-blue-street-sign-in-front-of-it-m6roJqblTUo |
+| reach-home.jpg | Lumin Osity | https://unsplash.com/photos/white-house-with-picket-fence-and-street-signs-I1HGlFg-bKs |
+| reach-health.jpg | Harold Hisona | https://unsplash.com/photos/dentist-talking-to-patient-in-a-modern-dental-office-Bg81yWKZlMg |
+
+## Addlyft composites
+
+`store-live-*.jpg` and `/media/store-screen.mp4` are composites: a real photograph of a
+real shop, with an Addlyft screen and its ad creative placed into the scene. They exist
+because stock photographs of shops do not show the product — the client asked for "a
+counter, top of that there is a TV where it's giving some kind of an advertisement".
+
+| composite | base photograph | photographer |
+| --- | --- | --- |
+| store-live-cafe / -realestate / -auto, store-screen.mp4 | café counter | Kelly Common |
+| store-live-counter | food hall counter | Mahesh Ranaweera |
+
+`ad-*.jpg` are **sample advertising creative** built for demonstration. Meridian Home
+Realty, Northgate Motors and Riverside Dental are invented businesses, not customers.
+
 ## Video
 
 Source footage from [Coverr](https://coverr.co) under the Coverr License (free for

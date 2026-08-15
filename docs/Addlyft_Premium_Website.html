@@ -1,0 +1,2799 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Addlyft — Premium Website</title>
+  <!-- EDIT: Google Fonts — Change font families here -->
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+  <!-- Lucide Icons -->
+  <script src="https://unpkg.com/lucide@latest" defer></script>
+  <style>
+    /* ============================================================
+       ROOT VARIABLES — Edit colors, shadows, radii here
+       ============================================================ */
+    :root {
+      /* === BACKGROUNDS === */
+      --bg-white: #FFFFFF;
+      --bg-surface: #F6F9FC;
+      --bg-dark: #0A0F1E;
+      --bg-dark-2: #0D1829;
+      --bg-card: #FFFFFF;
+      --bg-card-dark: rgba(255,255,255,0.05);
+
+      /* === TEXT === */
+      --text-primary: #0A2540;
+      --text-body: #425466;
+      --text-muted: #697386;
+      --text-white: #FFFFFF;
+      --text-white-muted: rgba(255,255,255,0.7);
+
+      /* === BRAND === */
+      --go-green: #059669;
+      --go-green-light: #10B981;
+      --go-green-hover: #047857;
+      --go-green-pale: #ECFDF5;
+      --reach-purple: #6D28D9;
+      --reach-purple-light: #7C3AED;
+      --reach-purple-hover: #5B21B6;
+      --reach-purple-pale: #F5F3FF;
+
+      /* === UI === */
+      --border: #E3E8EF;
+      --border-strong: #C1CCE0;
+      --shadow-sm: 0 1px 3px rgba(10,37,64,0.08), 0 1px 2px rgba(10,37,64,0.06);
+      --shadow-md: 0 4px 16px rgba(10,37,64,0.10), 0 2px 6px rgba(10,37,64,0.07);
+      --shadow-lg: 0 12px 40px rgba(10,37,64,0.12), 0 4px 12px rgba(10,37,64,0.08);
+      --shadow-xl: 0 24px 64px rgba(10,37,64,0.14), 0 8px 24px rgba(10,37,64,0.09);
+      --radius-sm: 6px;
+      --radius-md: 12px;
+      --radius-lg: 16px;
+      --radius-xl: 24px;
+      --radius-pill: 999px;
+    }
+
+    /* ============================================================
+       RESET & BASE — Edit base typography here
+       ============================================================ */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+      color: var(--text-body);
+      background: var(--bg-white);
+      line-height: 1.7;
+      font-size: 16px;
+      -webkit-font-smoothing: antialiased;
+      overflow-x: hidden;
+    }
+    h1, h2, h3, h4, h5, h6 {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      color: var(--text-primary);
+      line-height: 1.15;
+      letter-spacing: -0.01em;
+    }
+    /* EDIT: Font sizes for headings */
+    h1 { font-size: 56px; font-weight: 800; }
+    h2 { font-size: 40px; font-weight: 700; }
+    h3 { font-size: 28px; font-weight: 700; }
+    h4 { font-size: 20px; font-weight: 600; }
+    p { max-width: 680px; }
+    a { color: inherit; text-decoration: none; }
+    button { cursor: pointer; font-family: 'Inter', sans-serif; border: none; background: none; }
+    img { max-width: 100%; height: auto; }
+    ul { list-style: none; }
+
+    /* ============================================================
+       UTILITY CLASSES
+       ============================================================ */
+    .container { max-width: 1200px; margin: 0 auto; padding: 0 24px; }
+    .section-padding { padding: 100px 0; }
+    .text-center { text-align: center; }
+    .gradient-text-green {
+      background: linear-gradient(135deg, #34D399 0%, #059669 100%);
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+    .gradient-text-purple {
+      background: linear-gradient(135deg, #A78BFA 0%, #6D28D9 100%);
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+    .gradient-text-mixed {
+      background: linear-gradient(135deg, #34D399 0%, #6D28D9 100%);
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    /* ============================================================
+       PILL BADGES
+       ============================================================ */
+    .pill {
+      display: inline-flex; align-items: center; gap: 6px;
+      font-size: 0.75rem; font-weight: 600; text-transform: uppercase;
+      letter-spacing: 0.08em; padding: 6px 16px;
+      border-radius: var(--radius-pill);
+    }
+    .pill-green { background: var(--go-green-pale); color: var(--go-green); }
+    .pill-purple { background: var(--reach-purple-pale); color: var(--reach-purple); }
+    .pill-dark { background: rgba(255,255,255,0.08); color: #fff; border: 1px solid rgba(255,255,255,0.12); }
+    .pill-green-solid { background: var(--go-green); color: #fff; }
+    .pill-purple-solid { background: var(--reach-purple); color: #fff; }
+    .pill-gradient { background: linear-gradient(135deg, var(--go-green), var(--reach-purple)); color: #fff; }
+
+    /* ============================================================
+       BUTTONS
+       ============================================================ */
+    .btn {
+      display: inline-flex; align-items: center; justify-content: center; gap: 8px;
+      font-size: 15px; font-weight: 600; padding: 14px 28px;
+      border-radius: var(--radius-pill); transition: all 0.2s ease;
+      white-space: nowrap; min-height: 44px;
+    }
+    .btn-green { background: var(--go-green); color: #fff; }
+    .btn-green:hover { background: var(--go-green-hover); box-shadow: var(--shadow-lg); transform: translateY(-1px); }
+    .btn-purple { background: var(--reach-purple); color: #fff; }
+    .btn-purple:hover { background: var(--reach-purple-hover); box-shadow: var(--shadow-lg); transform: translateY(-1px); }
+    .btn-outline-white { border: 1px solid rgba(255,255,255,0.25); color: #fff; background: transparent; }
+    .btn-outline-white:hover { background: rgba(255,255,255,0.08); }
+    .btn-outline-green { border: 2px solid var(--go-green); color: var(--go-green); background: transparent; }
+    .btn-outline-green:hover { background: var(--go-green-pale); }
+    .btn-outline-purple { border: 2px solid var(--reach-purple); color: var(--reach-purple); background: transparent; }
+    .btn-outline-purple:hover { background: var(--reach-purple-pale); }
+    .btn-gradient { background: linear-gradient(135deg, var(--go-green), var(--reach-purple)); color: #fff; }
+    .btn-gradient:hover { box-shadow: var(--shadow-lg); transform: translateY(-1px); opacity: 0.92; }
+    .btn-full { width: 100%; }
+
+    /* ============================================================
+       NAVIGATION — Sticky top nav
+       ============================================================ */
+    .main-nav {
+      position: fixed; top: 0; left: 0; right: 0; z-index: 1000;
+      padding: 16px 0; transition: all 0.3s ease;
+      background: transparent;
+    }
+    .main-nav.scrolled {
+      background: rgba(255,255,255,0.95);
+      backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
+      border-bottom: 1px solid var(--border);
+      box-shadow: var(--shadow-sm);
+      padding: 12px 0;
+    }
+    .main-nav.dark-page { }
+    .main-nav.dark-page.scrolled {
+      background: rgba(10,15,30,0.95);
+      border-bottom: 1px solid rgba(255,255,255,0.08);
+    }
+    .nav-inner {
+      max-width: 1200px; margin: 0 auto; padding: 0 24px;
+      display: flex; align-items: center; justify-content: space-between;
+    }
+
+    /* EDIT: Logo styles */
+    .nav-logo {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      font-size: 22px; font-weight: 700;
+      color: var(--text-primary); display: flex; align-items: center; gap: 2px;
+      cursor: pointer;
+    }
+    .nav-logo .arrow { color: var(--go-green); font-size: 20px; margin-right: 2px; }
+    .dark-page .nav-logo { color: #fff; }
+    .scrolled .nav-logo { color: var(--text-primary) !important; }
+    .dark-page.scrolled .nav-logo { color: #fff !important; }
+
+    .nav-links {
+      display: flex; align-items: center; gap: 32px;
+    }
+    .nav-link {
+      font-size: 15px; font-weight: 500; color: var(--text-body);
+      transition: color 0.2s; position: relative; cursor: pointer;
+      padding: 4px 0;
+    }
+    .nav-link:hover { color: var(--text-primary); }
+    .nav-link.active { color: var(--go-green); }
+    .nav-link.active::after {
+      content: ''; position: absolute; bottom: -4px; left: 0; right: 0;
+      height: 2px; background: var(--go-green); border-radius: 2px;
+    }
+    .dark-page .nav-link { color: var(--text-white-muted); }
+    .dark-page .nav-link:hover { color: #fff; }
+    .scrolled .nav-link { color: var(--text-body) !important; }
+    .scrolled .nav-link:hover { color: var(--text-primary) !important; }
+    .dark-page.scrolled .nav-link { color: var(--text-white-muted) !important; }
+    .dark-page.scrolled .nav-link:hover { color: #fff !important; }
+
+    /* Products dropdown */
+    .nav-dropdown-wrap { position: relative; }
+    .dropdown-trigger { display: flex; align-items: center; gap: 4px; }
+    .dropdown-trigger .chevron {
+      width: 14px; height: 14px; transition: transform 0.2s;
+    }
+    .nav-dropdown {
+      position: absolute; top: calc(100% + 12px); left: 50%; transform: translateX(-50%) translateY(-8px);
+      background: #fff; border-radius: var(--radius-md); box-shadow: var(--shadow-lg);
+      padding: 8px; min-width: 340px; opacity: 0; pointer-events: none;
+      transition: all 0.25s ease; z-index: 100;
+    }
+    .nav-dropdown.open { opacity: 1; transform: translateX(-50%) translateY(0); pointer-events: auto; }
+    .dropdown-item {
+      display: flex; align-items: center; gap: 14px; padding: 14px 16px;
+      border-radius: var(--radius-sm); transition: background 0.15s; cursor: pointer;
+    }
+    .dropdown-item:hover { background: var(--bg-surface); }
+    .dropdown-icon {
+      width: 42px; height: 42px; border-radius: 10px;
+      display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+    }
+    .dropdown-icon.green { background: var(--go-green-pale); color: var(--go-green); }
+    .dropdown-icon.purple { background: var(--reach-purple-pale); color: var(--reach-purple); }
+    .dropdown-text h4 { font-size: 15px; font-weight: 600; margin-bottom: 2px; }
+    .dropdown-text p { font-size: 13px; color: var(--text-muted); margin: 0; }
+    .dropdown-arrow { margin-left: auto; color: var(--text-muted); width: 16px; height: 16px; }
+
+    .nav-right { display: flex; align-items: center; gap: 16px; }
+    .nav-signin {
+      font-size: 15px; font-weight: 500; color: var(--text-body);
+      cursor: pointer; padding: 8px 4px; transition: color 0.2s;
+    }
+    .nav-signin:hover { color: var(--text-primary); }
+    .dark-page .nav-signin { color: var(--text-white-muted); }
+    .dark-page .nav-signin:hover { color: #fff; }
+    .scrolled .nav-signin { color: var(--text-body) !important; }
+    .dark-page.scrolled .nav-signin { color: var(--text-white-muted) !important; }
+
+    .nav-cta { font-size: 14px; padding: 10px 20px; }
+
+    /* Hamburger */
+    .hamburger {
+      display: none; width: 44px; height: 44px;
+      align-items: center; justify-content: center; cursor: pointer;
+      position: relative; z-index: 1001;
+    }
+    .hamburger i { width: 24px; height: 24px; color: var(--text-primary); }
+    .dark-page .hamburger i { color: #fff; }
+    .scrolled .hamburger i { color: var(--text-primary) !important; }
+    .dark-page.scrolled .hamburger i { color: #fff !important; }
+
+    /* Mobile menu */
+    .mobile-menu {
+      display: none; position: fixed; inset: 0; z-index: 1000;
+      background: var(--bg-dark); flex-direction: column;
+      padding: 80px 32px 40px; gap: 8px; overflow-y: auto;
+    }
+    .mobile-menu.open { display: flex; }
+    .mobile-menu-close {
+      position: absolute; top: 20px; right: 24px;
+      width: 44px; height: 44px; display: flex; align-items: center; justify-content: center;
+      color: #fff; cursor: pointer;
+    }
+    .mobile-menu .mobile-logo {
+      font-family: 'Plus Jakarta Sans', sans-serif; font-size: 24px;
+      font-weight: 700; color: #fff; margin-bottom: 32px;
+    }
+    .mobile-menu .mobile-logo .arrow { color: var(--go-green); }
+    .mobile-nav-link {
+      font-size: 20px; font-weight: 600; color: rgba(255,255,255,0.8);
+      padding: 16px 0; border-bottom: 1px solid rgba(255,255,255,0.06);
+      cursor: pointer; transition: color 0.2s;
+      font-family: 'Plus Jakarta Sans', sans-serif;
+    }
+    .mobile-nav-link:hover { color: #fff; }
+    .mobile-menu .mobile-ctas { margin-top: auto; display: flex; flex-direction: column; gap: 12px; padding-top: 32px; }
+
+    @media (max-width: 767px) {
+      .nav-links, .nav-right { display: none !important; }
+      .hamburger { display: flex; }
+      h1 { font-size: 36px; }
+      h2 { font-size: 28px; }
+      h3 { font-size: 22px; }
+      .section-padding { padding: 64px 0; }
+    }
+    @media (min-width: 768px) and (max-width: 1023px) {
+      h1 { font-size: 44px; }
+      h2 { font-size: 34px; }
+    }
+
+    /* ============================================================
+       PAGE TRANSITION
+       ============================================================ */
+    .page { display: none; opacity: 0; transform: translateY(16px); transition: opacity 0.4s ease, transform 0.4s ease; }
+    .page.active { display: block; }
+    .page.visible { opacity: 1; transform: translateY(0); }
+
+    /* ============================================================
+       HERO SECTIONS — Dark with mesh gradients
+       ============================================================ */
+    .hero-dark {
+      position: relative; background: var(--bg-dark); overflow: hidden;
+      padding: 160px 24px 120px; text-align: center;
+      min-height: 100vh; display: flex; align-items: center; justify-content: center;
+    }
+    .hero-dark.small { min-height: auto; padding: 140px 24px 80px; }
+    .hero-mesh {
+      position: absolute; inset: 0; z-index: 0; pointer-events: none;
+    }
+    .hero-mesh .orb {
+      position: absolute; border-radius: 50%; filter: blur(80px);
+    }
+    .hero-grid {
+      position: absolute; inset: 0; z-index: 0; pointer-events: none;
+      background-image: radial-gradient(rgba(255,255,255,0.06) 1px, transparent 1px);
+      background-size: 32px 32px; opacity: 0.4;
+    }
+    .hero-content { position: relative; z-index: 1; max-width: 780px; margin: 0 auto; }
+    .hero-content h1 { color: #fff; margin-bottom: 24px; }
+    .hero-content .sub { color: var(--text-white-muted); font-size: 18px; max-width: 580px; margin: 0 auto 36px; line-height: 1.7; }
+    .hero-btns { display: flex; gap: 16px; justify-content: center; flex-wrap: wrap; }
+    .hero-chips {
+      display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; margin-top: 40px;
+    }
+    .hero-chip {
+      border: 1px solid rgba(255,255,255,0.1); background: rgba(255,255,255,0.05);
+      backdrop-filter: blur(12px); border-radius: 8px; padding: 12px 20px;
+      color: rgba(255,255,255,0.85); font-size: 14px; font-weight: 500;
+    }
+
+    /* Scroll indicator */
+    .scroll-indicator {
+      position: absolute; bottom: 32px; left: 50%; transform: translateX(-50%);
+      z-index: 1; color: rgba(255,255,255,0.4); animation: bounce-down 2s infinite;
+    }
+    @keyframes bounce-down {
+      0%, 100% { transform: translateX(-50%) translateY(0); }
+      50% { transform: translateX(-50%) translateY(8px); }
+    }
+
+    /* ============================================================
+       SECTION BACKGROUNDS
+       ============================================================ */
+    .bg-white { background: var(--bg-white); }
+    .bg-surface { background: var(--bg-surface); }
+    .bg-dark { background: var(--bg-dark); color: #fff; }
+    .bg-dark h2, .bg-dark h3, .bg-dark h4 { color: #fff; }
+
+    /* ============================================================
+       SECTION HEADERS
+       ============================================================ */
+    .section-header { text-align: center; max-width: 680px; margin: 0 auto 56px; }
+    .section-header .pill { margin-bottom: 16px; }
+    .section-header h2 { margin-bottom: 16px; }
+    .section-header p { color: var(--text-body); margin: 0 auto; }
+
+    /* ============================================================
+       CARDS
+       ============================================================ */
+    .card {
+      background: var(--bg-card); border-radius: var(--radius-xl);
+      border: 1px solid var(--border); box-shadow: var(--shadow-md);
+      padding: 48px 40px; transition: all 0.3s ease;
+    }
+    .card:hover { box-shadow: var(--shadow-lg); transform: translateY(-4px); }
+    .card-sm { padding: 28px; border-radius: var(--radius-lg); }
+    .card-sm:hover { transform: translateY(-2px); }
+    .card-dark {
+      background: var(--bg-dark); color: #fff; border-color: rgba(255,255,255,0.08);
+    }
+    .card-dark h3, .card-dark h4 { color: #fff; }
+
+    /* Icon circles */
+    .icon-circle {
+      width: 48px; height: 48px; border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      flex-shrink: 0;
+    }
+    .icon-circle.green { background: var(--go-green-pale); color: var(--go-green); }
+    .icon-circle.purple { background: var(--reach-purple-pale); color: var(--reach-purple); }
+    .icon-circle.gray { background: var(--bg-surface); color: var(--text-body); }
+
+    /* ============================================================
+       FEATURE LISTS (checkmarks)
+       ============================================================ */
+    .feature-list { display: flex; flex-direction: column; gap: 12px; margin: 24px 0; }
+    .feature-list li {
+      display: flex; align-items: flex-start; gap: 10px;
+      font-size: 15px; line-height: 1.5;
+    }
+    .feature-list .check {
+      width: 20px; height: 20px; border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      flex-shrink: 0; margin-top: 2px;
+    }
+    .feature-list .check.green { background: var(--go-green-pale); color: var(--go-green); }
+    .feature-list .check.purple { background: var(--reach-purple-pale); color: var(--reach-purple); }
+    .feature-list .check.white { background: rgba(255,255,255,0.1); color: #fff; }
+
+    /* ============================================================
+       PRODUCT SPLIT VIEW
+       ============================================================ */
+    .split-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 32px; max-width: 1000px; margin: 0 auto; }
+    @media (max-width: 767px) { .split-grid { grid-template-columns: 1fr; } }
+    .feature-pills { display: flex; flex-wrap: wrap; gap: 8px; margin: 20px 0; }
+    .feature-pill {
+      font-size: 13px; font-weight: 500; padding: 6px 14px;
+      border-radius: var(--radius-pill); border: 1px solid var(--border);
+      background: var(--bg-surface);
+    }
+    .revenue-pill {
+      display: inline-block; font-size: 13px; font-weight: 600; padding: 8px 16px;
+      border-radius: var(--radius-pill); margin: 8px 0 20px;
+    }
+    .revenue-pill.green { background: var(--go-green-pale); color: var(--go-green); border: 1px solid rgba(5,150,105,0.2); }
+    .revenue-pill.purple { background: var(--reach-purple-pale); color: var(--reach-purple); border: 1px solid rgba(109,40,217,0.15); }
+    .card-price { font-size: 15px; margin: 16px 0 8px; }
+    .card-price strong { font-size: 24px; font-weight: 800; color: var(--text-primary); font-family: 'Plus Jakarta Sans', sans-serif; }
+    .card-price span { color: var(--text-muted); }
+
+    /* ============================================================
+       BENTO GRID
+       ============================================================ */
+    .bento-grid {
+      display: grid; grid-template-columns: repeat(4, 1fr); gap: 20px;
+      max-width: 1100px; margin: 0 auto;
+    }
+    .bento-grid .card-sm { display: flex; flex-direction: column; gap: 12px; }
+    .bento-grid .card-sm h4 { font-size: 17px; }
+    .bento-grid .card-sm p { font-size: 14px; color: var(--text-body); max-width: none; }
+    .bento-span-2 { grid-column: span 2; }
+    .bento-row-2 { grid-row: span 2; }
+    .card-strip { height: 4px; border-radius: 2px 2px 0 0; margin: -28px -28px 16px; }
+    .card-strip.green { background: linear-gradient(90deg, var(--go-green-light), var(--go-green)); }
+    .card-strip.purple { background: linear-gradient(90deg, var(--reach-purple-light), var(--reach-purple)); }
+    @media (max-width: 767px) {
+      .bento-grid { grid-template-columns: 1fr; }
+      .bento-span-2 { grid-column: span 1; }
+      .bento-row-2 { grid-row: span 1; }
+    }
+    @media (min-width: 768px) and (max-width: 1023px) {
+      .bento-grid { grid-template-columns: 1fr 1fr; }
+    }
+
+    /* ============================================================
+       ECOSYSTEM FLOW
+       ============================================================ */
+    .eco-flow {
+      display: grid; grid-template-columns: 1fr auto 1fr auto 1fr;
+      gap: 0; align-items: center; max-width: 900px; margin: 0 auto;
+    }
+    .eco-step { text-align: center; padding: 0 16px; }
+    .eco-step .icon-circle { margin: 0 auto 16px; width: 64px; height: 64px; }
+    .eco-step h4 { margin-bottom: 8px; font-size: 17px; }
+    .eco-step p { font-size: 14px; color: var(--text-muted); margin: 0 auto; }
+    .eco-arrow { color: var(--border-strong); font-size: 28px; font-weight: 300; padding: 0 8px; }
+    @media (max-width: 767px) {
+      .eco-flow { grid-template-columns: 1fr; gap: 24px; }
+      .eco-arrow { display: none; }
+    }
+
+    /* ============================================================
+       INDUSTRY CARDS
+       ============================================================ */
+    .industry-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 20px; margin-top: 24px; }
+    .industry-card {
+      text-align: center; padding: 28px 20px; background: #fff;
+      border-radius: var(--radius-md); border: 1px solid var(--border);
+      box-shadow: var(--shadow-sm); transition: all 0.2s ease;
+    }
+    .industry-card:hover { box-shadow: var(--shadow-md); transform: translateY(-2px); }
+    .industry-card .icon-circle { margin: 0 auto 14px; }
+    .industry-card h4 { font-size: 16px; margin-bottom: 6px; }
+    .industry-card p { font-size: 13px; color: var(--text-muted); margin: 0 auto; }
+    @media (max-width: 767px) { .industry-grid { grid-template-columns: 1fr 1fr; } }
+    @media (max-width: 480px) { .industry-grid { grid-template-columns: 1fr; } }
+
+    /* ============================================================
+       STATS BAR
+       ============================================================ */
+    .stats-bar {
+      display: grid; grid-template-columns: repeat(4, 1fr); gap: 0;
+      max-width: 1000px; margin: 0 auto; text-align: center;
+    }
+    .stat-item { padding: 16px 24px; position: relative; }
+    .stat-item:not(:last-child)::after {
+      content: ''; position: absolute; right: 0; top: 20%; height: 60%;
+      width: 1px; background: rgba(255,255,255,0.1);
+    }
+    .stat-number {
+      font-family: 'Plus Jakarta Sans', sans-serif; font-size: 48px; font-weight: 800;
+      margin-bottom: 4px;
+    }
+    .stat-label { color: var(--text-white-muted); font-size: 14px; font-weight: 500; }
+    @media (max-width: 767px) {
+      .stats-bar { grid-template-columns: 1fr 1fr; }
+      .stat-item:nth-child(2)::after { display: none; }
+      .stat-number { font-size: 36px; }
+    }
+
+    /* ============================================================
+       CTA DUAL CARDS
+       ============================================================ */
+    .cta-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; max-width: 900px; margin: 0 auto 32px; }
+    .cta-card { border-radius: var(--radius-xl); padding: 40px; text-align: center; }
+    .cta-card h3 { font-size: 22px; margin-bottom: 8px; }
+    .cta-card p { margin: 0 auto 20px; font-size: 15px; }
+    .cta-card.green { background: var(--go-green-pale); border: 1px solid rgba(5,150,105,0.2); }
+    .cta-card.purple { background: var(--reach-purple-pale); border: 1px solid rgba(109,40,217,0.15); }
+    @media (max-width: 767px) { .cta-grid { grid-template-columns: 1fr; } }
+    .trust-row { display: flex; justify-content: center; gap: 32px; flex-wrap: wrap; }
+    .trust-item { font-size: 14px; font-weight: 500; color: var(--text-muted); }
+
+    /* ============================================================
+       GO CHANNELS — Two-column layouts
+       ============================================================ */
+    .channel-section {
+      display: grid; grid-template-columns: 1fr 1fr; gap: 64px;
+      align-items: center; max-width: 1100px; margin: 0 auto;
+    }
+    .channel-section.reverse { direction: rtl; }
+    .channel-section.reverse > * { direction: ltr; }
+    @media (max-width: 767px) {
+      .channel-section, .channel-section.reverse { grid-template-columns: 1fr; direction: ltr; }
+    }
+    .channel-content .pill { margin-bottom: 12px; }
+    .channel-content h2 { margin-bottom: 16px; }
+    .channel-content > p { margin-bottom: 20px; }
+    .price-badge {
+      display: inline-flex; align-items: center; gap: 6px;
+      background: #fff; box-shadow: var(--shadow-sm); border: 1px solid var(--border);
+      border-radius: var(--radius-pill); padding: 6px 16px; font-size: 14px;
+      font-weight: 600; color: var(--text-primary); margin-bottom: 16px;
+    }
+    .hw-note { font-size: 13px; color: var(--text-muted); display: flex; align-items: center; gap: 6px; margin: 12px 0 20px; }
+
+    /* Audio Visualizer Mockup */
+    .audio-mockup {
+      background: var(--bg-dark); border-radius: var(--radius-xl);
+      padding: 36px; box-shadow: var(--shadow-xl); color: #fff;
+    }
+    .audio-mockup-label { font-size: 13px; color: var(--text-white-muted); margin-bottom: 20px; display: flex; align-items: center; gap: 6px; }
+    .audio-player-mock { margin-bottom: 24px; }
+    .audio-player-mock .song { font-size: 16px; font-weight: 600; margin-bottom: 4px; }
+    .audio-player-mock .artist { font-size: 13px; color: var(--text-white-muted); margin-bottom: 12px; }
+    .progress-bar { height: 4px; background: rgba(255,255,255,0.1); border-radius: 2px; overflow: hidden; margin-bottom: 8px; }
+    .progress-fill { width: 62%; height: 100%; background: var(--go-green); border-radius: 2px; }
+    .progress-times { display: flex; justify-content: space-between; font-size: 12px; color: var(--text-white-muted); }
+    .wave-bars {
+      display: flex; align-items: flex-end; gap: 4px; height: 48px;
+      justify-content: center; margin: 24px 0 16px;
+    }
+    .wave-bar {
+      width: 6px; background: var(--go-green); border-radius: 3px;
+      animation: wave-pulse 1.2s ease-in-out infinite;
+    }
+    .wave-bar:nth-child(1) { height: 20px; animation-delay: 0s; }
+    .wave-bar:nth-child(2) { height: 35px; animation-delay: 0.1s; }
+    .wave-bar:nth-child(3) { height: 28px; animation-delay: 0.2s; }
+    .wave-bar:nth-child(4) { height: 42px; animation-delay: 0.3s; }
+    .wave-bar:nth-child(5) { height: 32px; animation-delay: 0.4s; }
+    .wave-bar:nth-child(6) { height: 48px; animation-delay: 0.5s; }
+    .wave-bar:nth-child(7) { height: 24px; animation-delay: 0.6s; }
+    .wave-bar:nth-child(8) { height: 38px; animation-delay: 0.7s; }
+    .wave-bar:nth-child(9) { height: 18px; animation-delay: 0.8s; }
+    .wave-bar:nth-child(10) { height: 30px; animation-delay: 0.9s; }
+    @keyframes wave-pulse {
+      0%, 100% { transform: scaleY(0.5); }
+      50% { transform: scaleY(1); }
+    }
+    .ad-notification {
+      font-size: 12px; color: var(--go-green); display: flex; align-items: center; gap: 6px;
+      background: rgba(5,150,105,0.1); padding: 8px 14px; border-radius: var(--radius-pill);
+      width: fit-content;
+    }
+
+    /* Phone Mockup */
+    .phone-mockup {
+      width: 220px; margin: 0 auto; background: #fff; border-radius: 28px;
+      box-shadow: var(--shadow-xl); padding: 12px; border: 2px solid var(--border);
+    }
+    .phone-screen { border-radius: 18px; overflow: hidden; background: #fff; }
+    .phone-header { display: flex; align-items: center; gap: 8px; padding: 12px; border-bottom: 1px solid var(--border); }
+    .phone-avatar { width: 28px; height: 28px; background: var(--go-green-pale); border-radius: 50%; display: flex; align-items: center; justify-content: center; }
+    .phone-handle { font-size: 12px; font-weight: 600; color: var(--text-primary); }
+    .phone-image { width: 100%; height: 140px; background: linear-gradient(135deg, var(--go-green-light), #14b8a6); }
+    .phone-caption { padding: 10px 12px; font-size: 11px; color: var(--text-body); line-height: 1.4; }
+    .phone-actions { display: flex; gap: 16px; padding: 6px 12px 10px; }
+    .phone-actions i { width: 16px; height: 16px; color: var(--text-muted); }
+    .phone-posted { font-size: 10px; color: var(--go-green); padding: 4px 12px 12px; display: flex; align-items: center; gap: 4px; }
+
+    /* TV Mockup */
+    .tv-mockup { max-width: 360px; margin: 0 auto; }
+    .tv-frame {
+      background: #1a1a2e; border-radius: 16px; padding: 16px;
+      box-shadow: var(--shadow-xl); position: relative;
+    }
+    .tv-bezel-top { text-align: center; margin-bottom: 8px; }
+    .tv-camera { width: 6px; height: 6px; background: #333; border-radius: 50%; display: inline-block; }
+    .tv-screen {
+      background: linear-gradient(135deg, var(--go-green), #14b8a6);
+      border-radius: 8px; height: 200px; position: relative;
+      display: flex; flex-direction: column; align-items: center; justify-content: center;
+      overflow: hidden;
+    }
+    .tv-play { width: 48px; height: 48px; color: rgba(255,255,255,0.9); }
+    .tv-badge-10s {
+      position: absolute; bottom: 8px; right: 8px;
+      background: rgba(0,0,0,0.5); color: #fff; font-size: 11px;
+      padding: 3px 8px; border-radius: 4px; font-weight: 600;
+    }
+    .tv-overlay {
+      position: absolute; bottom: 0; left: 0; right: 0;
+      background: linear-gradient(transparent, rgba(0,0,0,0.6));
+      padding: 16px 12px 10px; color: #fff; font-size: 14px; font-weight: 700;
+    }
+    .tv-stand { width: 80px; height: 6px; background: #1a1a2e; margin: 0 auto; border-radius: 0 0 4px 4px; }
+    .tv-free-sticker {
+      position: absolute; top: -8px; right: -8px;
+      background: var(--go-green); color: #fff; font-size: 10px;
+      font-weight: 700; padding: 4px 10px; border-radius: var(--radius-pill);
+      transform: rotate(12deg); box-shadow: var(--shadow-sm);
+    }
+
+    /* ============================================================
+       REVENUE SECTION
+       ============================================================ */
+    .revenue-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 64px; max-width: 1000px; margin: 0 auto; align-items: start; }
+    .revenue-big { font-family: 'Plus Jakarta Sans', sans-serif; font-size: 72px; font-weight: 800; margin-bottom: 4px; }
+    .revenue-label { font-size: 18px; color: var(--text-white-muted); margin-bottom: 16px; }
+    .revenue-divider { height: 1px; background: rgba(255,255,255,0.1); margin: 16px 0; }
+    .revenue-chip {
+      display: inline-block; font-size: 14px; font-weight: 600;
+      padding: 8px 18px; border-radius: var(--radius-pill); margin-top: 16px;
+    }
+    .revenue-chip.green { background: rgba(5,150,105,0.15); color: var(--go-green-light); }
+    .revenue-chip.purple { background: rgba(109,40,217,0.15); color: var(--reach-purple-light); }
+    .example-box {
+      background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.08);
+      border-radius: var(--radius-md); padding: 20px; font-size: 14px;
+      color: var(--text-white-muted); margin-top: 16px;
+    }
+    .example-box strong { color: #fff; }
+    .referral-flow {
+      display: flex; align-items: center; justify-content: center; gap: 16px;
+      margin-top: 48px; flex-wrap: wrap;
+    }
+    .referral-step { text-align: center; }
+    .referral-num {
+      width: 36px; height: 36px; border-radius: 50%;
+      background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.15);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 14px; font-weight: 700; color: #fff; margin: 0 auto 8px;
+    }
+    .referral-label { font-size: 13px; color: var(--text-white-muted); }
+    .referral-arrow { color: rgba(255,255,255,0.2); font-size: 20px; }
+    @media (max-width: 767px) {
+      .revenue-grid { grid-template-columns: 1fr; gap: 40px; }
+      .revenue-big { font-size: 48px; }
+    }
+
+    /* ============================================================
+       TOP-UP CARDS
+       ============================================================ */
+    .topup-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; max-width: 800px; margin: 0 auto; }
+    .topup-card { text-align: center; }
+    .topup-card h4 { margin-bottom: 8px; }
+    .topup-card .price-big { font-family: 'Plus Jakarta Sans', sans-serif; font-size: 32px; font-weight: 800; color: var(--text-primary); margin-bottom: 4px; }
+    .topup-card .per-unit { font-size: 14px; color: var(--text-muted); }
+    @media (max-width: 767px) { .topup-grid { grid-template-columns: 1fr; } }
+
+    /* ============================================================
+       PRICING CARDS
+       ============================================================ */
+    .pricing-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; max-width: 1000px; margin: 0 auto; }
+    .pricing-card {
+      border-radius: var(--radius-xl); padding: 36px; border: 1px solid var(--border);
+      box-shadow: var(--shadow-md); background: #fff; position: relative;
+      display: flex; flex-direction: column;
+    }
+    .pricing-card.popular { border: 2px solid var(--go-green); box-shadow: var(--shadow-xl); }
+    .pricing-card.dark-card { background: var(--bg-dark); color: #fff; border: 2px solid rgba(109,40,217,0.5); }
+    .pricing-card.dark-card h3, .pricing-card.dark-card h4 { color: #fff; }
+    .pricing-card .top-badge {
+      position: absolute; top: -14px; left: 50%; transform: translateX(-50%);
+      padding: 6px 20px; border-radius: var(--radius-pill); font-size: 12px;
+      font-weight: 700; text-transform: uppercase; letter-spacing: 0.06em;
+    }
+    .pricing-price { font-family: 'Plus Jakarta Sans', sans-serif; }
+    .pricing-price .amount { font-size: 40px; font-weight: 800; }
+    .pricing-price .period { font-size: 16px; color: var(--text-muted); font-weight: 400; }
+    .pricing-card.dark-card .pricing-price .period { color: var(--text-white-muted); }
+    .pricing-card .divider { height: 1px; background: var(--border); margin: 20px 0; }
+    .pricing-card.dark-card .divider { background: rgba(255,255,255,0.1); }
+    .pricing-card .btn { margin-top: auto; }
+    .pricing-note { font-size: 13px; color: var(--text-muted); text-align: center; margin-top: 8px; }
+    .pricing-card.dark-card .pricing-note { color: var(--text-white-muted); }
+    @media (max-width: 767px) { .pricing-grid { grid-template-columns: 1fr; } }
+
+    /* ============================================================
+       REACH PLAN GRID (5 cards)
+       ============================================================ */
+    .reach-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; max-width: 1100px; margin: 0 auto; }
+    @media (max-width: 1023px) { .reach-grid { grid-template-columns: 1fr 1fr; } }
+    @media (max-width: 767px) { .reach-grid { grid-template-columns: 1fr; } }
+    .reach-card {
+      border-radius: var(--radius-xl); padding: 32px; border: 1px solid var(--border);
+      box-shadow: var(--shadow-md); background: #fff; display: flex; flex-direction: column;
+      position: relative;
+    }
+    .reach-card.popular { border: 2px solid var(--reach-purple); box-shadow: var(--shadow-xl); }
+    .reach-card.dark-card { background: var(--bg-dark); color: #fff; border-color: rgba(255,255,255,0.1); }
+    .reach-card .top-badge { position: absolute; top: -14px; left: 50%; transform: translateX(-50%); }
+    .reach-card .per-store { font-size: 13px; color: var(--text-muted); margin-bottom: 8px; }
+    .reach-card.dark-card .per-store { color: var(--text-white-muted); }
+    .reach-card .feature-item { display: flex; align-items: center; gap: 8px; font-size: 14px; padding: 6px 0; }
+    .reach-card .btn { margin-top: auto; }
+    .reach-card.dark-card h3, .reach-card.dark-card h4 { color: #fff; }
+
+    /* ============================================================
+       VOLUME DISCOUNT TABLE
+       ============================================================ */
+    .volume-table-wrap {
+      max-width: 800px; margin: 0 auto; border-radius: var(--radius-lg);
+      overflow: hidden; box-shadow: var(--shadow-md); border: 1px solid var(--border);
+    }
+    .volume-table { width: 100%; border-collapse: collapse; }
+    .volume-table thead { background: var(--bg-dark); color: #fff; }
+    .volume-table th { padding: 14px 20px; text-align: left; font-size: 14px; font-weight: 600; }
+    .volume-table td { padding: 14px 20px; font-size: 14px; border-bottom: 1px solid var(--border); }
+    .volume-table tr:nth-child(even) { background: var(--bg-surface); }
+    .volume-table tr.highlight { background: var(--reach-purple-pale); font-weight: 600; }
+    .overflow-x { overflow-x: auto; }
+
+    /* ============================================================
+       COST ESTIMATOR
+       ============================================================ */
+    .estimator-card {
+      max-width: 800px; margin: 0 auto; background: #fff;
+      border-radius: var(--radius-xl); box-shadow: var(--shadow-xl);
+      padding: 48px; border: 1px solid var(--border);
+    }
+    .estimator-label { font-size: 14px; font-weight: 600; color: var(--text-primary); margin-bottom: 12px; }
+    .plan-pills { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 32px; }
+    .plan-pill {
+      padding: 10px 20px; border-radius: var(--radius-pill); font-size: 14px;
+      font-weight: 600; border: 1px solid var(--border); background: #fff;
+      cursor: pointer; transition: all 0.2s; color: var(--text-body);
+    }
+    .plan-pill.active { background: var(--reach-purple); color: #fff; border-color: var(--reach-purple); }
+    .store-control { display: flex; align-items: center; gap: 16px; margin-bottom: 16px; }
+    .store-btn {
+      width: 44px; height: 44px; border-radius: 50%;
+      border: 1px solid var(--border); background: #fff;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 20px; font-weight: 600; cursor: pointer;
+      transition: all 0.2s; color: var(--text-primary);
+    }
+    .store-btn:hover { background: var(--bg-surface); }
+    .store-count {
+      font-family: 'Plus Jakarta Sans', sans-serif; font-size: 48px;
+      font-weight: 800; color: var(--text-primary); min-width: 80px; text-align: center;
+    }
+    .store-slider { width: 100%; margin-bottom: 32px; accent-color: var(--reach-purple); }
+    .result-card {
+      background: var(--reach-purple-pale); border: 1px solid rgba(109,40,217,0.2);
+      border-radius: var(--radius-lg); padding: 32px;
+    }
+    .result-plan { font-size: 15px; font-weight: 600; color: var(--text-primary); margin-bottom: 16px; }
+    .result-lines { display: flex; flex-direction: column; gap: 8px; }
+    .result-line { display: flex; justify-content: space-between; font-size: 14px; }
+    .result-line.total { font-size: 20px; font-weight: 700; color: var(--reach-purple); padding-top: 12px; border-top: 2px solid rgba(109,40,217,0.2); margin-top: 8px; }
+    .result-line .discount { color: #dc2626; }
+    .result-impressions { margin-top: 16px; padding-top: 16px; border-top: 1px solid rgba(109,40,217,0.1); display: flex; flex-direction: column; gap: 4px; font-size: 13px; color: var(--text-muted); }
+
+    /* ============================================================
+       HOW IT WORKS STEPS
+       ============================================================ */
+    .steps-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 24px; max-width: 1000px; margin: 0 auto; }
+    .step-card { text-align: center; padding: 28px 20px; }
+    .step-num {
+      width: 40px; height: 40px; border-radius: 50%; margin: 0 auto 16px;
+      display: flex; align-items: center; justify-content: center;
+      font-weight: 700; font-size: 16px;
+    }
+    .step-num.purple { background: var(--reach-purple-pale); color: var(--reach-purple); }
+    .step-num.green { background: var(--go-green-pale); color: var(--go-green); }
+    .step-card h4 { margin-bottom: 8px; font-size: 16px; }
+    .step-card p { font-size: 14px; color: var(--text-muted); margin: 0 auto; }
+    @media (max-width: 767px) { .steps-grid { grid-template-columns: 1fr 1fr; } }
+    @media (max-width: 480px) { .steps-grid { grid-template-columns: 1fr; } }
+
+    /* ============================================================
+       PRICING PAGE — Tab toggle
+       ============================================================ */
+    .tab-toggle {
+      display: inline-flex; background: var(--bg-surface); border-radius: var(--radius-pill);
+      padding: 4px; margin: 0 auto 40px; border: 1px solid var(--border);
+    }
+    .tab-btn {
+      padding: 12px 28px; border-radius: var(--radius-pill); font-size: 15px;
+      font-weight: 600; cursor: pointer; transition: all 0.2s;
+      color: var(--text-body);
+    }
+    .tab-btn.active { background: #fff; color: var(--text-primary); box-shadow: var(--shadow-sm); }
+    .tab-content { display: none; }
+    .tab-content.active { display: block; }
+
+    /* Annual toggle */
+    .period-toggle { display: flex; align-items: center; gap: 12px; justify-content: center; margin-bottom: 40px; }
+    .toggle-label { font-size: 14px; font-weight: 500; color: var(--text-muted); }
+    .toggle-label.active-label { color: var(--text-primary); font-weight: 600; }
+    .toggle-switch {
+      width: 48px; height: 26px; border-radius: 13px; background: var(--border);
+      position: relative; cursor: pointer; transition: background 0.2s;
+    }
+    .toggle-switch.on { background: var(--go-green); }
+    .toggle-knob {
+      width: 22px; height: 22px; border-radius: 50%; background: #fff;
+      position: absolute; top: 2px; left: 2px; transition: transform 0.2s;
+      box-shadow: var(--shadow-sm);
+    }
+    .toggle-switch.on .toggle-knob { transform: translateX(22px); }
+    .save-badge { font-size: 12px; font-weight: 600; color: var(--go-green); }
+
+    /* Feature comparison table */
+    .compare-table-wrap { max-width: 900px; margin: 40px auto 0; overflow-x: auto; }
+    .compare-table { width: 100%; border-collapse: collapse; }
+    .compare-table th, .compare-table td { padding: 12px 16px; text-align: center; font-size: 14px; border-bottom: 1px solid var(--border); }
+    .compare-table th:first-child, .compare-table td:first-child { text-align: left; font-weight: 500; }
+    .compare-table thead th { font-weight: 600; color: var(--text-primary); background: var(--bg-surface); }
+    .compare-table tr:hover { background: var(--bg-surface); }
+
+    /* Trust row */
+    .trust-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 20px; max-width: 800px; margin: 40px auto 0; }
+    .trust-cell { text-align: center; font-size: 14px; font-weight: 500; color: var(--text-muted); display: flex; flex-direction: column; align-items: center; gap: 8px; }
+    @media (max-width: 767px) { .trust-grid { grid-template-columns: 1fr 1fr; } }
+
+    /* ============================================================
+       ABOUT PAGE
+       ============================================================ */
+    .about-two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 64px; align-items: center; max-width: 1000px; margin: 0 auto; }
+    @media (max-width: 767px) { .about-two-col { grid-template-columns: 1fr; gap: 32px; } }
+    .pull-quote {
+      font-family: 'Plus Jakarta Sans', sans-serif; font-size: 32px; font-weight: 800;
+      line-height: 1.2;
+    }
+    .values-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; max-width: 800px; margin: 0 auto; }
+    .value-card { text-align: center; padding: 32px; }
+    .value-icon { font-size: 36px; margin-bottom: 12px; }
+    @media (max-width: 767px) { .values-grid { grid-template-columns: 1fr; } }
+    .founder-card {
+      max-width: 560px; margin: 0 auto;
+      background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1);
+      border-radius: var(--radius-xl); padding: 36px; text-align: center;
+    }
+    .founder-avatar {
+      width: 72px; height: 72px; border-radius: 50%;
+      background: linear-gradient(135deg, var(--go-green), var(--reach-purple));
+      display: flex; align-items: center; justify-content: center;
+      margin: 0 auto 16px; color: #fff;
+    }
+    .founder-name { font-size: 20px; font-weight: 700; color: #fff; margin-bottom: 4px; }
+    .founder-title { font-size: 14px; color: var(--text-white-muted); margin-bottom: 20px; }
+    .founder-quote { font-style: italic; color: var(--text-white-muted); font-size: 15px; line-height: 1.6; max-width: 480px; margin: 0 auto; }
+
+    /* Contact form */
+    .contact-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 40px; max-width: 900px; margin: 0 auto; }
+    @media (max-width: 767px) { .contact-grid { grid-template-columns: 1fr; } }
+    .contact-info-cards { display: flex; flex-direction: column; gap: 16px; }
+    .contact-info-card {
+      background: #fff; border: 1px solid var(--border); border-radius: var(--radius-md);
+      padding: 20px; display: flex; align-items: center; gap: 14px;
+    }
+    .contact-form { display: flex; flex-direction: column; gap: 16px; }
+    .form-input, .form-textarea {
+      width: 100%; padding: 14px 18px; border: 1px solid var(--border);
+      border-radius: var(--radius-md); font-size: 16px; font-family: 'Inter', sans-serif;
+      transition: border-color 0.2s; background: #fff; color: var(--text-primary);
+    }
+    .form-input:focus, .form-textarea:focus {
+      outline: none; border-color: var(--go-green); box-shadow: 0 0 0 3px rgba(5,150,105,0.1);
+    }
+    .form-textarea { resize: vertical; min-height: 120px; }
+
+    /* ============================================================
+       FAQ PAGE
+       ============================================================ */
+    .faq-search {
+      max-width: 560px; margin: 0 auto 32px; position: relative;
+    }
+    .faq-search input {
+      width: 100%; padding: 16px 20px 16px 48px; border: 1px solid var(--border);
+      border-radius: var(--radius-pill); font-size: 16px; background: #fff;
+      box-shadow: var(--shadow-sm); font-family: 'Inter', sans-serif;
+      transition: all 0.2s; color: var(--text-primary);
+    }
+    .faq-search input:focus { outline: none; border-color: var(--go-green); box-shadow: 0 0 0 3px rgba(5,150,105,0.1); }
+    .faq-search .search-icon { position: absolute; left: 18px; top: 50%; transform: translateY(-50%); color: var(--text-muted); width: 20px; height: 20px; }
+    .faq-search .clear-btn {
+      position: absolute; right: 14px; top: 50%; transform: translateY(-50%);
+      color: var(--text-muted); width: 20px; height: 20px; cursor: pointer;
+      display: none; padding: 0;
+    }
+
+    .faq-tabs { display: flex; gap: 8px; justify-content: center; flex-wrap: wrap; margin-bottom: 32px; }
+    .faq-tab {
+      padding: 8px 18px; border-radius: var(--radius-pill); font-size: 14px;
+      font-weight: 500; border: 1px solid var(--border); background: #fff;
+      cursor: pointer; transition: all 0.2s; color: var(--text-body);
+    }
+    .faq-tab.active { background: var(--go-green); color: #fff; border-color: var(--go-green); }
+
+    .faq-list { max-width: 760px; margin: 0 auto; display: flex; flex-direction: column; gap: 8px; }
+    .faq-item {
+      background: #fff; border: 1px solid var(--border); border-radius: var(--radius-md);
+      overflow: hidden; transition: box-shadow 0.2s;
+    }
+    .faq-item:hover { box-shadow: var(--shadow-sm); }
+    .faq-question {
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 18px 24px; cursor: pointer; font-weight: 600; font-size: 15px;
+      color: var(--text-primary); gap: 16px;
+    }
+    .faq-question .chevron { width: 20px; height: 20px; flex-shrink: 0; color: var(--text-muted); transition: transform 0.3s; }
+    .faq-item.open .faq-question .chevron { transform: rotate(180deg); }
+    .faq-answer {
+      max-height: 0; overflow: hidden; transition: max-height 0.35s ease;
+    }
+    .faq-answer-inner { padding: 0 24px 18px; font-size: 15px; line-height: 1.7; color: var(--text-body); }
+
+    /* ============================================================
+       FOOTER
+       ============================================================ */
+    .main-footer {
+      background: #07070F; color: rgba(255,255,255,0.6); padding: 64px 0 0;
+      border-top: 4px solid transparent;
+      border-image: linear-gradient(90deg, var(--go-green), var(--reach-purple)) 1;
+    }
+    .footer-top { display: grid; grid-template-columns: 1.5fr 1fr 1fr 1fr 1fr; gap: 40px; margin-bottom: 48px; }
+    .footer-brand .nav-logo { color: #fff; margin-bottom: 12px; }
+    .footer-tagline { font-size: 14px; color: rgba(255,255,255,0.5); margin-bottom: 20px; max-width: 240px; }
+    .footer-socials { display: flex; gap: 12px; }
+    .footer-social {
+      width: 36px; height: 36px; border-radius: 50%;
+      background: rgba(255,255,255,0.06); display: flex; align-items: center; justify-content: center;
+      color: rgba(255,255,255,0.5); transition: all 0.2s; cursor: pointer;
+    }
+    .footer-social:hover { color: #fff; background: rgba(255,255,255,0.12); }
+    .footer-col h5 { color: #fff; font-size: 14px; font-weight: 600; margin-bottom: 16px; text-transform: uppercase; letter-spacing: 0.06em; }
+    .footer-col a { display: block; font-size: 14px; color: rgba(255,255,255,0.5); padding: 4px 0; transition: color 0.2s; cursor: pointer; }
+    .footer-col a:hover { color: #fff; }
+    .footer-bottom {
+      border-top: 1px solid rgba(255,255,255,0.06); padding: 20px 0;
+      text-align: center; font-size: 13px; color: rgba(255,255,255,0.35);
+    }
+    @media (max-width: 767px) {
+      .footer-top { grid-template-columns: 1fr 1fr; }
+      .footer-brand { grid-column: span 2; }
+    }
+    @media (max-width: 480px) { .footer-top { grid-template-columns: 1fr; } .footer-brand { grid-column: span 1; } }
+
+    /* ============================================================
+       ANIMATIONS
+       ============================================================ */
+    .animate-on-scroll { opacity: 0; transform: translateY(24px); transition: opacity 0.6s ease, transform 0.6s ease; }
+    .animate-on-scroll.visible { opacity: 1; transform: translateY(0); }
+    .animate-stagger > .animate-on-scroll:nth-child(1) { transition-delay: 0ms; }
+    .animate-stagger > .animate-on-scroll:nth-child(2) { transition-delay: 80ms; }
+    .animate-stagger > .animate-on-scroll:nth-child(3) { transition-delay: 160ms; }
+    .animate-stagger > .animate-on-scroll:nth-child(4) { transition-delay: 240ms; }
+    .animate-stagger > .animate-on-scroll:nth-child(5) { transition-delay: 320ms; }
+    .animate-stagger > .animate-on-scroll:nth-child(6) { transition-delay: 400ms; }
+
+    /* ============================================================
+       MISCELLANEOUS
+       ============================================================ */
+    .hidden { display: none !important; }
+    .inline-flex { display: inline-flex; }
+    .free-badge-inline {
+      display: inline-flex; align-items: center; gap: 4px;
+      background: var(--go-green); color: #fff; font-size: 12px;
+      font-weight: 700; padding: 4px 12px; border-radius: var(--radius-pill);
+      margin-bottom: 12px;
+    }
+    .info-box {
+      border-radius: var(--radius-md); padding: 20px; font-size: 14px; line-height: 1.6;
+    }
+    .info-box.purple { background: var(--reach-purple-pale); border: 1px solid rgba(109,40,217,0.2); color: var(--text-body); }
+    .info-box strong { color: var(--text-primary); }
+    .sub-label { font-size: 14px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 16px; }
+  </style>
+</head>
+<body data-id="0">
+
+  <!-- App Icon -->
+  <app-icon data-id="1" hidden data-icon="trending-up" data-palette="Green"></app-icon>
+
+  <!-- ============================================================
+       NAVIGATION — Edit links, button text, and logo here
+       ============================================================ -->
+  <nav data-id="2" class="main-nav" id="main-nav" aria-label="Main navigation">
+    <div data-id="3" class="nav-inner">
+      <!-- EDIT: Logo text -->
+      <div data-id="4" class="nav-logo" id="nav-logo" role="button" tabindex="0" data-page="home" aria-label="Addlyft Home">
+        <span data-id="5" class="arrow">⬆</span> Addlyft
+      </div>
+
+      <!-- Desktop Navigation -->
+      <div data-id="6" class="nav-links" id="nav-links">
+        <!-- EDIT: Nav link text and page targets -->
+        <span data-id="7" class="nav-link active" data-page="home">Home</span>
+        <div data-id="8" class="nav-dropdown-wrap" id="products-dropdown-wrap">
+          <span data-id="9" class="nav-link dropdown-trigger" id="products-trigger">
+            Products
+            <i data-id="10" data-lucide="chevron-down" class="chevron"></i>
+          </span>
+          <div data-id="11" class="nav-dropdown" id="products-dropdown">
+            <div data-id="12" class="dropdown-item" data-page="go">
+              <div data-id="13" class="dropdown-icon green"><i data-id="14" data-lucide="volume-2" class="w-5 h-5"></i></div>
+              <div data-id="15" class="dropdown-text">
+                <h4 data-id="16">Addlyft Go</h4>
+                <p data-id="17">AI marketing for store owners</p>
+              </div>
+              <i data-id="18" data-lucide="arrow-right" class="dropdown-arrow"></i>
+            </div>
+            <div data-id="19" class="dropdown-item" data-page="reach">
+              <div data-id="20" class="dropdown-icon purple"><i data-id="21" data-lucide="megaphone" class="w-5 h-5"></i></div>
+              <div data-id="22" class="dropdown-text">
+                <h4 data-id="23">Addlyft Reach</h4>
+                <p data-id="24">Advertise inside local stores</p>
+              </div>
+              <i data-id="25" data-lucide="arrow-right" class="dropdown-arrow"></i>
+            </div>
+          </div>
+        </div>
+        <span data-id="26" class="nav-link" data-page="pricing">Pricing</span>
+        <span data-id="27" class="nav-link" data-page="about">About</span>
+        <span data-id="28" class="nav-link" data-page="faq">FAQ</span>
+      </div>
+
+      <div data-id="29" class="nav-right">
+        <!-- EDIT: Sign in and CTA text -->
+        <span data-id="30" class="nav-signin">Sign In</span>
+        <button data-id="31" class="btn btn-green nav-cta" data-page="go">Start Free Trial</button>
+      </div>
+
+      <!-- Mobile Hamburger -->
+      <button data-id="32" class="hamburger" id="hamburger-btn" aria-label="Open menu">
+        <i data-id="33" data-lucide="menu" class="w-6 h-6"></i>
+      </button>
+    </div>
+  </nav>
+
+  <!-- Mobile Menu -->
+  <div data-id="34" class="mobile-menu" id="mobile-menu" role="dialog" aria-label="Mobile navigation">
+    <button data-id="35" class="mobile-menu-close" id="mobile-close" aria-label="Close menu">
+      <i data-id="36" data-lucide="x" class="w-6 h-6"></i>
+    </button>
+    <div data-id="37" class="mobile-logo"><span data-id="38" class="arrow">⬆</span> Addlyft</div>
+    <div data-id="39" class="mobile-nav-link" data-page="home">Home</div>
+    <div data-id="40" class="mobile-nav-link" data-page="go">Addlyft Go</div>
+    <div data-id="41" class="mobile-nav-link" data-page="reach">Addlyft Reach</div>
+    <div data-id="42" class="mobile-nav-link" data-page="pricing">Pricing</div>
+    <div data-id="43" class="mobile-nav-link" data-page="about">About</div>
+    <div data-id="44" class="mobile-nav-link" data-page="faq">FAQ</div>
+    <div data-id="45" class="mobile-ctas">
+      <button data-id="46" class="btn btn-green btn-full" data-page="go">Start Free Trial</button>
+      <button data-id="47" class="btn btn-outline-white btn-full">Sign In</button>
+    </div>
+  </div>
+
+  <!-- ============================================================
+       PAGE 1: HOME
+       ============================================================ -->
+  <div data-id="48" class="page active" id="page-home">
+
+    <!-- ============================================================
+         HOME HERO — Edit headline, subheadline, badge, and CTAs
+         ============================================================ -->
+    <section data-id="49" class="hero-dark" id="home-hero">
+      <div data-id="50" class="hero-mesh">
+        <div data-id="51" class="orb" style="top:-10%;left:-5%;width:600px;height:500px;background:rgba(5,150,105,0.22);"></div>
+        <div data-id="52" class="orb" style="top:5%;right:-5%;width:500px;height:400px;background:rgba(109,40,217,0.18);"></div>
+        <div data-id="53" class="orb" style="bottom:0;left:30%;width:800px;height:300px;background:rgba(37,99,235,0.12);"></div>
+      </div>
+      <div data-id="54" class="hero-grid"></div>
+      <div data-id="55" class="hero-content">
+        <!-- EDIT: Hero badge text -->
+        <div data-id="56" class="pill pill-dark" style="backdrop-filter:blur(12px);margin-bottom:24px;">✦ AI-Powered Marketing · Launching 2026</div>
+        <!-- EDIT: Hero headline -->
+        <h1 data-id="57">The Marketing Platform <span data-id="58" class="gradient-text-mixed">Small Retail</span> Has Been Waiting For</h1>
+        <!-- EDIT: Hero subheadline -->
+        <p data-id="59" class="sub">Addlyft Go turns your store into a marketing powerhouse. Addlyft Reach puts your brand inside real local stores. Two products. One ecosystem.</p>
+        <div data-id="60" class="hero-btns">
+          <!-- EDIT: CTA button text -->
+          <button data-id="61" class="btn btn-green" data-page="go">Get Started Free →</button>
+          <button data-id="62" class="btn btn-outline-white" data-page="go">See How It Works</button>
+        </div>
+        <!-- EDIT: Stat chip text -->
+        <div data-id="63" class="hero-chips">
+          <div data-id="64" class="hero-chip">7-Day Free Trial</div>
+          <div data-id="65" class="hero-chip">$49/mo Guaranteed Revenue</div>
+          <div data-id="66" class="hero-chip">40% Referral Commission</div>
+        </div>
+      </div>
+      <div data-id="67" class="scroll-indicator"><i data-id="68" data-lucide="arrow-down" class="w-6 h-6"></i></div>
+    </section>
+
+    <!-- ============================================================
+         PRODUCTS SPLITVIEW — Edit product descriptions and CTAs
+         ============================================================ -->
+    <section data-id="69" class="bg-white section-padding">
+      <div data-id="70" class="container">
+        <div data-id="71" class="section-header animate-on-scroll">
+          <div data-id="72" class="pill pill-green">TWO PRODUCTS</div>
+          <h2 data-id="73">Built for Two Audiences. Connected by One Platform.</h2>
+          <p data-id="74">Whether you own a store or want to advertise in one — Addlyft was built for you.</p>
+        </div>
+        <div data-id="75" class="split-grid animate-stagger">
+          <!-- EDIT: Addlyft Go card -->
+          <div data-id="76" class="card animate-on-scroll">
+            <div data-id="77" class="pill pill-green" style="margin-bottom:16px;">FOR STORE OWNERS</div>
+            <div data-id="78" class="icon-circle green" style="margin-bottom:16px;"><i data-id="79" data-lucide="volume-2" class="w-5 h-5"></i></div>
+            <h3 data-id="80">Addlyft Go</h3>
+            <p data-id="81" style="color:var(--go-green);font-size:14px;font-weight:600;margin:8px 0 16px;">Your Store's AI Marketing Command Center</p>
+            <p data-id="82">Create professional audio ads, auto-generate social media content, and display video ads on your store screens — all powered by AI. Then earn passive income when advertisers play their ads in your store.</p>
+            <div data-id="83" class="feature-pills">
+              <span data-id="84" class="feature-pill">🎵 Audio 15s</span>
+              <span data-id="85" class="feature-pill">🎬 Video 10s</span>
+              <span data-id="86" class="feature-pill">📱 Social</span>
+            </div>
+            <div data-id="87" class="revenue-pill green">💰 $49/mo Guaranteed Revenue</div>
+            <div data-id="88" class="card-price">From <strong data-id="89">$39.99</strong><span data-id="90">/mo</span></div>
+            <!-- EDIT: CTA text -->
+            <button data-id="91" class="btn btn-green btn-full" data-page="go" style="margin-top:16px;">Explore Addlyft Go →</button>
+          </div>
+          <!-- EDIT: Addlyft Reach card -->
+          <div data-id="92" class="card animate-on-scroll">
+            <div data-id="93" class="pill pill-purple" style="margin-bottom:16px;">FOR ADVERTISERS</div>
+            <div data-id="94" class="icon-circle purple" style="margin-bottom:16px;"><i data-id="95" data-lucide="megaphone" class="w-5 h-5"></i></div>
+            <h3 data-id="96">Addlyft Reach</h3>
+            <p data-id="97" style="color:var(--reach-purple);font-size:14px;font-weight:600;margin:8px 0 16px;">Advertise Inside Real Local Stores</p>
+            <p data-id="98">Place your audio and video ads inside hand-picked local stores across the Addlyft network. You choose exactly which stores, set your play frequency, and only pay for your plan — no per-impression billing.</p>
+            <div data-id="99" class="feature-pills">
+              <span data-id="100" class="feature-pill">🔊 Cross Audio 15s</span>
+              <span data-id="101" class="feature-pill">📺 Cross Video 10s</span>
+            </div>
+            <div data-id="102" class="revenue-pill purple">🏪 Minimum 5 Stores</div>
+            <div data-id="103" class="card-price">From <strong data-id="104">$29.99</strong><span data-id="105">/mo</span></div>
+            <!-- EDIT: CTA text -->
+            <button data-id="106" class="btn btn-purple btn-full" data-page="reach" style="margin-top:16px;">Explore Addlyft Reach →</button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============================================================
+         WHY ADDLYFT — Edit bento grid cards here
+         ============================================================ -->
+    <section data-id="107" class="bg-surface section-padding">
+      <div data-id="108" class="container">
+        <div data-id="109" class="section-header animate-on-scroll">
+          <div data-id="110" class="pill pill-green">WHY ADDLYFT</div>
+          <h2 data-id="111">Everything You Need. Nothing You Don't.</h2>
+          <p data-id="112">Built from the ground up for small retail — not adapted from enterprise software.</p>
+        </div>
+        <div data-id="113" class="bento-grid animate-stagger">
+          <!-- EDIT: Bento card A — AI-Powered -->
+          <div data-id="114" class="card card-sm bento-span-2 animate-on-scroll">
+            <div data-id="115" class="card-strip green"></div>
+            <div data-id="116" style="display:flex;align-items:center;gap:10px;"><i data-id="117" data-lucide="zap" class="w-5 h-5" style="color:var(--go-green);"></i><h4 data-id="118">AI-Powered in Seconds</h4></div>
+            <p data-id="119">Describe your promotion in plain words. Addlyft's AI generates professional audio scripts, video content, and social media posts — ready to publish in under a minute.</p>
+          </div>
+          <!-- EDIT: Bento card B — Store Music -->
+          <div data-id="120" class="card card-sm animate-on-scroll">
+            <div data-id="121" style="display:flex;align-items:center;gap:10px;"><i data-id="122" data-lucide="music" class="w-5 h-5" style="color:var(--go-green);"></i><h4 data-id="123">Store Music</h4></div>
+            <p data-id="124">Stream curated background music while your own AI ads play automatically after every song.</p>
+          </div>
+          <!-- EDIT: Bento card C — Free TV Device -->
+          <div data-id="125" class="card card-sm animate-on-scroll">
+            <div data-id="126" style="display:flex;align-items:center;gap:10px;"><i data-id="127" data-lucide="monitor" class="w-5 h-5" style="color:var(--go-green);"></i><h4 data-id="128">Free TV Device</h4></div>
+            <span data-id="129" class="free-badge-inline">FREE DEVICE</span>
+            <p data-id="130">Every Addlyft Video subscriber receives a free in-store display device. Zero hardware cost.</p>
+          </div>
+          <!-- EDIT: Bento card D — Passive Income (dark, row-span 2) -->
+          <div data-id="131" class="card card-sm card-dark bento-row-2 animate-on-scroll">
+            <div data-id="132" class="card-strip purple"></div>
+            <div data-id="133" style="display:flex;align-items:center;gap:10px;"><i data-id="134" data-lucide="trending-up" class="w-5 h-5" style="color:var(--reach-purple-light);"></i><h4 data-id="135">Passive Income</h4></div>
+            <p data-id="136" style="color:var(--text-white-muted);">Earn $49/mo guaranteed from Addlyft plus revenue share when advertisers play ads in your store. Refer advertisers and earn 40% of their monthly spend — forever.</p>
+          </div>
+          <!-- EDIT: Bento card E — In-Store Audio Ads -->
+          <div data-id="137" class="card card-sm animate-on-scroll">
+            <div data-id="138" style="display:flex;align-items:center;gap:10px;"><i data-id="139" data-lucide="volume-2" class="w-5 h-5" style="color:var(--go-green);"></i><h4 data-id="140">In-Store Audio Ads</h4></div>
+            <p data-id="141">15-second professional spots play between songs, reaching every customer in your store.</p>
+          </div>
+          <!-- EDIT: Bento card F — Hand-Pick Stores -->
+          <div data-id="142" class="card card-sm bento-span-2 animate-on-scroll">
+            <div data-id="143" class="card-strip purple"></div>
+            <div data-id="144" style="display:flex;align-items:center;gap:10px;"><i data-id="145" data-lucide="map-pin" class="w-5 h-5" style="color:var(--reach-purple);"></i><h4 data-id="146">Hand-Pick Your Stores</h4></div>
+            <p data-id="147">Addlyft Reach advertisers choose exactly which stores they want. No radius restrictions. No wasted reach. Minimum 5 stores, volume discounts up to 50%.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============================================================
+         ECOSYSTEM — Edit the flow steps and descriptions
+         ============================================================ -->
+    <section data-id="148" class="bg-white section-padding">
+      <div data-id="149" class="container">
+        <div data-id="150" class="section-header animate-on-scroll">
+          <h2 data-id="151">The Addlyft Ecosystem</h2>
+          <p data-id="152">Store owners and advertisers work together — creating a self-sustaining local marketing network that grows stronger over time.</p>
+        </div>
+        <div data-id="153" class="eco-flow animate-on-scroll">
+          <!-- EDIT: Ecosystem step 1 -->
+          <div data-id="154" class="eco-step">
+            <div data-id="155" class="icon-circle green" style="width:64px;height:64px;margin:0 auto 16px;"><i data-id="156" data-lucide="store" class="w-6 h-6"></i></div>
+            <h4 data-id="157">Store Owner Joins Go</h4>
+            <p data-id="158">Gets AI tools to create audio, video &amp; social ads. Earns $49/mo guaranteed revenue from Addlyft.</p>
+          </div>
+          <div data-id="159" class="eco-arrow">─────→</div>
+          <!-- EDIT: Ecosystem step 2 -->
+          <div data-id="160" class="eco-step">
+            <div data-id="161" class="icon-circle gray" style="width:64px;height:64px;margin:0 auto 16px;"><i data-id="162" data-lucide="megaphone" class="w-6 h-6"></i></div>
+            <h4 data-id="163">Advertiser Joins Reach</h4>
+            <p data-id="164">Selects stores, chooses a plan, and places audio/video ads inside those stores.</p>
+          </div>
+          <div data-id="165" class="eco-arrow">─────→</div>
+          <!-- EDIT: Ecosystem step 3 -->
+          <div data-id="166" class="eco-step">
+            <div data-id="167" class="icon-circle purple" style="width:64px;height:64px;margin:0 auto 16px;"><i data-id="168" data-lucide="heart" class="w-6 h-6"></i></div>
+            <h4 data-id="169">Both Parties Win</h4>
+            <p data-id="170">Store owner earns passive income + uses great marketing tools. Advertiser reaches real shoppers at the exact moment they're buying.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============================================================
+         INDUSTRIES — Edit store types and advertiser types
+         ============================================================ -->
+    <section data-id="171" class="bg-surface section-padding">
+      <div data-id="172" class="container">
+        <div data-id="173" class="section-header animate-on-scroll">
+          <h2 data-id="174">Built for Every Business in Your Neighborhood</h2>
+        </div>
+        <!-- EDIT: Who uses Addlyft Go -->
+        <div data-id="175" class="sub-label" style="color:var(--go-green);text-align:center;">🏪 WHO USES ADDLYFT GO</div>
+        <div data-id="176" class="industry-grid animate-stagger" style="margin-bottom:48px;">
+          <div data-id="177" class="industry-card animate-on-scroll">
+            <div data-id="178" class="icon-circle green"><i data-id="179" data-lucide="store" class="w-5 h-5"></i></div>
+            <h4 data-id="180">Convenience Stores</h4>
+            <p data-id="181">Promote daily deals, new arrivals, and loyalty programs.</p>
+          </div>
+          <div data-id="182" class="industry-card animate-on-scroll">
+            <div data-id="183" class="icon-circle green"><i data-id="184" data-lucide="utensils" class="w-5 h-5"></i></div>
+            <h4 data-id="185">Restaurants &amp; Cafes</h4>
+            <p data-id="186">Drive foot traffic with lunch specials and happy hour promos.</p>
+          </div>
+          <div data-id="187" class="industry-card animate-on-scroll">
+            <div data-id="188" class="icon-circle green"><i data-id="189" data-lucide="wine" class="w-5 h-5"></i></div>
+            <h4 data-id="190">Liquor Stores</h4>
+            <p data-id="191">Highlight new spirits, weekend specials, and tasting events.</p>
+          </div>
+          <div data-id="192" class="industry-card animate-on-scroll">
+            <div data-id="193" class="icon-circle green"><i data-id="194" data-lucide="flame" class="w-5 h-5"></i></div>
+            <h4 data-id="195">Smoke Shops</h4>
+            <p data-id="196">Showcase products, accessories, and exclusive deals.</p>
+          </div>
+        </div>
+        <!-- EDIT: Who advertises on Addlyft Reach -->
+        <div data-id="197" class="sub-label" style="color:var(--reach-purple);text-align:center;">📡 WHO ADVERTISES ON ADDLYFT REACH</div>
+        <div data-id="198" class="industry-grid animate-stagger">
+          <div data-id="199" class="industry-card animate-on-scroll">
+            <div data-id="200" class="icon-circle purple"><i data-id="201" data-lucide="car" class="w-5 h-5"></i></div>
+            <h4 data-id="202">Auto Dealers</h4>
+            <p data-id="203">Drive showroom visits and seasonal sales events.</p>
+          </div>
+          <div data-id="204" class="industry-card animate-on-scroll">
+            <div data-id="205" class="icon-circle purple"><i data-id="206" data-lucide="heart-pulse" class="w-5 h-5"></i></div>
+            <h4 data-id="207">Healthcare Providers</h4>
+            <p data-id="208">Promote services, clinics, and community health events.</p>
+          </div>
+          <div data-id="209" class="industry-card animate-on-scroll">
+            <div data-id="210" class="icon-circle purple"><i data-id="211" data-lucide="home" class="w-5 h-5"></i></div>
+            <h4 data-id="212">Real Estate Agents</h4>
+            <p data-id="213">Advertise listings and open houses to local buyers.</p>
+          </div>
+          <div data-id="214" class="industry-card animate-on-scroll">
+            <div data-id="215" class="icon-circle purple"><i data-id="216" data-lucide="building-2" class="w-5 h-5"></i></div>
+            <h4 data-id="217">Local Businesses</h4>
+            <p data-id="218">Any business that wants to reach in-store shoppers.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============================================================
+         STATS — Edit numbers and labels
+         ============================================================ -->
+    <section data-id="219" class="bg-dark section-padding">
+      <div data-id="220" class="container">
+        <div data-id="221" class="stats-bar animate-on-scroll">
+          <!-- EDIT: Stat values and labels -->
+          <div data-id="222" class="stat-item">
+            <div data-id="223" class="stat-number gradient-text-green"><span data-id="224" class="counter" data-target="500">0</span>+</div>
+            <div data-id="225" class="stat-label">Stores Ready to Join</div>
+          </div>
+          <div data-id="226" class="stat-item">
+            <div data-id="227" class="stat-number gradient-text-green">$49</div>
+            <div data-id="228" class="stat-label">/mo Guaranteed Revenue</div>
+          </div>
+          <div data-id="229" class="stat-item">
+            <div data-id="230" class="stat-number gradient-text-green"><span data-id="231" class="counter" data-target="40">0</span>%</div>
+            <div data-id="232" class="stat-label">Referral Commission</div>
+          </div>
+          <div data-id="233" class="stat-item">
+            <div data-id="234" class="stat-number gradient-text-green">5 min</div>
+            <div data-id="235" class="stat-label">Average Setup Time</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============================================================
+         CTA SECTION — Edit headline and button text
+         ============================================================ -->
+    <section data-id="236" class="bg-white section-padding">
+      <div data-id="237" class="container">
+        <div data-id="238" class="section-header animate-on-scroll">
+          <h2 data-id="239">Ready to Lift Your Business?</h2>
+          <p data-id="240">Join Addlyft today — whether you're a store owner looking to market smarter or an advertiser wanting real local reach.</p>
+        </div>
+        <!-- EDIT: CTA cards -->
+        <div data-id="241" class="cta-grid animate-on-scroll">
+          <div data-id="242" class="cta-card green">
+            <h3 data-id="243">🏪 I'm a Store Owner</h3>
+            <p data-id="244">Start marketing with AI. Earn $49/mo guaranteed.</p>
+            <button data-id="245" class="btn btn-green" data-page="go">Get Addlyft Go Free →</button>
+          </div>
+          <div data-id="246" class="cta-card purple">
+            <h3 data-id="247">📡 I'm an Advertiser</h3>
+            <p data-id="248">Reach local shoppers inside their favorite stores.</p>
+            <button data-id="249" class="btn btn-purple" data-page="reach">Start with Addlyft Reach →</button>
+          </div>
+        </div>
+        <div data-id="250" class="trust-row animate-on-scroll">
+          <span data-id="251" class="trust-item">✓ 7-Day Free Trial</span>
+          <span data-id="252" class="trust-item">✓ No Credit Card Required</span>
+          <span data-id="253" class="trust-item">✓ Cancel Anytime</span>
+        </div>
+      </div>
+    </section>
+  </div>
+
+  <!-- ============================================================
+       PAGE 2: ADDLYFT GO
+       ============================================================ -->
+  <div data-id="254" class="page" id="page-go">
+
+    <!-- ============================================================
+         GO HERO — Edit headline, subheadline, badge, and CTAs
+         ============================================================ -->
+    <section data-id="255" class="hero-dark small">
+      <div data-id="256" class="hero-mesh">
+        <div data-id="257" class="orb" style="top:-10%;left:-10%;width:700px;height:600px;background:rgba(5,150,105,0.25);"></div>
+        <div data-id="258" class="orb" style="bottom:-10%;right:-5%;width:400px;height:400px;background:rgba(109,40,217,0.15);"></div>
+      </div>
+      <div data-id="259" class="hero-grid"></div>
+      <div data-id="260" class="hero-content">
+        <div data-id="261" class="pill pill-dark" style="backdrop-filter:blur(12px);margin-bottom:24px;">🏪 FOR STORE OWNERS</div>
+        <!-- EDIT: Go hero headline -->
+        <h1 data-id="262">Your Store. Your Brand. <span data-id="263" class="gradient-text-green">Your Revenue.</span></h1>
+        <p data-id="264" class="sub">Addlyft Go is the all-in-one AI marketing app built for store owners. Three channels — audio, video, social — managed from one app. Start free, no credit card needed.</p>
+        <div data-id="265" class="hero-btns">
+          <button data-id="266" class="btn btn-green">Start 7-Day Free Trial</button>
+          <button data-id="267" class="btn btn-outline-white" data-page="pricing">View Pricing</button>
+        </div>
+        <div data-id="268" class="hero-chips">
+          <div data-id="269" class="hero-chip">🎵 Addlyft Audio · 15s</div>
+          <div data-id="270" class="hero-chip">🎬 Addlyft Video · 10s</div>
+          <div data-id="271" class="hero-chip">📱 Addlyft Social</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============================================================
+         ADDLYFT GO CHANNELS — Edit features and prices here
+         ============================================================ -->
+
+    <!-- CHANNEL 1: ADDLYFT AUDIO (white bg) -->
+    <section data-id="272" class="bg-white section-padding">
+      <div data-id="273" class="container">
+        <div data-id="274" class="channel-section">
+          <div data-id="275" class="channel-content animate-on-scroll">
+            <div data-id="276" class="pill pill-green">🎵 ADDLYFT AUDIO</div>
+            <div data-id="277" class="price-badge">$39.99 / month</div>
+            <!-- EDIT: Audio headline -->
+            <h2 data-id="278">Your Store Has a Voice. Make It Count.</h2>
+            <p data-id="279">Play professional AI-generated ads between every song in your store. Stream curated music your customers love — and your own promotions play automatically, every time.</p>
+            <ul data-id="280" class="feature-list">
+              <li data-id="281"><span data-id="282" class="check green"><i data-id="283" data-lucide="check" class="w-3 h-3"></i></span>AI-generated 15-second audio ad scripts</li>
+              <li data-id="284"><span data-id="285" class="check green"><i data-id="286" data-lucide="check" class="w-3 h-3"></i></span>Background music streaming — choose your genre</li>
+              <li data-id="287"><span data-id="288" class="check green"><i data-id="289" data-lucide="check" class="w-3 h-3"></i></span>Your ad plays automatically after every song</li>
+              <li data-id="290"><span data-id="291" class="check green"><i data-id="292" data-lucide="check" class="w-3 h-3"></i></span>Set your own frequency, duration &amp; schedule</li>
+              <li data-id="293"><span data-id="294" class="check green"><i data-id="295" data-lucide="check" class="w-3 h-3"></i></span>POS integration for real-time promotions</li>
+              <li data-id="296"><span data-id="297" class="check green"><i data-id="298" data-lucide="check" class="w-3 h-3"></i></span>Offline mode — works without internet</li>
+              <li data-id="299"><span data-id="300" class="check green"><i data-id="301" data-lucide="check" class="w-3 h-3"></i></span>30 AI script generations per month</li>
+              <li data-id="302"><span data-id="303" class="check green"><i data-id="304" data-lucide="check" class="w-3 h-3"></i></span>7-day free trial included</li>
+            </ul>
+            <div data-id="305" class="hw-note"><i data-id="306" data-lucide="info" class="w-4 h-4"></i> Requires one-time speaker or tablet purchase</div>
+            <button data-id="307" class="btn btn-green">Try Addlyft Audio Free</button>
+          </div>
+          <!-- Audio Visualizer Mockup -->
+          <div data-id="308" class="animate-on-scroll">
+            <div data-id="309" class="audio-mockup">
+              <div data-id="310" class="audio-mockup-label">🎵 Now Playing in Your Store</div>
+              <div data-id="311" class="audio-player-mock">
+                <div data-id="312" class="song">Summer Vibes Mix</div>
+                <div data-id="313" class="artist">Addlyft Curated Playlist</div>
+                <div data-id="314" class="progress-bar"><div data-id="315" class="progress-fill"></div></div>
+                <div data-id="316" class="progress-times"><span data-id="317">2:14</span><span data-id="318">3:32</span></div>
+              </div>
+              <div data-id="319" class="wave-bars">
+                <div data-id="320" class="wave-bar"></div><div data-id="321" class="wave-bar"></div><div data-id="322" class="wave-bar"></div>
+                <div data-id="323" class="wave-bar"></div><div data-id="324" class="wave-bar"></div><div data-id="325" class="wave-bar"></div>
+                <div data-id="326" class="wave-bar"></div><div data-id="327" class="wave-bar"></div><div data-id="328" class="wave-bar"></div>
+                <div data-id="329" class="wave-bar"></div>
+              </div>
+              <div data-id="330" class="ad-notification">📢 Your ad plays after this song</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- CHANNEL 2: ADDLYFT SOCIAL (surface bg) -->
+    <section data-id="331" class="bg-surface section-padding">
+      <div data-id="332" class="container">
+        <div data-id="333" class="channel-section reverse">
+          <!-- Phone Mockup -->
+          <div data-id="334" class="animate-on-scroll" style="display:flex;justify-content:center;">
+            <div data-id="335" class="phone-mockup">
+              <div data-id="336" class="phone-screen">
+                <div data-id="337" class="phone-header">
+                  <div data-id="338" class="phone-avatar"><i data-id="339" data-lucide="user" class="w-4 h-4" style="color:var(--go-green);"></i></div>
+                  <span data-id="340" class="phone-handle">@yourstore</span>
+                </div>
+                <div data-id="341" class="phone-image"></div>
+                <div data-id="342" class="phone-caption">🔥 Weekend Special! Get 20% off all items this Saturday &amp; Sunday. Limited time only — don't miss out!</div>
+                <div data-id="343" class="phone-actions">
+                  <i data-id="344" data-lucide="heart" class="w-4 h-4"></i>
+                  <i data-id="345" data-lucide="message-circle" class="w-4 h-4"></i>
+                  <i data-id="346" data-lucide="send" class="w-4 h-4"></i>
+                </div>
+                <div data-id="347" class="phone-posted"><i data-id="348" data-lucide="check-circle" class="w-3 h-3"></i> Posted automatically by Addlyft</div>
+              </div>
+            </div>
+          </div>
+          <div data-id="349" class="channel-content animate-on-scroll">
+            <div data-id="350" class="pill pill-green">📱 ADDLYFT SOCIAL</div>
+            <div data-id="351" class="price-badge">$39.99 / month</div>
+            <!-- EDIT: Social headline -->
+            <h2 data-id="352">Turn Any Promotion Into a Viral Post in Seconds.</h2>
+            <p data-id="353">Upload a photo, describe your promotion in plain English, and Addlyft's AI creates a scroll-stopping social media post — then publishes it to Facebook and Instagram automatically.</p>
+            <ul data-id="354" class="feature-list">
+              <li data-id="355"><span data-id="356" class="check green"><i data-id="357" data-lucide="check" class="w-3 h-3"></i></span>Upload a photo + describe your promo in plain words</li>
+              <li data-id="358"><span data-id="359" class="check green"><i data-id="360" data-lucide="check" class="w-3 h-3"></i></span>AI instantly crafts a professional social post</li>
+              <li data-id="361"><span data-id="362" class="check green"><i data-id="363" data-lucide="check" class="w-3 h-3"></i></span>Auto-posts to Facebook &amp; Instagram on schedule</li>
+              <li data-id="364"><span data-id="365" class="check green"><i data-id="366" data-lucide="check" class="w-3 h-3"></i></span>Manual or automatic publishing — your choice</li>
+              <li data-id="367"><span data-id="368" class="check green"><i data-id="369" data-lucide="check" class="w-3 h-3"></i></span>Smart alerts when no content is scheduled</li>
+              <li data-id="370"><span data-id="371" class="check green"><i data-id="372" data-lucide="check" class="w-3 h-3"></i></span>Works for sales, events, new products, anything</li>
+              <li data-id="373"><span data-id="374" class="check green"><i data-id="375" data-lucide="check" class="w-3 h-3"></i></span>30 AI post generations per month</li>
+            </ul>
+            <button data-id="376" class="btn btn-green">Try Addlyft Social Free</button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- CHANNEL 3: ADDLYFT VIDEO (white bg) -->
+    <section data-id="377" class="bg-white section-padding">
+      <div data-id="378" class="container">
+        <div data-id="379" class="channel-section">
+          <div data-id="380" class="channel-content animate-on-scroll">
+            <div data-id="381" class="pill pill-green">🎬 ADDLYFT VIDEO</div>
+            <div data-id="382" class="price-badge">$39.99 / month</div>
+            <div data-id="383" class="free-badge-inline">📺 FREE TV Device Included</div>
+            <!-- EDIT: Video headline -->
+            <h2 data-id="384">Your Store TV Just Got a Whole Lot Smarter.</h2>
+            <p data-id="385">Display AI-generated 10-second video ads on your store screens. Promote anything — sales, menus, events — and earn extra revenue when advertisers pay to play their ads on your screen.</p>
+            <ul data-id="386" class="feature-list">
+              <li data-id="387"><span data-id="388" class="check green"><i data-id="389" data-lucide="check" class="w-3 h-3"></i></span>AI-generated 10-second video ad scripts</li>
+              <li data-id="390"><span data-id="391" class="check green"><i data-id="392" data-lucide="check" class="w-3 h-3"></i></span>Digital signage &amp; promotional content</li>
+              <li data-id="393"><span data-id="394" class="check green"><i data-id="395" data-lucide="check" class="w-3 h-3"></i></span>Earn revenue hosting Addlyft Reach cross-ads</li>
+              <li data-id="396"><span data-id="397" class="check green"><i data-id="398" data-lucide="check" class="w-3 h-3"></i></span>Real-time content scheduling &amp; management</li>
+              <li data-id="399"><span data-id="400" class="check green"><i data-id="401" data-lucide="check" class="w-3 h-3"></i></span>Perfect for menus, promotions &amp; announcements</li>
+              <li data-id="402"><span data-id="403" class="check green"><i data-id="404" data-lucide="check" class="w-3 h-3"></i></span>30 AI video script generations per month</li>
+            </ul>
+            <button data-id="405" class="btn btn-green">Try Addlyft Video Free</button>
+          </div>
+          <!-- TV Mockup -->
+          <div data-id="406" class="animate-on-scroll">
+            <div data-id="407" class="tv-mockup">
+              <div data-id="408" class="tv-frame" style="position:relative;">
+                <span data-id="409" class="tv-free-sticker">FREE DEVICE</span>
+                <div data-id="410" class="tv-bezel-top"><span data-id="411" class="tv-camera"></span></div>
+                <div data-id="412" class="tv-screen">
+                  <i data-id="413" data-lucide="play" class="tv-play"></i>
+                  <span data-id="414" class="tv-badge-10s">10s AD</span>
+                  <div data-id="415" class="tv-overlay">WEEKEND SALE — 20% OFF</div>
+                </div>
+              </div>
+              <div data-id="416" class="tv-stand"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============================================================
+         REVENUE & REFERRAL — Edit dollar amounts and examples
+         ============================================================ -->
+    <section data-id="417" class="bg-dark section-padding">
+      <div data-id="418" class="container">
+        <div data-id="419" class="revenue-grid animate-on-scroll">
+          <!-- EDIT: Guaranteed revenue amount -->
+          <div data-id="420">
+            <div data-id="421" class="revenue-big gradient-text-green">$49</div>
+            <div data-id="422" class="revenue-label">/mo Guaranteed Revenue</div>
+            <div data-id="423" class="revenue-divider"></div>
+            <p data-id="424" style="color:var(--text-white-muted);margin-bottom:0;">Every Addlyft Go store receives $49/month guaranteed from Addlyft — just for being part of the network. This is your baseline passive income, paid every month regardless of activity.</p>
+            <div data-id="425" class="revenue-chip green">$49 × 12 = $588/year baseline income</div>
+          </div>
+          <!-- EDIT: Referral commission percentage -->
+          <div data-id="426">
+            <div data-id="427" class="revenue-big gradient-text-purple">40%</div>
+            <div data-id="428" class="revenue-label">Referral Commission</div>
+            <div data-id="429" class="revenue-divider"></div>
+            <p data-id="430" style="color:var(--text-white-muted);margin-bottom:0;">Refer any business to Addlyft Reach using your unique code. Earn 40% of their total monthly ad spend — automatically, every month they stay active.</p>
+            <div data-id="431" class="example-box">📊 Example: Advertiser spends $390/mo → <strong data-id="432">You earn $156/mo</strong> extra</div>
+          </div>
+        </div>
+        <div data-id="433" class="referral-flow animate-on-scroll">
+          <div data-id="434" class="referral-step"><div data-id="435" class="referral-num">1</div><div data-id="436" class="referral-label">Share Code</div></div>
+          <div data-id="437" class="referral-arrow">→→</div>
+          <div data-id="438" class="referral-step"><div data-id="439" class="referral-num">2</div><div data-id="440" class="referral-label">They Sign Up</div></div>
+          <div data-id="441" class="referral-arrow">→→</div>
+          <div data-id="442" class="referral-step"><div data-id="443" class="referral-num">3</div><div data-id="444" class="referral-label">They Advertise</div></div>
+          <div data-id="445" class="referral-arrow">→→</div>
+          <div data-id="446" class="referral-step"><div data-id="447" class="referral-num">4</div><div data-id="448" class="referral-label">You Earn 40%</div></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============================================================
+         AI TOP-UPS — Edit generation counts and prices
+         ============================================================ -->
+    <section data-id="449" class="bg-surface section-padding">
+      <div data-id="450" class="container">
+        <div data-id="451" class="section-header animate-on-scroll">
+          <h3 data-id="452">Need More Than 30 AI Generations?</h3>
+          <p data-id="453">Every channel includes 30 generations/month. Buy top-up packs anytime — no subscription needed.</p>
+        </div>
+        <div data-id="454" class="topup-grid animate-stagger">
+          <!-- EDIT: Top-up pack prices -->
+          <div data-id="455" class="card card-sm topup-card animate-on-scroll">
+            <h4 data-id="456">10 Extra Generations</h4>
+            <div data-id="457" class="price-big">$9.90</div>
+            <div data-id="458" class="per-unit">$0.99/generation</div>
+          </div>
+          <div data-id="459" class="card card-sm topup-card animate-on-scroll" style="border:2px solid var(--go-green);">
+            <div data-id="460" class="pill pill-green-solid" style="margin-bottom:12px;">Save 20%</div>
+            <h4 data-id="461">25 Extra Generations</h4>
+            <div data-id="462" class="price-big">$19.99</div>
+            <div data-id="463" class="per-unit">$0.80/generation</div>
+          </div>
+          <div data-id="464" class="card card-sm topup-card animate-on-scroll" style="border:2px solid var(--reach-purple);">
+            <div data-id="465" class="pill pill-purple-solid" style="margin-bottom:12px;">Save 30%</div>
+            <h4 data-id="466">50 Extra Generations</h4>
+            <div data-id="467" class="price-big">$34.99</div>
+            <div data-id="468" class="per-unit">$0.70/generation</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============================================================
+         GO PRICING — Edit plan names, prices, and features
+         ============================================================ -->
+    <section data-id="469" class="bg-white section-padding">
+      <div data-id="470" class="container">
+        <div data-id="471" class="section-header animate-on-scroll">
+          <div data-id="472" class="pill pill-green">ADDLYFT GO PLANS</div>
+          <h2 data-id="473">Simple Plans. Every One Includes a 7-Day Free Trial.</h2>
+        </div>
+        <div data-id="474" class="pricing-grid animate-stagger" id="go-pricing-cards">
+          <!-- EDIT: Single Channel plan -->
+          <div data-id="475" class="pricing-card animate-on-scroll">
+            <div data-id="476" class="pill pill-green" style="margin-bottom:16px;">SINGLE CHANNEL</div>
+            <div data-id="477" class="pricing-price">
+              <span data-id="478" class="amount go-price" data-base="39.99">$39.99</span><span data-id="479" class="period">/mo</span>
+            </div>
+            <p data-id="480" style="font-size:14px;color:var(--text-muted);margin:8px 0;">Choose Audio, Video, or Social</p>
+            <div data-id="481" class="divider"></div>
+            <ul data-id="482" class="feature-list">
+              <li data-id="483"><span data-id="484" class="check green"><i data-id="485" data-lucide="check" class="w-3 h-3"></i></span>Choose one channel (Audio, Video, or Social)</li>
+              <li data-id="486"><span data-id="487" class="check green"><i data-id="488" data-lucide="check" class="w-3 h-3"></i></span>30 AI generations / month</li>
+              <li data-id="489"><span data-id="490" class="check green"><i data-id="491" data-lucide="check" class="w-3 h-3"></i></span>Ad scheduling &amp; frequency control</li>
+              <li data-id="492"><span data-id="493" class="check green"><i data-id="494" data-lucide="check" class="w-3 h-3"></i></span>Analytics dashboard</li>
+              <li data-id="495"><span data-id="496" class="check green"><i data-id="497" data-lucide="check" class="w-3 h-3"></i></span>$49/mo guaranteed revenue from Addlyft</li>
+              <li data-id="498"><span data-id="499" class="check green"><i data-id="500" data-lucide="check" class="w-3 h-3"></i></span>7-day free trial</li>
+            </ul>
+            <button data-id="501" class="btn btn-outline-green btn-full">Start Free Trial</button>
+            <p data-id="502" class="pricing-note">No credit card required</p>
+          </div>
+          <!-- EDIT: Dual Channel plan -->
+          <div data-id="503" class="pricing-card popular animate-on-scroll">
+            <div data-id="504" class="top-badge pill-green-solid" style="padding:6px 20px;border-radius:var(--radius-pill);font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:0.06em;">MOST POPULAR</div>
+            <div data-id="505" class="pill pill-green" style="margin-bottom:16px;margin-top:8px;">DUAL CHANNEL</div>
+            <div data-id="506" class="pricing-price">
+              <span data-id="507" class="amount go-price" data-base="79.99">$79.99</span><span data-id="508" class="period">/mo</span>
+            </div>
+            <p data-id="509" style="font-size:14px;color:var(--text-muted);margin:8px 0;">Any two channels</p>
+            <div data-id="510" class="divider"></div>
+            <ul data-id="511" class="feature-list">
+              <li data-id="512"><span data-id="513" class="check green"><i data-id="514" data-lucide="check" class="w-3 h-3"></i></span>Choose any two channels</li>
+              <li data-id="515"><span data-id="516" class="check green"><i data-id="517" data-lucide="check" class="w-3 h-3"></i></span>30 AI generations / channel / month (60 total)</li>
+              <li data-id="518"><span data-id="519" class="check green"><i data-id="520" data-lucide="check" class="w-3 h-3"></i></span>Cross-channel campaigns</li>
+              <li data-id="521"><span data-id="522" class="check green"><i data-id="523" data-lucide="check" class="w-3 h-3"></i></span>Priority customer support</li>
+              <li data-id="524"><span data-id="525" class="check green"><i data-id="526" data-lucide="check" class="w-3 h-3"></i></span>$49/mo guaranteed revenue</li>
+              <li data-id="527"><span data-id="528" class="check green"><i data-id="529" data-lucide="check" class="w-3 h-3"></i></span>7-day free trial</li>
+            </ul>
+            <button data-id="530" class="btn btn-green btn-full">Start Free Trial</button>
+          </div>
+          <!-- EDIT: Full Bundle plan -->
+          <div data-id="531" class="pricing-card dark-card animate-on-scroll">
+            <div data-id="532" class="top-badge pill-gradient" style="padding:6px 20px;border-radius:var(--radius-pill);font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:0.06em;">BEST VALUE</div>
+            <div data-id="533" class="pill pill-dark" style="margin-bottom:16px;margin-top:8px;">FULL BUNDLE</div>
+            <div data-id="534" class="pricing-price">
+              <span data-id="535" class="amount go-price" data-base="99.99" style="color:#fff;">$99.99</span><span data-id="536" class="period">/mo</span>
+            </div>
+            <p data-id="537" style="font-size:14px;color:var(--text-white-muted);margin:8px 0;">Audio + Video + Social — all three</p>
+            <div data-id="538" class="divider"></div>
+            <ul data-id="539" class="feature-list">
+              <li data-id="540"><span data-id="541" class="check white"><i data-id="542" data-lucide="check" class="w-3 h-3"></i></span><span data-id="543" style="color:var(--text-white-muted);">All three channels</span></li>
+              <li data-id="544"><span data-id="545" class="check white"><i data-id="546" data-lucide="check" class="w-3 h-3"></i></span><span data-id="547" style="color:var(--text-white-muted);">90 AI generations / month total</span></li>
+              <li data-id="548"><span data-id="549" class="check white"><i data-id="550" data-lucide="check" class="w-3 h-3"></i></span><span data-id="551" style="color:var(--text-white-muted);">All hardware included (speaker + FREE TV device)</span></li>
+              <li data-id="552"><span data-id="553" class="check white"><i data-id="554" data-lucide="check" class="w-3 h-3"></i></span><span data-id="555" style="color:var(--text-white-muted);">Dedicated account manager</span></li>
+              <li data-id="556"><span data-id="557" class="check white"><i data-id="558" data-lucide="check" class="w-3 h-3"></i></span><span data-id="559" style="color:var(--text-white-muted);">$49/mo guaranteed revenue</span></li>
+              <li data-id="560"><span data-id="561" class="check white"><i data-id="562" data-lucide="check" class="w-3 h-3"></i></span><span data-id="563" style="color:var(--text-white-muted);">7-day free trial</span></li>
+            </ul>
+            <button data-id="564" class="btn btn-gradient btn-full">Start Free Trial</button>
+          </div>
+        </div>
+        <p data-id="565" class="text-center animate-on-scroll" style="margin:32px auto 0;font-size:14px;color:var(--text-muted);">💡 AI Top-Up Packs: 10 extra = $9.90 · 25 extra = $19.99 (save 20%) · 50 extra = $34.99 (save 30%)</p>
+      </div>
+    </section>
+  </div>
+
+  <!-- ============================================================
+       PAGE 3: ADDLYFT REACH
+       ============================================================ -->
+  <div data-id="566" class="page" id="page-reach">
+
+    <!-- ============================================================
+         REACH HERO — Edit headline, subheadline, badge, and CTAs
+         ============================================================ -->
+    <section data-id="567" class="hero-dark small">
+      <div data-id="568" class="hero-mesh">
+        <div data-id="569" class="orb" style="top:-10%;left:-10%;width:600px;height:500px;background:rgba(109,40,217,0.25);"></div>
+        <div data-id="570" class="orb" style="top:10%;right:-5%;width:500px;height:400px;background:rgba(109,40,217,0.15);"></div>
+        <div data-id="571" class="orb" style="bottom:-10%;left:30%;width:600px;height:300px;background:rgba(37,99,235,0.1);"></div>
+      </div>
+      <div data-id="572" class="hero-grid"></div>
+      <div data-id="573" class="hero-content">
+        <div data-id="574" class="pill pill-dark" style="backdrop-filter:blur(12px);margin-bottom:24px;">📡 FOR ADVERTISERS</div>
+        <h1 data-id="575">Reach Real Customers. <span data-id="576" class="gradient-text-purple">Inside Real Stores.</span></h1>
+        <p data-id="577" class="sub">Place 15-second audio and 10-second video ads inside hand-picked local retail stores. Choose your stores. Set your frequency. Go live in 48 hours.</p>
+        <div data-id="578" class="hero-btns">
+          <button data-id="579" class="btn btn-purple">Start Advertising</button>
+          <button data-id="580" class="btn btn-outline-white" id="jump-to-estimator">Calculate My Cost</button>
+        </div>
+        <div data-id="581" class="hero-chips">
+          <div data-id="582" class="hero-chip">5 Plans from $29.99/mo</div>
+          <div data-id="583" class="hero-chip">Min. 5 Stores</div>
+          <div data-id="584" class="hero-chip">Up to 50% Volume Discount</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============================================================
+         REACH PRODUCT CARDS — Edit Cross Audio / Cross Video
+         ============================================================ -->
+    <section data-id="585" class="bg-white section-padding">
+      <div data-id="586" class="container">
+        <div data-id="587" class="split-grid animate-stagger">
+          <div data-id="588" class="card animate-on-scroll" style="border-top:4px solid var(--reach-purple);">
+            <div data-id="589" class="icon-circle purple" style="margin-bottom:16px;"><i data-id="590" data-lucide="volume-2" class="w-5 h-5"></i></div>
+            <h3 data-id="591">🔊 Cross Audio</h3>
+            <p data-id="592" style="margin:12px 0;">Your 15-second audio ad plays between songs inside Addlyft network stores. Reach customers while they browse — right at the point of purchase.</p>
+            <ul data-id="593" class="feature-list">
+              <li data-id="594"><span data-id="595" class="check purple"><i data-id="596" data-lucide="check" class="w-3 h-3"></i></span>15-second spots</li>
+              <li data-id="597"><span data-id="598" class="check purple"><i data-id="599" data-lucide="check" class="w-3 h-3"></i></span>1–12 plays/day (plan dependent)</li>
+              <li data-id="600"><span data-id="601" class="check purple"><i data-id="602" data-lucide="check" class="w-3 h-3"></i></span>Choose exact store locations</li>
+              <li data-id="603"><span data-id="604" class="check purple"><i data-id="605" data-lucide="check" class="w-3 h-3"></i></span>Standard plan and above</li>
+            </ul>
+            <p data-id="606" style="font-size:14px;font-weight:600;color:var(--reach-purple);">Included in Standard+ plans</p>
+          </div>
+          <div data-id="607" class="card animate-on-scroll" style="border-top:4px solid var(--reach-purple);">
+            <div data-id="608" class="icon-circle purple" style="margin-bottom:16px;"><i data-id="609" data-lucide="monitor" class="w-5 h-5"></i></div>
+            <h3 data-id="610">📺 Cross Video</h3>
+            <p data-id="611" style="margin:12px 0;">Your 10-second video ad displays on in-store TV screens and digital signage. Capture visual attention at the exact moment buying decisions are made.</p>
+            <ul data-id="612" class="feature-list">
+              <li data-id="613"><span data-id="614" class="check purple"><i data-id="615" data-lucide="check" class="w-3 h-3"></i></span>10-second slots</li>
+              <li data-id="616"><span data-id="617" class="check purple"><i data-id="618" data-lucide="check" class="w-3 h-3"></i></span>5–90 plays/day</li>
+              <li data-id="619"><span data-id="620" class="check purple"><i data-id="621" data-lucide="check" class="w-3 h-3"></i></span>Choose exact store locations</li>
+              <li data-id="622"><span data-id="623" class="check purple"><i data-id="624" data-lucide="check" class="w-3 h-3"></i></span>Available in all plans</li>
+            </ul>
+            <p data-id="625" style="font-size:14px;font-weight:600;color:var(--reach-purple);">Available in all plans from Base</p>
+          </div>
+        </div>
+        <p data-id="626" class="text-center animate-on-scroll" style="margin:32px auto 0;font-size:14px;color:var(--text-muted);">📦 Subscribe to a plan and get both Cross Audio + Cross Video together — no separate subscriptions needed.</p>
+      </div>
+    </section>
+
+    <!-- ============================================================
+         ADDLYFT REACH PLANS — Edit plans, prices, and features here
+         ============================================================ -->
+    <section data-id="627" class="bg-surface section-padding">
+      <div data-id="628" class="container">
+        <div data-id="629" class="section-header animate-on-scroll">
+          <div data-id="630" class="pill pill-purple">CHOOSE YOUR PLAN</div>
+          <h2 data-id="631">Five Plans. Built for Every Advertiser.</h2>
+          <p data-id="632">Each plan covers 5 stores as your base. Add more stores at a per-store rate. Volume discounts up to 50% apply automatically.</p>
+        </div>
+        <div data-id="633" class="reach-grid animate-stagger">
+          <!-- EDIT: Base plan -->
+          <div data-id="634" class="reach-card animate-on-scroll">
+            <div data-id="635" class="pill pill-purple" style="margin-bottom:12px;">BASE</div>
+            <p data-id="636" class="per-store">$5.99/store/mo (base 5 stores)</p>
+            <div data-id="637" class="pricing-price"><span data-id="638" class="amount">$29.99</span><span data-id="639" class="period">/mo</span></div>
+            <div data-id="640" class="divider"></div>
+            <div data-id="641" class="feature-item">📺 5 video plays/day per store</div>
+            <div data-id="642" class="feature-item" style="color:var(--text-muted);">❌ Audio not included</div>
+            <div data-id="643" class="feature-item">🏪 Minimum 5 stores</div>
+            <div data-id="644" class="feature-item">📊 Basic analytics</div>
+            <div data-id="645" style="flex:1;"></div>
+            <button data-id="646" class="btn btn-outline-purple btn-full" style="margin-top:20px;">Get Started</button>
+          </div>
+          <!-- EDIT: Standard plan -->
+          <div data-id="647" class="reach-card animate-on-scroll">
+            <div data-id="648" class="pill pill-purple" style="margin-bottom:12px;">STANDARD</div>
+            <p data-id="649" class="per-store">$19.99/store/mo</p>
+            <div data-id="650" class="pricing-price"><span data-id="651" class="amount">$99.99</span><span data-id="652" class="period">/mo</span></div>
+            <div data-id="653" class="divider"></div>
+            <div data-id="654" class="feature-item">📺 10 video plays/day per store</div>
+            <div data-id="655" class="feature-item">🔊 1 audio play/day per store</div>
+            <div data-id="656" class="feature-item">🏪 Minimum 5 stores</div>
+            <div data-id="657" class="feature-item">📊 Advanced analytics</div>
+            <div data-id="658" style="flex:1;"></div>
+            <button data-id="659" class="btn btn-outline-purple btn-full" style="margin-top:20px;">Get Started</button>
+          </div>
+          <!-- EDIT: Plus plan (Most Popular) -->
+          <div data-id="660" class="reach-card popular animate-on-scroll">
+            <div data-id="661" class="top-badge pill-purple-solid" style="padding:6px 20px;border-radius:var(--radius-pill);font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:0.06em;">MOST POPULAR</div>
+            <div data-id="662" class="pill pill-purple" style="margin-bottom:12px;margin-top:8px;">PLUS</div>
+            <p data-id="663" class="per-store">$39.99/store/mo</p>
+            <div data-id="664" class="pricing-price"><span data-id="665" class="amount">$199.99</span><span data-id="666" class="period">/mo</span></div>
+            <div data-id="667" class="divider"></div>
+            <div data-id="668" class="feature-item">📺 25 video plays/day per store</div>
+            <div data-id="669" class="feature-item">🔊 3 audio plays/day per store</div>
+            <div data-id="670" class="feature-item">🤖 1 AI token/month</div>
+            <div data-id="671" class="feature-item">🏪 Minimum 5 stores</div>
+            <div data-id="672" class="feature-item">📊 Full analytics + reporting</div>
+            <div data-id="673" style="flex:1;"></div>
+            <button data-id="674" class="btn btn-purple btn-full" style="margin-top:20px;">Get Started</button>
+          </div>
+          <!-- EDIT: Premium plan -->
+          <div data-id="675" class="reach-card animate-on-scroll">
+            <div data-id="676" class="pill pill-purple" style="margin-bottom:12px;">PREMIUM</div>
+            <p data-id="677" class="per-store">$59.99/store/mo</p>
+            <div data-id="678" class="pricing-price"><span data-id="679" class="amount">$299.99</span><span data-id="680" class="period">/mo</span></div>
+            <div data-id="681" class="divider"></div>
+            <div data-id="682" class="feature-item">📺 40 video plays/day per store</div>
+            <div data-id="683" class="feature-item">🔊 5 audio plays/day per store</div>
+            <div data-id="684" class="feature-item">🤖 2 AI tokens/month</div>
+            <div data-id="685" class="feature-item">🏪 Minimum 5 stores</div>
+            <div data-id="686" class="feature-item">📊 Priority placement</div>
+            <div data-id="687" style="flex:1;"></div>
+            <button data-id="688" class="btn btn-outline-purple btn-full" style="margin-top:20px;">Get Started</button>
+          </div>
+          <!-- EDIT: Executive plan -->
+          <div data-id="689" class="reach-card dark-card animate-on-scroll" style="background:var(--bg-dark);color:#fff;">
+            <div data-id="690" class="pill pill-dark" style="margin-bottom:12px;">EXECUTIVE</div>
+            <p data-id="691" class="per-store">$119.99/store/mo</p>
+            <div data-id="692" class="pricing-price"><span data-id="693" class="amount" style="color:#fff;">$599.99</span><span data-id="694" class="period" style="color:var(--text-white-muted);">/mo</span></div>
+            <div data-id="695" class="divider" style="background:rgba(255,255,255,0.1);"></div>
+            <div data-id="696" class="feature-item" style="color:var(--text-white-muted);">📺 90 video plays/day per store</div>
+            <div data-id="697" class="feature-item" style="color:var(--text-white-muted);">🔊 12 audio plays/day per store</div>
+            <div data-id="698" class="feature-item" style="color:var(--text-white-muted);">🤖 4 AI tokens/month</div>
+            <div data-id="699" class="feature-item" style="color:var(--text-white-muted);">🏪 Minimum 5 stores</div>
+            <div data-id="700" class="feature-item" style="color:var(--text-white-muted);">👤 Dedicated account manager</div>
+            <div data-id="701" style="flex:1;"></div>
+            <button data-id="702" class="btn btn-outline-white btn-full" style="margin-top:20px;">Contact Sales</button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============================================================
+         VOLUME DISCOUNTS TABLE — Edit discount tiers here
+         ============================================================ -->
+    <section data-id="703" class="bg-white section-padding">
+      <div data-id="704" class="container">
+        <div data-id="705" class="section-header animate-on-scroll">
+          <h3 data-id="706">More Stores = Bigger Discounts</h3>
+          <p data-id="707">Volume discounts stack automatically. No promo code needed.</p>
+        </div>
+        <div data-id="708" class="overflow-x animate-on-scroll">
+          <div data-id="709" class="volume-table-wrap">
+            <table data-id="710" class="volume-table">
+              <thead data-id="711">
+                <tr data-id="712">
+                  <th data-id="713">Number of Stores</th>
+                  <th data-id="714">Discount</th>
+                  <th data-id="715">Example (Plus Plan $199.99)</th>
+                </tr>
+              </thead>
+              <tbody data-id="716">
+                <!-- EDIT: Volume discount tiers -->
+                <tr data-id="717"><td data-id="718">5 stores</td><td data-id="719">0%</td><td data-id="720">$199.99/mo</td></tr>
+                <tr data-id="721"><td data-id="722">10 stores</td><td data-id="723">5%</td><td data-id="724">$379.98/mo</td></tr>
+                <tr data-id="725"><td data-id="726">20 stores</td><td data-id="727">10%</td><td data-id="728">$719.96/mo</td></tr>
+                <tr data-id="729"><td data-id="730">30 stores</td><td data-id="731">15%</td><td data-id="732">$1,019.94/mo</td></tr>
+                <tr data-id="733"><td data-id="734">50 stores</td><td data-id="735">20%</td><td data-id="736">$1,599.90/mo</td></tr>
+                <tr data-id="737"><td data-id="738">75 stores</td><td data-id="739">35%</td><td data-id="740">$1,949.85/mo</td></tr>
+                <tr data-id="741" class="highlight"><td data-id="742">100 stores</td><td data-id="743">50%</td><td data-id="744">$1,999.90/mo <span data-id="745" class="pill pill-purple-solid" style="margin-left:8px;font-size:10px;padding:2px 8px;">BEST VALUE</span></td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+        <div data-id="746" class="info-box purple animate-on-scroll" style="max-width:800px;margin:24px auto 0;">
+          📐 <strong data-id="747">How pricing works:</strong> Each plan's price covers a base of 5 stores. For more stores, you pay (plan price ÷ 5) × your store count, then your volume discount is applied automatically.
+        </div>
+      </div>
+    </section>
+
+    <!-- ============================================================
+         COST ESTIMATOR — JavaScript pricing calculator
+         Search for "EDIT PRICING DATA" in JS to find the data
+         ============================================================ -->
+    <section data-id="748" class="bg-surface section-padding" id="cost-estimator-section">
+      <div data-id="749" class="container">
+        <div data-id="750" class="section-header animate-on-scroll">
+          <h2 data-id="751">🧮 Estimate Your Campaign Cost</h2>
+          <p data-id="752">Real-time pricing. Adjust your plan and store count to see your exact monthly spend.</p>
+        </div>
+        <div data-id="753" class="estimator-card animate-on-scroll">
+          <div data-id="754" class="estimator-label">1. Choose Your Plan</div>
+          <div data-id="755" class="plan-pills" id="plan-pills">
+            <button data-id="756" class="plan-pill" data-plan="base">Base</button>
+            <button data-id="757" class="plan-pill" data-plan="standard">Standard</button>
+            <button data-id="758" class="plan-pill active" data-plan="plus">Plus</button>
+            <button data-id="759" class="plan-pill" data-plan="premium">Premium</button>
+            <button data-id="760" class="plan-pill" data-plan="executive">Executive</button>
+          </div>
+          <div data-id="761" class="estimator-label">2. Number of Stores (minimum 5)</div>
+          <div data-id="762" class="store-control">
+            <button data-id="763" class="store-btn" id="store-minus">−</button>
+            <div data-id="764" class="store-count" id="store-count-display">5</div>
+            <button data-id="765" class="store-btn" id="store-plus">+</button>
+          </div>
+          <input data-id="766" type="range" min="5" max="200" step="5" value="5" class="store-slider" id="store-slider" aria-label="Number of stores">
+          <div data-id="767" class="result-card" id="estimator-result">
+            <!-- Populated by JS -->
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============================================================
+         HOW IT WORKS FOR ADVERTISERS — Edit steps here
+         ============================================================ -->
+    <section data-id="768" class="bg-white section-padding">
+      <div data-id="769" class="container">
+        <div data-id="770" class="section-header animate-on-scroll">
+          <h2 data-id="771">How It Works</h2>
+        </div>
+        <div data-id="772" class="steps-grid animate-stagger">
+          <div data-id="773" class="step-card animate-on-scroll">
+            <div data-id="774" class="step-num purple">1</div>
+            <h4 data-id="775">Create Account</h4>
+            <p data-id="776">Sign up for Addlyft Reach. Quick setup, no complex onboarding.</p>
+          </div>
+          <div data-id="777" class="step-card animate-on-scroll">
+            <div data-id="778" class="step-num purple">2</div>
+            <h4 data-id="779">Choose Your Plan</h4>
+            <p data-id="780">Pick Base, Standard, Plus, Premium, or Executive based on how many plays per day you need.</p>
+          </div>
+          <div data-id="781" class="step-card animate-on-scroll">
+            <div data-id="782" class="step-num purple">3</div>
+            <h4 data-id="783">Pick Your Stores</h4>
+            <p data-id="784">Browse the Addlyft network. Hand-select at least 5 stores where your ad should play.</p>
+          </div>
+          <div data-id="785" class="step-card animate-on-scroll">
+            <div data-id="786" class="step-num purple">4</div>
+            <h4 data-id="787">Go Live in 48h</h4>
+            <p data-id="788">Your ads start playing within 48 hours. Track performance in real-time.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+  </div>
+
+  <!-- ============================================================
+       PAGE 4: PRICING
+       Full pricing for both products side by side
+       ============================================================ -->
+  <div data-id="789" class="page" id="page-pricing">
+    <section data-id="790" class="bg-white" style="padding:140px 0 40px;">
+      <div data-id="791" class="container">
+        <div data-id="792" class="section-header">
+          <div data-id="793" class="pill pill-green">PRICING</div>
+          <h1 data-id="794">Transparent Pricing. No Surprises.</h1>
+          <p data-id="795">Two products, two audiences. Choose what fits — upgrade or cancel anytime.</p>
+        </div>
+        <div data-id="796" class="text-center">
+          <div data-id="797" class="tab-toggle" id="pricing-tabs">
+            <button data-id="798" class="tab-btn active" data-tab="pricing-go">🏪 Addlyft Go</button>
+            <button data-id="799" class="tab-btn" data-tab="pricing-reach">📡 Addlyft Reach</button>
+          </div>
+        </div>
+
+        <!-- GO TAB -->
+        <div data-id="800" class="tab-content active" id="pricing-go">
+          <!-- Monthly / Annual toggle -->
+          <div data-id="801" class="period-toggle" id="period-toggle">
+            <span data-id="802" class="toggle-label active-label" id="monthly-label">Monthly</span>
+            <div data-id="803" class="toggle-switch" id="annual-toggle"><div data-id="804" class="toggle-knob"></div></div>
+            <span data-id="805" class="toggle-label" id="annual-label">Annual</span>
+            <span data-id="806" class="save-badge" id="save-badge" style="display:none;">Save 10%</span>
+          </div>
+          <!-- GO pricing cards (re-rendered) -->
+          <div data-id="807" class="pricing-grid" id="pricing-go-cards">
+            <div data-id="808" class="pricing-card">
+              <div data-id="809" class="pill pill-green" style="margin-bottom:16px;">SINGLE CHANNEL</div>
+              <div data-id="810" class="pricing-price"><span data-id="811" class="amount go-price-page" data-base="39.99">$39.99</span><span data-id="812" class="period">/mo</span></div>
+              <p data-id="813" style="font-size:14px;color:var(--text-muted);margin:8px 0;">Choose Audio, Video, or Social</p>
+              <div data-id="814" class="divider"></div>
+              <ul data-id="815" class="feature-list">
+                <li data-id="816"><span data-id="817" class="check green"><i data-id="818" data-lucide="check" class="w-3 h-3"></i></span>Choose one channel</li>
+                <li data-id="819"><span data-id="820" class="check green"><i data-id="821" data-lucide="check" class="w-3 h-3"></i></span>30 AI generations / month</li>
+                <li data-id="822"><span data-id="823" class="check green"><i data-id="824" data-lucide="check" class="w-3 h-3"></i></span>Ad scheduling &amp; frequency control</li>
+                <li data-id="825"><span data-id="826" class="check green"><i data-id="827" data-lucide="check" class="w-3 h-3"></i></span>Analytics dashboard</li>
+                <li data-id="828"><span data-id="829" class="check green"><i data-id="830" data-lucide="check" class="w-3 h-3"></i></span>$49/mo guaranteed revenue</li>
+                <li data-id="831"><span data-id="832" class="check green"><i data-id="833" data-lucide="check" class="w-3 h-3"></i></span>7-day free trial</li>
+              </ul>
+              <button data-id="834" class="btn btn-outline-green btn-full">Start Free Trial</button>
+            </div>
+            <div data-id="835" class="pricing-card popular">
+              <div data-id="836" class="top-badge pill-green-solid" style="padding:6px 20px;border-radius:var(--radius-pill);font-size:12px;font-weight:700;text-transform:uppercase;">MOST POPULAR</div>
+              <div data-id="837" class="pill pill-green" style="margin-bottom:16px;margin-top:8px;">DUAL CHANNEL</div>
+              <div data-id="838" class="pricing-price"><span data-id="839" class="amount go-price-page" data-base="79.99">$79.99</span><span data-id="840" class="period">/mo</span></div>
+              <p data-id="841" style="font-size:14px;color:var(--text-muted);margin:8px 0;">Any two channels</p>
+              <div data-id="842" class="divider"></div>
+              <ul data-id="843" class="feature-list">
+                <li data-id="844"><span data-id="845" class="check green"><i data-id="846" data-lucide="check" class="w-3 h-3"></i></span>Choose any two channels</li>
+                <li data-id="847"><span data-id="848" class="check green"><i data-id="849" data-lucide="check" class="w-3 h-3"></i></span>60 AI generations / month</li>
+                <li data-id="850"><span data-id="851" class="check green"><i data-id="852" data-lucide="check" class="w-3 h-3"></i></span>Cross-channel campaigns</li>
+                <li data-id="853"><span data-id="854" class="check green"><i data-id="855" data-lucide="check" class="w-3 h-3"></i></span>Priority support</li>
+                <li data-id="856"><span data-id="857" class="check green"><i data-id="858" data-lucide="check" class="w-3 h-3"></i></span>$49/mo guaranteed revenue</li>
+                <li data-id="859"><span data-id="860" class="check green"><i data-id="861" data-lucide="check" class="w-3 h-3"></i></span>7-day free trial</li>
+              </ul>
+              <button data-id="862" class="btn btn-green btn-full">Start Free Trial</button>
+            </div>
+            <div data-id="863" class="pricing-card dark-card">
+              <div data-id="864" class="top-badge pill-gradient" style="padding:6px 20px;border-radius:var(--radius-pill);font-size:12px;font-weight:700;text-transform:uppercase;">BEST VALUE</div>
+              <div data-id="865" class="pill pill-dark" style="margin-bottom:16px;margin-top:8px;">FULL BUNDLE</div>
+              <div data-id="866" class="pricing-price"><span data-id="867" class="amount go-price-page" data-base="99.99" style="color:#fff;">$99.99</span><span data-id="868" class="period">/mo</span></div>
+              <p data-id="869" style="font-size:14px;color:var(--text-white-muted);margin:8px 0;">All three channels</p>
+              <div data-id="870" class="divider"></div>
+              <ul data-id="871" class="feature-list">
+                <li data-id="872"><span data-id="873" class="check white"><i data-id="874" data-lucide="check" class="w-3 h-3"></i></span><span data-id="875" style="color:var(--text-white-muted);">All three channels</span></li>
+                <li data-id="876"><span data-id="877" class="check white"><i data-id="878" data-lucide="check" class="w-3 h-3"></i></span><span data-id="879" style="color:var(--text-white-muted);">90 AI generations / month</span></li>
+                <li data-id="880"><span data-id="881" class="check white"><i data-id="882" data-lucide="check" class="w-3 h-3"></i></span><span data-id="883" style="color:var(--text-white-muted);">All hardware included</span></li>
+                <li data-id="884"><span data-id="885" class="check white"><i data-id="886" data-lucide="check" class="w-3 h-3"></i></span><span data-id="887" style="color:var(--text-white-muted);">Dedicated account manager</span></li>
+                <li data-id="888"><span data-id="889" class="check white"><i data-id="890" data-lucide="check" class="w-3 h-3"></i></span><span data-id="891" style="color:var(--text-white-muted);">$49/mo guaranteed revenue</span></li>
+                <li data-id="892"><span data-id="893" class="check white"><i data-id="894" data-lucide="check" class="w-3 h-3"></i></span><span data-id="895" style="color:var(--text-white-muted);">7-day free trial</span></li>
+              </ul>
+              <button data-id="896" class="btn btn-gradient btn-full">Start Free Trial</button>
+            </div>
+          </div>
+          <!-- Feature comparison table -->
+          <div data-id="897" class="compare-table-wrap">
+            <table data-id="898" class="compare-table">
+              <thead data-id="899">
+                <tr data-id="900"><th data-id="901">Feature</th><th data-id="902">Single</th><th data-id="903">Dual</th><th data-id="904">Bundle</th></tr>
+              </thead>
+              <tbody data-id="905">
+                <tr data-id="906"><td data-id="907">Channels</td><td data-id="908">1</td><td data-id="909">2</td><td data-id="910">3</td></tr>
+                <tr data-id="911"><td data-id="912">AI Generations/mo</td><td data-id="913">30</td><td data-id="914">60</td><td data-id="915">90</td></tr>
+                <tr data-id="916"><td data-id="917">Audio (15s)</td><td data-id="918">Choose</td><td data-id="919">Choose</td><td data-id="920">✅</td></tr>
+                <tr data-id="921"><td data-id="922">Video (10s)</td><td data-id="923">Choose</td><td data-id="924">Choose</td><td data-id="925">✅</td></tr>
+                <tr data-id="926"><td data-id="927">Social</td><td data-id="928">Choose</td><td data-id="929">Choose</td><td data-id="930">✅</td></tr>
+                <tr data-id="931"><td data-id="932">Free TV Device</td><td data-id="933">If Video</td><td data-id="934">If Video</td><td data-id="935">✅</td></tr>
+                <tr data-id="936"><td data-id="937">$49/mo Revenue</td><td data-id="938">✅</td><td data-id="939">✅</td><td data-id="940">✅</td></tr>
+                <tr data-id="941"><td data-id="942">Referral Program</td><td data-id="943">✅</td><td data-id="944">✅</td><td data-id="945">✅</td></tr>
+                <tr data-id="946"><td data-id="947">Priority Support</td><td data-id="948">❌</td><td data-id="949">✅</td><td data-id="950">✅</td></tr>
+                <tr data-id="951"><td data-id="952">Account Manager</td><td data-id="953">❌</td><td data-id="954">❌</td><td data-id="955">✅</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- REACH TAB -->
+        <div data-id="956" class="tab-content" id="pricing-reach">
+          <div data-id="957" class="reach-grid" style="margin-bottom:40px;">
+            <div data-id="958" class="reach-card"><div data-id="959" class="pill pill-purple" style="margin-bottom:12px;">BASE</div><div data-id="960" class="pricing-price"><span data-id="961" class="amount">$29.99</span><span data-id="962" class="period">/mo</span></div><div data-id="963" class="divider"></div><div data-id="964" class="feature-item">📺 5 video/day</div><div data-id="965" class="feature-item" style="color:var(--text-muted);">❌ No audio</div><div data-id="966" class="feature-item">🏪 5 stores</div><div data-id="967" style="flex:1;"></div><button data-id="968" class="btn btn-outline-purple btn-full" style="margin-top:16px;">Get Started</button></div>
+            <div data-id="969" class="reach-card"><div data-id="970" class="pill pill-purple" style="margin-bottom:12px;">STANDARD</div><div data-id="971" class="pricing-price"><span data-id="972" class="amount">$99.99</span><span data-id="973" class="period">/mo</span></div><div data-id="974" class="divider"></div><div data-id="975" class="feature-item">📺 10 video/day</div><div data-id="976" class="feature-item">🔊 1 audio/day</div><div data-id="977" class="feature-item">🏪 5 stores</div><div data-id="978" style="flex:1;"></div><button data-id="979" class="btn btn-outline-purple btn-full" style="margin-top:16px;">Get Started</button></div>
+            <div data-id="980" class="reach-card popular"><div data-id="981" class="top-badge pill-purple-solid" style="padding:6px 20px;border-radius:var(--radius-pill);font-size:12px;font-weight:700;text-transform:uppercase;">MOST POPULAR</div><div data-id="982" class="pill pill-purple" style="margin-bottom:12px;margin-top:8px;">PLUS</div><div data-id="983" class="pricing-price"><span data-id="984" class="amount">$199.99</span><span data-id="985" class="period">/mo</span></div><div data-id="986" class="divider"></div><div data-id="987" class="feature-item">📺 25 video/day</div><div data-id="988" class="feature-item">🔊 3 audio/day</div><div data-id="989" class="feature-item">🤖 1 AI token</div><div data-id="990" class="feature-item">🏪 5 stores</div><div data-id="991" style="flex:1;"></div><button data-id="992" class="btn btn-purple btn-full" style="margin-top:16px;">Get Started</button></div>
+            <div data-id="993" class="reach-card"><div data-id="994" class="pill pill-purple" style="margin-bottom:12px;">PREMIUM</div><div data-id="995" class="pricing-price"><span data-id="996" class="amount">$299.99</span><span data-id="997" class="period">/mo</span></div><div data-id="998" class="divider"></div><div data-id="999" class="feature-item">📺 40 video/day</div><div data-id="1000" class="feature-item">🔊 5 audio/day</div><div data-id="1001" class="feature-item">🤖 2 AI tokens</div><div data-id="1002" class="feature-item">🏪 5 stores</div><div data-id="1003" style="flex:1;"></div><button data-id="1004" class="btn btn-outline-purple btn-full" style="margin-top:16px;">Get Started</button></div>
+            <div data-id="1005" class="reach-card dark-card" style="background:var(--bg-dark);color:#fff;"><div data-id="1006" class="pill pill-dark" style="margin-bottom:12px;">EXECUTIVE</div><div data-id="1007" class="pricing-price"><span data-id="1008" class="amount" style="color:#fff;">$599.99</span><span data-id="1009" class="period" style="color:var(--text-white-muted);">/mo</span></div><div data-id="1010" class="divider" style="background:rgba(255,255,255,0.1);"></div><div data-id="1011" class="feature-item" style="color:var(--text-white-muted);">📺 90 video/day</div><div data-id="1012" class="feature-item" style="color:var(--text-white-muted);">🔊 12 audio/day</div><div data-id="1013" class="feature-item" style="color:var(--text-white-muted);">🤖 4 AI tokens</div><div data-id="1014" class="feature-item" style="color:var(--text-white-muted);">👤 Account mgr</div><div data-id="1015" style="flex:1;"></div><button data-id="1016" class="btn btn-outline-white btn-full" style="margin-top:16px;">Contact Sales</button></div>
+          </div>
+          <p data-id="1017" class="text-center"><button data-id="1018" class="btn btn-purple" data-page="reach">View Volume Discounts &amp; Estimator →</button></p>
+        </div>
+
+        <!-- Trust items -->
+        <div data-id="1019" class="trust-grid" style="margin-top:56px;">
+          <div data-id="1020" class="trust-cell"><i data-id="1021" data-lucide="lock" class="w-5 h-5" style="color:var(--text-muted);"></i>No long-term contracts</div>
+          <div data-id="1022" class="trust-cell"><i data-id="1023" data-lucide="credit-card" class="w-5 h-5" style="color:var(--text-muted);"></i>No credit card for trial</div>
+          <div data-id="1024" class="trust-cell"><i data-id="1025" data-lucide="refresh-cw" class="w-5 h-5" style="color:var(--text-muted);"></i>Change plans anytime</div>
+          <div data-id="1026" class="trust-cell"><i data-id="1027" data-lucide="message-circle" class="w-5 h-5" style="color:var(--text-muted);"></i>Support included</div>
+        </div>
+      </div>
+    </section>
+  </div>
+
+  <!-- ============================================================
+       PAGE 5: ABOUT
+       Edit mission statement, values, and founder info here
+       ============================================================ -->
+  <div data-id="1028" class="page" id="page-about">
+    <section data-id="1029" class="hero-dark small">
+      <div data-id="1030" class="hero-mesh">
+        <div data-id="1031" class="orb" style="top:-10%;left:20%;width:600px;height:400px;background:rgba(5,150,105,0.18);"></div>
+        <div data-id="1032" class="orb" style="bottom:0;right:10%;width:400px;height:400px;background:rgba(109,40,217,0.15);"></div>
+      </div>
+      <div data-id="1033" class="hero-grid"></div>
+      <div data-id="1034" class="hero-content">
+        <div data-id="1035" class="pill pill-dark" style="backdrop-filter:blur(12px);margin-bottom:24px;">✦ OUR MISSION</div>
+        <!-- EDIT: About hero headline -->
+        <h1 data-id="1036">We Believe Every Small Store Deserves Enterprise-Level Marketing</h1>
+      </div>
+    </section>
+
+    <!-- Mission -->
+    <section data-id="1037" class="bg-white section-padding">
+      <div data-id="1038" class="container">
+        <div data-id="1039" class="about-two-col animate-on-scroll">
+          <div data-id="1040">
+            <!-- EDIT: Pull quote -->
+            <p data-id="1041" class="pull-quote"><span data-id="1042" class="gradient-text-mixed">"Marketing that works for the store owner — not just the agency."</span></p>
+          </div>
+          <div data-id="1043">
+            <!-- EDIT: Mission paragraphs -->
+            <p data-id="1044" style="margin-bottom:16px;">Small retail is the backbone of every neighborhood. Convenience stores, restaurants, liquor stores, smoke shops — these aren't just businesses, they're community hubs.</p>
+            <p data-id="1045" style="margin-bottom:16px;">But they've been left behind by marketing technology built for Fortune 500 companies. Addlyft changes that. We built an AI-powered platform that gives any store owner the ability to create professional audio ads, video content, and social media campaigns — in minutes.</p>
+            <p data-id="1046">And then we built Addlyft Reach — so advertisers pay to play inside these stores, sending passive revenue back to the store owners. Everyone wins.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Why Different -->
+    <section data-id="1047" class="bg-surface section-padding">
+      <div data-id="1048" class="container">
+        <div data-id="1049" class="section-header animate-on-scroll">
+          <h2 data-id="1050">Why We're Different</h2>
+        </div>
+        <div data-id="1051" class="split-grid animate-stagger" style="max-width:1000px;">
+          <!-- EDIT: Why different cards -->
+          <div data-id="1052" class="card card-sm animate-on-scroll" style="text-align:center;">
+            <div data-id="1053" style="font-size:36px;margin-bottom:12px;">🤖</div>
+            <h4 data-id="1054">AI-First</h4>
+            <p data-id="1055">AI is the core engine, not a bolt-on feature.</p>
+          </div>
+          <div data-id="1056" class="card card-sm animate-on-scroll" style="text-align:center;">
+            <div data-id="1057" style="font-size:36px;margin-bottom:12px;">🏪</div>
+            <h4 data-id="1058">Built FOR Small Retail</h4>
+            <p data-id="1059">Not adapted from enterprise. Built from day one for C-stores, restaurants, liquor stores.</p>
+          </div>
+          <div data-id="1060" class="card card-sm animate-on-scroll" style="text-align:center;">
+            <div data-id="1061" style="font-size:36px;margin-bottom:12px;">💰</div>
+            <h4 data-id="1062">We Pay You Back</h4>
+            <p data-id="1063">Addlyft pays store owners $49/mo guaranteed + referral commissions.</p>
+          </div>
+          <div data-id="1064" class="card card-sm animate-on-scroll" style="text-align:center;">
+            <div data-id="1065" style="font-size:36px;margin-bottom:12px;">🔗</div>
+            <h4 data-id="1066">Two-Sided Ecosystem</h4>
+            <p data-id="1067">Owners and advertisers strengthen each other as the network grows.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Values -->
+    <section data-id="1068" class="bg-white section-padding">
+      <div data-id="1069" class="container">
+        <div data-id="1070" class="section-header animate-on-scroll"><h2 data-id="1071">Our Values</h2></div>
+        <div data-id="1072" class="values-grid animate-stagger">
+          <!-- EDIT: Company values -->
+          <div data-id="1073" class="animate-on-scroll" style="text-align:center;">
+            <div data-id="1074" class="value-icon">⚡</div>
+            <h4 data-id="1075">Simplicity</h4>
+            <p data-id="1076" style="margin:8px auto 0;">If it takes more than 5 minutes, we haven't done our job.</p>
+          </div>
+          <div data-id="1077" class="animate-on-scroll" style="text-align:center;">
+            <div data-id="1078" class="value-icon">🤝</div>
+            <h4 data-id="1079">Community</h4>
+            <p data-id="1080" style="margin:8px auto 0;">We grow when our store owners and advertisers grow.</p>
+          </div>
+          <div data-id="1081" class="animate-on-scroll" style="text-align:center;">
+            <div data-id="1082" class="value-icon">📈</div>
+            <h4 data-id="1083">Transparency</h4>
+            <p data-id="1084" style="margin:8px auto 0;">Clear pricing, honest metrics, no hidden fees — ever.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Founder -->
+    <section data-id="1085" class="bg-dark section-padding">
+      <div data-id="1086" class="container">
+        <div data-id="1087" class="section-header animate-on-scroll">
+          <h2 data-id="1088">Built by an Entrepreneur, for Entrepreneurs</h2>
+          <p data-id="1089" style="color:var(--text-white-muted);">Addlyft was founded by AZIM — a builder passionate about giving small retail the same marketing firepower as national brands. Every feature was shaped by real conversations with real store owners.</p>
+        </div>
+        <div data-id="1090" class="founder-card animate-on-scroll">
+          <div data-id="1091" class="founder-avatar"><i data-id="1092" data-lucide="user" class="w-8 h-8"></i></div>
+          <!-- EDIT: Founder name and title -->
+          <div data-id="1093" class="founder-name">AZIM</div>
+          <div data-id="1094" class="founder-title">Founder &amp; CEO, Addlyft</div>
+          <!-- EDIT: Founder quote -->
+          <p data-id="1095" class="founder-quote">"I watched store owners work 16-hour days and still lose customers to chains — not because their products were worse, but because they couldn't market like them. That ends with Addlyft."</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Contact -->
+    <section data-id="1096" class="bg-surface section-padding">
+      <div data-id="1097" class="container">
+        <div data-id="1098" class="section-header animate-on-scroll">
+          <h2 data-id="1099">Get in Touch</h2>
+        </div>
+        <div data-id="1100" class="contact-grid animate-on-scroll">
+          <div data-id="1101" class="contact-info-cards">
+            <!-- EDIT: Contact email addresses -->
+            <div data-id="1102" class="contact-info-card">
+              <div data-id="1103" class="icon-circle green"><i data-id="1104" data-lucide="mail" class="w-5 h-5"></i></div>
+              <div data-id="1105">
+                <h4 data-id="1106" style="font-size:15px;">General Inquiries</h4>
+                <p data-id="1107" style="font-size:14px;color:var(--text-muted);margin:0;">hello@addlyft.com</p>
+              </div>
+            </div>
+            <div data-id="1108" class="contact-info-card">
+              <div data-id="1109" class="icon-circle purple"><i data-id="1110" data-lucide="handshake" class="w-5 h-5"></i></div>
+              <div data-id="1111">
+                <h4 data-id="1112" style="font-size:15px;">Partnerships</h4>
+                <p data-id="1113" style="font-size:14px;color:var(--text-muted);margin:0;">partners@addlyft.com</p>
+              </div>
+            </div>
+          </div>
+          <form data-id="1114" class="contact-form" id="contact-form">
+            <input data-id="1115" type="text" class="form-input" placeholder="Your Name" aria-label="Your name" required>
+            <input data-id="1116" type="email" class="form-input" placeholder="Your Email" aria-label="Your email" required>
+            <textarea data-id="1117" class="form-textarea" placeholder="Your Message" aria-label="Your message" required></textarea>
+            <button data-id="1118" type="submit" class="btn btn-green btn-full">Send Message</button>
+          </form>
+        </div>
+      </div>
+    </section>
+  </div>
+
+  <!-- ============================================================
+       PAGE 6: FAQ
+       Edit questions and answers in the faqData array in JS
+       Search for "EDIT FAQ DATA" to find the data
+       ============================================================ -->
+  <div data-id="1119" class="page" id="page-faq">
+    <section data-id="1120" class="bg-white" style="padding:140px 0 40px;">
+      <div data-id="1121" class="container">
+        <div data-id="1122" class="section-header">
+          <h1 data-id="1123">Frequently Asked Questions</h1>
+          <p data-id="1124">Everything you need to know about Addlyft.</p>
+        </div>
+        <div data-id="1125" class="faq-search" id="faq-search-wrap">
+          <i data-id="1126" data-lucide="search" class="search-icon"></i>
+          <input data-id="1127" type="text" id="faq-search" placeholder="Search questions..." aria-label="Search FAQ">
+          <button data-id="1128" class="clear-btn" id="faq-clear" aria-label="Clear search"><i data-id="1129" data-lucide="x" class="w-4 h-4"></i></button>
+        </div>
+        <div data-id="1130" class="faq-tabs" id="faq-tabs">
+          <button data-id="1131" class="faq-tab active" data-category="all">All</button>
+          <button data-id="1132" class="faq-tab" data-category="go">Addlyft Go</button>
+          <button data-id="1133" class="faq-tab" data-category="reach">Addlyft Reach</button>
+          <button data-id="1134" class="faq-tab" data-category="pricing">Pricing</button>
+          <button data-id="1135" class="faq-tab" data-category="hardware">Hardware</button>
+          <button data-id="1136" class="faq-tab" data-category="getting-started">Getting Started</button>
+        </div>
+        <div data-id="1137" class="faq-list" id="faq-list">
+          <!-- FAQ items populated by JS -->
+        </div>
+      </div>
+    </section>
+  </div>
+
+  <!-- ============================================================
+       FOOTER — Edit links, email addresses, and social URLs here
+       ============================================================ -->
+  <footer data-id="1138" class="main-footer">
+    <div data-id="1139" class="container">
+      <div data-id="1140" class="footer-top">
+        <div data-id="1141" class="footer-brand">
+          <div data-id="1142" class="nav-logo" style="color:#fff;margin-bottom:12px;"><span data-id="1143" class="arrow" style="color:var(--go-green);">⬆</span> Addlyft</div>
+          <!-- EDIT: Footer tagline -->
+          <p data-id="1144" class="footer-tagline">Your Store. Your Brand. Your Revenue.</p>
+          <div data-id="1145" class="footer-socials">
+            <span data-id="1146" class="footer-social" aria-label="Twitter"><i data-id="1147" data-lucide="twitter" class="w-4 h-4"></i></span>
+            <span data-id="1148" class="footer-social" aria-label="LinkedIn"><i data-id="1149" data-lucide="linkedin" class="w-4 h-4"></i></span>
+            <span data-id="1150" class="footer-social" aria-label="Facebook"><i data-id="1151" data-lucide="facebook" class="w-4 h-4"></i></span>
+            <span data-id="1152" class="footer-social" aria-label="Instagram"><i data-id="1153" data-lucide="instagram" class="w-4 h-4"></i></span>
+          </div>
+        </div>
+        <!-- EDIT: Footer links -->
+        <div data-id="1154" class="footer-col">
+          <h5 data-id="1155">Addlyft Go</h5>
+          <a data-id="1156" data-page="go">Audio</a><a data-id="1157" data-page="go">Video</a><a data-id="1158" data-page="go">Social</a><a data-id="1159" data-page="pricing">Plans</a><a data-id="1160" data-page="go">Free Trial</a>
+        </div>
+        <div data-id="1161" class="footer-col">
+          <h5 data-id="1162">Addlyft Reach</h5>
+          <a data-id="1163" data-page="reach">Cross Audio</a><a data-id="1164" data-page="reach">Cross Video</a><a data-id="1165" data-page="reach">Store Network</a><a data-id="1166" data-page="pricing">Pricing</a>
+        </div>
+        <div data-id="1167" class="footer-col">
+          <h5 data-id="1168">Company</h5>
+          <a data-id="1169" data-page="about">About Us</a><a data-id="1170">Blog</a><a data-id="1171">Careers</a><a data-id="1172" data-page="about">Contact</a>
+        </div>
+        <div data-id="1173" class="footer-col">
+          <h5 data-id="1174">Legal</h5>
+          <a data-id="1175">Privacy Policy</a><a data-id="1176">Terms</a><a data-id="1177">Security</a><a data-id="1178">Cookies</a>
+        </div>
+      </div>
+      <div data-id="1179" class="footer-bottom">
+        <!-- EDIT: Copyright text -->
+        &copy; 2026 Addlyft, Inc. All rights reserved. · Built for Small Retail 🏪 · Made by Copilot
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    // ============================================================
+    // ICONS — Progressive enhancement guard
+    // ============================================================
+    if (typeof lucide !== "undefined" && typeof lucide.createIcons === "function") {
+      lucide.createIcons();
+    }
+
+    // ============================================================
+    // EDIT PRICING DATA — Change plan prices and features here
+    // ============================================================
+    const REACH_PLANS = {
+      base:      { name:'Base',      price:29.99,  video:5,  audio:0,  ai:0 },
+      standard:  { name:'Standard',  price:99.99,  video:10, audio:1,  ai:0 },
+      plus:      { name:'Plus',      price:199.99, video:25, audio:3,  ai:1 },
+      premium:   { name:'Premium',   price:299.99, video:40, audio:5,  ai:2 },
+      executive: { name:'Executive', price:599.99, video:90, audio:12, ai:4 }
+    };
+
+    // ============================================================
+    // EDIT VOLUME DISCOUNTS — Format: [min_stores, discount_rate]
+    // ============================================================
+    const VOLUME_DISCOUNTS = [
+      [100, 0.50], [75, 0.35], [50, 0.20],
+      [30, 0.15],  [20, 0.10], [10, 0.05], [5, 0]
+    ];
+
+    function getVolumeDiscount(stores) {
+      for (const [min, rate] of VOLUME_DISCOUNTS) {
+        if (stores >= min) return rate;
+      }
+      return 0;
+    }
+
+    function calcReachCost(planKey, stores) {
+      const plan = REACH_PLANS[planKey];
+      const perStore = plan.price / 5;
+      const subtotal = perStore * stores;
+      const discRate = getVolumeDiscount(stores);
+      const discount = subtotal * discRate;
+      const total = subtotal - discount;
+      return {
+        perStore, subtotal, discRate, discount, total,
+        videoPlays: stores * plan.video * 30,
+        audioPlays: stores * plan.audio * 30,
+        planName: plan.name
+      };
+    }
+
+    // ============================================================
+    // EDIT FAQ DATA — Add, remove, or edit questions here
+    // Format: { category: 'string', q: 'question', a: 'answer' }
+    // ============================================================
+    const faqData = [
+      { category: 'go', q: 'What is Addlyft Go?', a: 'Addlyft Go is an AI-powered marketing platform built for store owners. It lets you create professional 15-second audio ads, 10-second video ads, and social media posts — all from one app. You also earn $49/mo guaranteed revenue and can earn 40% referral commissions.' },
+      { category: 'go', q: 'How does the AI content generation work?', a: 'Simply describe your promotion in plain English — for example, "20% off all drinks this weekend." Addlyft\'s AI instantly generates a professional ad script for audio, video content for your store screens, or a social media post ready to publish. Each channel includes 30 AI generations per month.' },
+      { category: 'go', q: 'How do I earn $49/month guaranteed?', a: 'Every active Addlyft Go subscriber receives $49/month from Addlyft — just for being part of the network. This is paid automatically every month regardless of your activity level or whether advertisers choose your store.' },
+      { category: 'reach', q: 'What is Addlyft Reach?', a: 'Addlyft Reach lets advertisers place 15-second audio ads and 10-second video ads inside real local retail stores on the Addlyft network. You hand-pick your stores, choose a plan, and go live within 48 hours.' },
+      { category: 'reach', q: 'How do I choose which stores to advertise in?', a: 'You browse the Addlyft store network and hand-select at least 5 stores where you want your ads to play. There are no radius restrictions — pick stores anywhere in the network that match your target audience.' },
+      { category: 'reach', q: 'What are the volume discounts?', a: 'Volume discounts apply automatically based on how many stores you select: 10 stores = 5% off, 20 stores = 10%, 30 = 15%, 50 = 20%, 75 = 35%, and 100+ stores = 50% off. No promo code needed.' },
+      { category: 'pricing', q: 'Is there a free trial?', a: 'Yes! Every Addlyft Go plan includes a 7-day free trial. No credit card required to start. You can explore all features before committing to a paid plan.' },
+      { category: 'pricing', q: 'Can I change or cancel my plan?', a: 'Absolutely. You can upgrade, downgrade, or cancel your plan at any time. There are no long-term contracts or cancellation fees.' },
+      { category: 'pricing', q: 'What happens if I need more than 30 AI generations?', a: 'You can purchase AI Top-Up Packs at any time: 10 extra generations for $9.90, 25 for $19.99 (save 20%), or 50 for $34.99 (save 30%). These are one-time purchases, not subscriptions.' },
+      { category: 'hardware', q: 'Do I need to buy any hardware?', a: 'For Addlyft Audio, you\'ll need a speaker or tablet (one-time purchase). For Addlyft Video, every subscriber receives a FREE in-store TV display device — no hardware cost. Addlyft Social requires no hardware at all.' },
+      { category: 'getting-started', q: 'How long does setup take?', a: 'Most store owners are fully set up in under 5 minutes. For advertisers, ads go live within 48 hours of submission. The entire process is guided step-by-step inside the app.' },
+      { category: 'getting-started', q: 'What\'s the referral program?', a: 'Refer any business to sign up for Addlyft Reach using your unique referral code. You\'ll earn 40% of their total monthly ad spend — automatically, every month they remain an active subscriber. There\'s no cap on how many businesses you can refer.' }
+    ];
+
+    // ============================================================
+    // SPA NAVIGATION
+    // ============================================================
+    const pages = ['home', 'go', 'reach', 'pricing', 'about', 'faq'];
+    let currentPage = 'home';
+
+    function showPage(pageName) {
+      if (!pages.includes(pageName)) pageName = 'home';
+      currentPage = pageName;
+
+      // Hide all pages
+      document.querySelectorAll('.page').forEach(p => {
+        p.classList.remove('active', 'visible');
+      });
+
+      // Show target page
+      const target = document.getElementById('page-' + pageName);
+      if (target) {
+        target.classList.add('active');
+        requestAnimationFrame(() => {
+          requestAnimationFrame(() => {
+            target.classList.add('visible');
+          });
+        });
+      }
+
+      // Update active nav link
+      document.querySelectorAll('.nav-link[data-page]').forEach(link => {
+        link.classList.remove('active');
+        if (link.dataset.page === pageName) link.classList.add('active');
+      });
+
+      // Update nav theme for dark hero pages
+      const nav = document.getElementById('main-nav');
+      const darkPages = ['home', 'go', 'reach', 'about'];
+      if (darkPages.includes(pageName)) {
+        nav.classList.add('dark-page');
+      } else {
+        nav.classList.remove('dark-page');
+      }
+
+      // Scroll to top
+      window.scrollTo({ top: 0, behavior: 'instant' });
+
+      // Re-trigger scroll animations
+      initScrollAnimations();
+
+      // Re-init Lucide icons for the new page
+      if (typeof lucide !== "undefined" && typeof lucide.createIcons === "function") {
+        lucide.createIcons();
+      }
+
+      // Update URL
+      history.pushState({ page: pageName }, '', '#' + pageName);
+
+      // Close mobile menu
+      document.getElementById('mobile-menu').classList.remove('open');
+    }
+
+    // Attach navigation to all [data-page] elements
+    function attachNavListeners() {
+      document.querySelectorAll('[data-page]').forEach(el => {
+        el.addEventListener('click', function(e) {
+          e.preventDefault();
+          const page = this.dataset.page;
+          if (page) showPage(page);
+        });
+      });
+    }
+    attachNavListeners();
+
+    // Handle browser back/forward
+    window.addEventListener('popstate', function(e) {
+      if (e.state && e.state.page) {
+        showPage(e.state.page);
+      } else {
+        const hash = window.location.hash.replace('#', '') || 'home';
+        showPage(hash);
+      }
+    });
+
+    // Load page from hash on initial load
+    (function() {
+      const hash = window.location.hash.replace('#', '') || 'home';
+      if (hash !== 'home') {
+        showPage(hash);
+      } else {
+        // Show home page
+        const home = document.getElementById('page-home');
+        if (home) {
+          home.classList.add('visible');
+        }
+        // Set dark nav for home
+        document.getElementById('main-nav').classList.add('dark-page');
+      }
+    })();
+
+    // ============================================================
+    // STICKY NAV — Scroll behavior
+    // ============================================================
+    window.addEventListener('scroll', function() {
+      const nav = document.getElementById('main-nav');
+      if (window.scrollY > 50) {
+        nav.classList.add('scrolled');
+      } else {
+        nav.classList.remove('scrolled');
+      }
+    });
+
+    // ============================================================
+    // PRODUCTS DROPDOWN
+    // ============================================================
+    const productsTrigger = document.getElementById('products-trigger');
+    const productsDropdown = document.getElementById('products-dropdown');
+    const productsWrap = document.getElementById('products-dropdown-wrap');
+
+    if (productsTrigger) {
+      productsTrigger.addEventListener('click', function(e) {
+        e.stopPropagation();
+        productsDropdown.classList.toggle('open');
+      });
+    }
+
+    document.addEventListener('click', function(e) {
+      if (productsWrap && !productsWrap.contains(e.target)) {
+        productsDropdown.classList.remove('open');
+      }
+    });
+
+    // Dropdown items navigation
+    document.querySelectorAll('.dropdown-item').forEach(item => {
+      item.addEventListener('click', function() {
+        const page = this.dataset.page;
+        if (page) showPage(page);
+        productsDropdown.classList.remove('open');
+      });
+    });
+
+    // ============================================================
+    // MOBILE MENU
+    // ============================================================
+    const hamburger = document.getElementById('hamburger-btn');
+    const mobileMenu = document.getElementById('mobile-menu');
+    const mobileClose = document.getElementById('mobile-close');
+
+    if (hamburger) {
+      hamburger.addEventListener('click', function() {
+        mobileMenu.classList.add('open');
+      });
+    }
+    if (mobileClose) {
+      mobileClose.addEventListener('click', function() {
+        mobileMenu.classList.remove('open');
+      });
+    }
+
+    document.querySelectorAll('.mobile-nav-link').forEach(link => {
+      link.addEventListener('click', function() {
+        const page = this.dataset.page;
+        if (page) showPage(page);
+      });
+    });
+
+    // ============================================================
+    // SCROLL ANIMATIONS — IntersectionObserver
+    // ============================================================
+    function initScrollAnimations() {
+      const observer = new IntersectionObserver(function(entries) {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add('visible');
+            observer.unobserve(entry.target);
+          }
+        });
+      }, { threshold: 0.12 });
+
+      document.querySelectorAll('.animate-on-scroll:not(.visible)').forEach(el => {
+        observer.observe(el);
+      });
+    }
+    initScrollAnimations();
+
+    // ============================================================
+    // COUNTER ANIMATION — Animate numbers on scroll
+    // ============================================================
+    function animateCounter(el) {
+      const target = parseInt(el.dataset.target);
+      const duration = 2000;
+      const start = performance.now();
+
+      function easeOutQuad(t) { return t * (2 - t); }
+
+      function update(now) {
+        const elapsed = now - start;
+        const progress = Math.min(elapsed / duration, 1);
+        const value = Math.round(easeOutQuad(progress) * target);
+        el.textContent = value;
+        if (progress < 1) requestAnimationFrame(update);
+      }
+      requestAnimationFrame(update);
+    }
+
+    const counterObserver = new IntersectionObserver(function(entries) {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          animateCounter(entry.target);
+          counterObserver.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.5 });
+
+    document.querySelectorAll('.counter').forEach(c => counterObserver.observe(c));
+
+    // ============================================================
+    // PRICING PAGE — Tab toggle
+    // ============================================================
+    document.querySelectorAll('#pricing-tabs .tab-btn').forEach(btn => {
+      btn.addEventListener('click', function() {
+        document.querySelectorAll('#pricing-tabs .tab-btn').forEach(b => b.classList.remove('active'));
+        this.classList.add('active');
+        document.querySelectorAll('.tab-content').forEach(tc => tc.classList.remove('active'));
+        const target = document.getElementById(this.dataset.tab);
+        if (target) target.classList.add('active');
+      });
+    });
+
+    // ============================================================
+    // MONTHLY / ANNUAL TOGGLE
+    // ============================================================
+    let isAnnual = false;
+    const annualToggle = document.getElementById('annual-toggle');
+    const monthlyLabel = document.getElementById('monthly-label');
+    const annualLabel = document.getElementById('annual-label');
+    const saveBadge = document.getElementById('save-badge');
+
+    if (annualToggle) {
+      annualToggle.addEventListener('click', function() {
+        isAnnual = !isAnnual;
+        this.classList.toggle('on', isAnnual);
+        if (monthlyLabel) monthlyLabel.classList.toggle('active-label', !isAnnual);
+        if (annualLabel) annualLabel.classList.toggle('active-label', isAnnual);
+        if (saveBadge) saveBadge.style.display = isAnnual ? 'inline' : 'none';
+        updateGoPrices();
+      });
+    }
+
+    function updateGoPrices() {
+      document.querySelectorAll('.go-price-page').forEach(el => {
+        const base = parseFloat(el.dataset.base);
+        const price = isAnnual ? (base * 0.9).toFixed(2) : base.toFixed(2);
+        el.textContent = '$' + price;
+      });
+    }
+
+    // ============================================================
+    // COST ESTIMATOR — Interactive pricing calculator
+    // ============================================================
+    let selectedPlan = 'plus';
+    let storeCount = 5;
+
+    // Plan pill selection
+    document.querySelectorAll('#plan-pills .plan-pill').forEach(pill => {
+      pill.addEventListener('click', function() {
+        document.querySelectorAll('#plan-pills .plan-pill').forEach(p => p.classList.remove('active'));
+        this.classList.add('active');
+        selectedPlan = this.dataset.plan;
+        updateEstimator();
+      });
+    });
+
+    // Store controls
+    const storeMinus = document.getElementById('store-minus');
+    const storePlus = document.getElementById('store-plus');
+    const storeDisplay = document.getElementById('store-count-display');
+    const storeSlider = document.getElementById('store-slider');
+
+    if (storeMinus) {
+      storeMinus.addEventListener('click', function() {
+        if (storeCount > 5) { storeCount -= 5; updateStoreUI(); updateEstimator(); }
+      });
+    }
+    if (storePlus) {
+      storePlus.addEventListener('click', function() {
+        if (storeCount < 200) { storeCount += 5; updateStoreUI(); updateEstimator(); }
+      });
+    }
+    if (storeSlider) {
+      storeSlider.addEventListener('input', function() {
+        storeCount = parseInt(this.value);
+        updateStoreUI();
+        updateEstimator();
+      });
+    }
+
+    function updateStoreUI() {
+      if (storeDisplay) storeDisplay.textContent = storeCount;
+      if (storeSlider) storeSlider.value = storeCount;
+    }
+
+    function updateEstimator() {
+      const result = calcReachCost(selectedPlan, storeCount);
+      const resultEl = document.getElementById('estimator-result');
+      if (!resultEl) return;
+
+      const discPercent = Math.round(result.discRate * 100);
+      const audioLine = result.audioPlays > 0
+        ? '~' + result.audioPlays.toLocaleString() + ' plays'
+        : 'Not included';
+
+      resultEl.innerHTML =
+        '<div class="result-plan">Plan: <strong>' + result.planName + '</strong> · <strong>' + storeCount + '</strong> stores</div>' +
+        '<div class="result-lines">' +
+          '<div class="result-line"><span>Per-store rate:</span><span>$' + result.perStore.toFixed(2) + '/store</span></div>' +
+          '<div class="result-line"><span>Subtotal (' + storeCount + ' × $' + result.perStore.toFixed(2) + '):</span><span>$' + result.subtotal.toFixed(2) + '</span></div>' +
+          '<div class="result-line"><span>Volume Discount (' + discPercent + '%):</span><span class="discount">−$' + result.discount.toFixed(2) + '</span></div>' +
+          '<div class="result-line total"><span>Monthly Total:</span><span>$' + result.total.toFixed(2) + '</span></div>' +
+        '</div>' +
+        '<div class="result-impressions">' +
+          '<span>Video impressions/mo: ~' + result.videoPlays.toLocaleString() + ' plays</span>' +
+          '<span>Audio impressions/mo: ' + audioLine + '</span>' +
+        '</div>' +
+        '<button class="btn btn-purple btn-full" style="margin-top:20px;">Start This Plan →</button>';
+
+      // Re-attach event listeners on dynamically created button
+      const newBtn = resultEl.querySelector('.btn');
+      if (newBtn) {
+        newBtn.addEventListener('click', function() { /* placeholder for plan start */ });
+      }
+    }
+
+    // Initialize estimator
+    updateEstimator();
+
+    // Jump to estimator button
+    const jumpBtn = document.getElementById('jump-to-estimator');
+    if (jumpBtn) {
+      jumpBtn.addEventListener('click', function() {
+        showPage('reach');
+        setTimeout(function() {
+          const section = document.getElementById('cost-estimator-section');
+          if (section) section.scrollIntoView({ behavior: 'smooth' });
+        }, 500);
+      });
+    }
+
+    // ============================================================
+    // FAQ — Build items, search, filter, accordion
+    // ============================================================
+    function buildFAQ() {
+      const list = document.getElementById('faq-list');
+      if (!list) return;
+      list.innerHTML = '';
+      faqData.forEach(function(item, i) {
+        const div = document.createElement('div');
+        div.className = 'faq-item';
+        div.dataset.category = item.category;
+        div.dataset.index = i;
+        div.innerHTML =
+          '<div class="faq-question" tabindex="0" role="button" aria-expanded="false">' +
+            '<span>' + item.q + '</span>' +
+            '<i data-lucide="chevron-down" class="chevron"></i>' +
+          '</div>' +
+          '<div class="faq-answer"><div class="faq-answer-inner">' + item.a + '</div></div>';
+        list.appendChild(div);
+      });
+
+      // Re-init Lucide for new icons
+      if (typeof lucide !== "undefined" && typeof lucide.createIcons === "function") {
+        lucide.createIcons();
+      }
+
+      // Accordion listeners
+      list.querySelectorAll('.faq-question').forEach(function(q) {
+        q.addEventListener('click', function() {
+          const item = this.parentElement;
+          const answer = item.querySelector('.faq-answer');
+          const isOpen = item.classList.contains('open');
+
+          // Close all others
+          list.querySelectorAll('.faq-item.open').forEach(function(openItem) {
+            openItem.classList.remove('open');
+            openItem.querySelector('.faq-answer').style.maxHeight = '0';
+            openItem.querySelector('.faq-question').setAttribute('aria-expanded', 'false');
+          });
+
+          if (!isOpen) {
+            item.classList.add('open');
+            answer.style.maxHeight = answer.scrollHeight + 'px';
+            this.setAttribute('aria-expanded', 'true');
+          }
+        });
+
+        q.addEventListener('keydown', function(e) {
+          if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); this.click(); }
+        });
+      });
+    }
+    buildFAQ();
+
+    // FAQ Category tabs
+    document.querySelectorAll('#faq-tabs .faq-tab').forEach(function(tab) {
+      tab.addEventListener('click', function() {
+        document.querySelectorAll('#faq-tabs .faq-tab').forEach(t => t.classList.remove('active'));
+        this.classList.add('active');
+        const cat = this.dataset.category;
+        document.querySelectorAll('.faq-item').forEach(function(item) {
+          if (cat === 'all' || item.dataset.category === cat) {
+            item.style.display = '';
+          } else {
+            item.style.display = 'none';
+          }
+        });
+      });
+    });
+
+    // FAQ Search
+    const faqSearchInput = document.getElementById('faq-search');
+    const faqClearBtn = document.getElementById('faq-clear');
+
+    if (faqSearchInput) {
+      faqSearchInput.addEventListener('input', function() {
+        const query = this.value.toLowerCase().trim();
+        if (faqClearBtn) faqClearBtn.style.display = query ? 'block' : 'none';
+
+        // Reset category to "All"
+        document.querySelectorAll('#faq-tabs .faq-tab').forEach(t => t.classList.remove('active'));
+        document.querySelector('#faq-tabs .faq-tab[data-category="all"]').classList.add('active');
+
+        document.querySelectorAll('.faq-item').forEach(function(item) {
+          const idx = parseInt(item.dataset.index);
+          const faq = faqData[idx];
+          const match = !query || faq.q.toLowerCase().includes(query) || faq.a.toLowerCase().includes(query);
+          item.style.display = match ? '' : 'none';
+        });
+      });
+    }
+
+    if (faqClearBtn) {
+      faqClearBtn.addEventListener('click', function() {
+        if (faqSearchInput) {
+          faqSearchInput.value = '';
+          faqSearchInput.dispatchEvent(new Event('input'));
+        }
+      });
+    }
+
+    // ============================================================
+    // CONTACT FORM — Basic handling
+    // ============================================================
+    const contactForm = document.getElementById('contact-form');
+    if (contactForm) {
+      contactForm.addEventListener('submit', function(e) {
+        e.preventDefault();
+        const btn = this.querySelector('button[type="submit"]');
+        btn.textContent = '✓ Message Sent!';
+        btn.style.background = 'var(--go-green-hover)';
+        setTimeout(function() {
+          btn.textContent = 'Send Message';
+          btn.style.background = '';
+          contactForm.reset();
+        }, 2500);
+      });
+    }
+  </script>
+</body>
+</html>

@@ -7,8 +7,8 @@ import { Arrow } from "./Brand";
 import { EASE } from "./Motion";
 
 const INTENTS = [
-  { id: "store", label: "I own a store", note: "Put your airtime to work with Go" },
-  { id: "brand", label: "I want to advertise", note: "Book stores near your customers with Reach" },
+  { id: "store", label: "I'm a store", note: "Market your own store with Addlyft Go" },
+  { id: "advertiser", label: "I'm an advertiser", note: "Book stores near your customers" },
   { id: "partner", label: "Partnership", note: "Networks, groups and multi-site operators" },
   { id: "press", label: "Press", note: "Media enquiries and company information" },
 ] as const;
@@ -170,7 +170,7 @@ export default function ContactForm() {
 
             <div className="cform__submit">
               <button
-                className={`btn btn--lg ${isStore ? "btn--teal" : intent === "brand" ? "btn--reach" : ""}`}
+                className={`btn btn--lg ${isStore ? "btn--teal" : intent === "advertiser" ? "btn--reach" : ""}`}
                 type="submit"
                 disabled={state === "sending"}
               >

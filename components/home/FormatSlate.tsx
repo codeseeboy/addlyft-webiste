@@ -15,7 +15,7 @@ const BARS = [
 ];
 
 /**
- * The measure of ADD-LYFT media, stated plainly: fifteen seconds spoken, then
+ * The measure of Addlyft media, stated plainly: fifteen seconds spoken, then
  * ten seconds on screen. It loops because the format loops, not because
  * something needs to move.
  */

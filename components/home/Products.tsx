@@ -24,73 +24,74 @@ type Panel = {
 const PANELS: Panel[] = [
   {
     key: "go",
-    eyebrow: "ADD-LYFT Go — for store owners",
+    eyebrow: "Addlyft Go — for store owners",
     titleLines: [
-      <>Your store already has</>,
-      <>
-        an audience. Now it has <span className="em">an income.</span>
-      </>,
+      <span key="g1">Advertise your own store,</span>,
+      <span key="g2">
+        inside <span key="g3" className="em">your own store.</span>
+      </span>,
     ],
-    lede: "Go is the side of ADD-LYFT built for the person behind the counter. Set the store up once, keep your own music, and let the airtime you were already paying for start earning.",
+    lede: "You own the shop. You want people who walk in to know about the deal on this weekend. Today that means hiring an agency to shoot it, produce it and schedule it. Go replaces all of that with a sentence you type yourself.",
     points: [
       [
+        "No agency, no photographer",
+        "Describe the promotion in plain English and Addlyft writes the audio read, the screen spot and the social post. Or take one from the free template library and pay nothing for it.",
+      ],
+      [
+        "All three channels, one price",
+        "Audio between the songs, video on the screen above your counter, and a post on Facebook and Instagram. They are not sold separately — every store gets all of them.",
+      ],
+      [
         "A guaranteed floor, not a maybe",
-        "On the Full Bundle plan, $49 a month per active store — paid whether or not an advertiser books your aisle that month. We carry that risk, not you.",
+        "$49 a month per active store, paid whether or not an advertiser books your screen. The TV device and the speaker come with the plan.",
       ],
       [
-        "Promote your own business too",
-        "Ready-made promotions and your own audio, screen and social posts — scheduled by day and time slot, from one screen.",
-      ],
-      [
-        "Earn from who you introduce",
-        "Bring a local advertiser onto the network with your referral code and take up to 40% of what they spend, for as long as they stay active.",
-      ],
-      [
-        "Numbers in plain English",
-        "Plays today, people reached, best hours of the week. No dashboards you need a course to read.",
+        "Then it starts paying you back",
+        "Local advertisers pay to appear in your store, and you keep a share. Introduce one yourself and take up to 40% of their spend, every month they stay.",
       ],
     ],
-    spec: ["From $39.99 / month", "7-day free trial", "$49 / month guaranteed", "Zero setup work"],
+    spec: ["$99.99 / mo billed annually", "7-day free trial", "$49 / mo guaranteed", "Hardware included"],
     href: "/go",
-    cta: "Explore Go",
-    big: { name: "owner-shop", alt: "A shop owner behind the counter of her store" },
+    cta: "Explore Addlyft Go",
+    big: { name: "store-live-cafe", alt: "A shop's own promotion running on its in-store screen" },
     small: { name: "counter-pos", alt: "A customer paying at a small store counter" },
   },
   {
     key: "reach",
-    eyebrow: "ADD-LYFT Reach — for brands",
+    eyebrow: "Addlyft Reach — for advertisers",
     titleLines: [
-      <>Buy the last three feet,</>,
-      <>
-        not another <span className="em">impression.</span>
-      </>,
+      <span key="r1">Advertise your business</span>,
+      <span key="r2">
+        inside <span key="r3" className="em">somebody else&rsquo;s store.</span>
+      </span>,
     ],
-    lede: "Reach is the buying side. Choose the actual stores your customers walk into, run audio and screen together, and watch the plays land store by store — without an agency in the middle.",
+    lede: "You are the auto dealer, the dentist, the estate agent. Your customers are already standing in the convenience store down the road. Reach puts you on that screen and that speaker — without knocking on a single door yourself.",
     points: [
       [
-        "Stores, not abstractions",
-        "Pick locations by neighbourhood, category and daily footfall. You are choosing rooms on a map, not a lookalike segment.",
+        "Pick the actual stores",
+        "Browse the network and hand-select the shops you want to appear in. Addresses on a map, not a lookalike audience.",
       ],
       [
-        "Two formats, one break",
-        "Fifteen seconds spoken, ten seconds on screen. Run either, or run both inside the same rotation for the same shopper.",
+        "Two channels, run separately",
+        "A 10-second silent spot on the screen, running through the day. A 15-second audio read between songs on the speaker. Different schedules, on purpose.",
+      ],
+      [
+        "From five stores upward",
+        "Plans start at $29.99 a month covering five stores, and scale to ninety plays a day per store. Volume discounts reach 50% and apply automatically.",
       ],
       [
         "Your competitors are removed",
-        "Stores in your own category are taken off your list automatically. A café never carries a rival café — that is a network rule.",
-      ],
-      [
-        "Counted, not modelled",
-        "Every play is logged by the device that ran it, with the store and the hour attached. Impressions come from footfall you can see.",
+        "Stores in your own category come off your list automatically. You never pay to advertise inside a rival.",
       ],
     ],
-    spec: ["15s audio · 10s screen", "From 5 stores", "Live performance data", "Self-serve setup"],
+    spec: ["From $29.99 / mo", "Minimum 5 stores", "15s audio · 10s screen", "Up to 50% volume discount"],
     href: "/reach",
-    cta: "Explore Reach",
-    big: { name: "screens-wall", alt: "A wall of bright in-store display screens" },
-    small: { name: "foodtruck", alt: "Customers ordering from a local food business" },
+    cta: "Explore Addlyft Reach",
+    big: { name: "store-live-realestate", alt: "A local estate agent's ad playing inside a shop" },
+    small: { name: "reach-auto", alt: "A car on display in a dealership showroom" },
   },
 ];
+
 
 function Panel({ panel, index }: { panel: Panel; index: number }) {
   const ref = useRef<HTMLDivElement>(null);
@@ -188,19 +189,18 @@ export default function Products() {
     <section className="prods" id="products">
       <div className="shell prods__head">
         <Reveal>
-          <span className="kicker">Two products, one network</span>
+          <span className="kicker">Two products, one ecosystem</span>
         </Reveal>
         <Reveal delay={0.06}>
           <h2 className="t-d2 prods__head-t">
-            ADD-LYFT is the company. <span className="em">Go</span> and{" "}
-            <span className="em">Reach</span> are the two sides of the same street.
+            Built for two audiences. Connected by <span className="em">one platform.</span>
           </h2>
         </Reveal>
         <Reveal delay={0.12}>
           <p className="t-lead measure">
-            One network, two jobs. Stores supply the room and the audience. Brands supply the
-            message and the budget. ADD-LYFT keeps the exchange fair, measurable and pleasant to
-            stand inside.
+            The difference is simply whose store it is. Go is a shop advertising itself. Reach is a
+            business advertising inside a shop it does not own. Same screens, same speakers,
+            opposite directions — and the store gets paid either way.
           </p>
         </Reveal>
       </div>

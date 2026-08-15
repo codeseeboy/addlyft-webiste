@@ -11,7 +11,7 @@ import type { ImageKey } from "@/lib/images";
 export const metadata: Metadata = {
   title: "The network",
   description:
-    "ADD-LYFT is a United States network of independent retail — convenience, fuel, salons, pharmacies, cafés and laundromats — switched on market by market.",
+    "Addlyft is a United States network of independent retail — convenience, fuel, salons, pharmacies, cafés and laundromats — switched on market by market.",
 };
 
 const TYPES: { name: string; dwell: string; note: string; img: ImageKey; alt: string }[] = [
@@ -97,7 +97,7 @@ export default function NetworkPage() {
                     List your store
                     <Arrow className="btn__ico" />
                   </Link>
-                  <Link href="/contact?intent=brand" className="btn btn--ghost">
+                  <Link href="/contact?intent=advertiser" className="btn btn--ghost">
                     Ask about a market
                   </Link>
                 </div>

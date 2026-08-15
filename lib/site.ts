@@ -27,11 +27,12 @@ function getValidSiteUrl(): string {
 
 export const SITE_URL = getValidSiteUrl();
 
-export const SITE_NAME = "ADD-LYFT";
+export const SITE_NAME = "Addlyft";
 export const SITE_TAGLINE = "Grow Local. Reach Further.";
+export const SITE_PROMISE = "The marketing platform small retail has been waiting for.";
 
 export const SITE_DESCRIPTION =
-  "ADD-LYFT turns everyday stores into measurable local media. Fifteen seconds of spoken audio between songs, ten seconds on the screen — at the moment people decide. Go for store owners, Reach for brands.";
+  "The marketing platform small retail has been waiting for. Addlyft Go turns your store into a marketing powerhouse; Addlyft Reach puts your business inside real local stores. Two products, one ecosystem.";
 
 export const CONTACT_EMAIL =
   process.env.NEXT_PUBLIC_CONTACT_EMAIL?.trim() || "hello@addlyft.com";
@@ -49,7 +50,7 @@ export const ROUTES: { path: string; priority: number; changeFrequency: "weekly"
   { path: "/legal/terms", priority: 0.2, changeFrequency: "yearly" },
 ];
 
-/** Organization schema, so search and social know what ADD-LYFT is. */
+/** Organization schema, so search and social know what Addlyft is. */
 export function organizationJsonLd() {
   return {
     "@context": "https://schema.org",
@@ -69,16 +70,16 @@ export function organizationJsonLd() {
     makesOffer: [
       {
         "@type": "Offer",
-        name: "ADD-LYFT Go",
+        name: "Addlyft Go",
         description:
-          "For store owners: earn from in-store audio and screen airtime, with a guaranteed monthly floor on the Full Bundle plan.",
+          "For store owners: create in-store audio, video and social ads yourself, and earn from hosting local advertisers on your own screen.",
         url: `${SITE_URL}/go`,
       },
       {
         "@type": "Offer",
-        name: "ADD-LYFT Reach",
+        name: "Addlyft Reach",
         description:
-          "For brands: run 15-second audio and 10-second screen campaigns in chosen local stores, counted per play.",
+          "For advertisers: run 15-second audio and 10-second screen campaigns inside chosen local stores, priced per store and per play.",
         url: `${SITE_URL}/reach`,
       },
     ],

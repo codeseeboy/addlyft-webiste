@@ -2,8 +2,10 @@
 
 import Link from "next/link";
 import { Arrow } from "@/components/site/Brand";
-import { LineReveal, Reveal, RevealGroup, RevealItem } from "@/components/site/Motion";
-import { GO_PLANS, REACH_FACTS } from "@/lib/pricing";
+import { Reveal } from "@/components/site/Motion";
+import { GO_PRICE, REACH_PLANS, money } from "@/lib/pricing";
+
+const cheapestReach = REACH_PLANS[0];
 
 export default function PricePeek() {
   return (
@@ -14,82 +16,69 @@ export default function PricePeek() {
             <Reveal>
               <span className="kicker">Pricing</span>
             </Reveal>
-            <h2 className="t-d1" style={{ marginTop: "1.25rem" }}>
-              <LineReveal
-                lines={[
-                  <span key="ln1">Two sides, two</span>,
-                  <span key="ln2">
-                    <span key="ln3" className="em">honest price lists.</span>
-                  </span>,
-                ]}
-              />
-            </h2>
+            <Reveal delay={0.05}>
+              <h2 className="t-d1" style={{ marginTop: "0.9rem" }}>
+                Transparent pricing. No surprises.
+              </h2>
+            </Reveal>
           </div>
           <Reveal delay={0.1}>
             <p className="t-lead">
-              Store owners subscribe by location. Brands pay for stores and plays. Nobody signs a
-              twelve-month insertion order to find out what a fifteen-second message costs.
+              Own a store? One flat price, everything included. Want to advertise in stores?
+              Pay for the locations you pick and how often you play.
             </p>
           </Reveal>
         </div>
 
-        <RevealGroup className="peek__plans" stagger={0.08}>
-          {GO_PLANS.map((p) => (
-            <RevealItem key={p.id}>
-              <article className="plan" data-featured={!!p.featured}>
-                <header className="plan__head">
-                  <span className="mono plan__name">{p.name}</span>
-                  {p.featured && <span className="tag tag--teal">Most chosen</span>}
-                </header>
-                <p className="plan__price">
-                  {p.price}
-                  <span>{p.cadence}</span>
-                </p>
-                <p className="t-sm plan__blurb">{p.blurb}</p>
-                <ul className="plan__channels">
-                  {p.channels.map((c) => (
-                    <li key={c}>{c}</li>
-                  ))}
-                </ul>
-              </article>
-            </RevealItem>
-          ))}
-        </RevealGroup>
-
-        <div className="peek__reach">
-          <Reveal>
-            <div className="peek__reach-copy">
-              <span className="kicker kicker--reach">For brands · Reach</span>
-              <h3 className="t-d3" style={{ marginTop: "1rem" }}>
-                Campaigns start at five stores and scale by plays.
-              </h3>
-              <p className="t-sm" style={{ marginTop: "0.85rem", maxWidth: "46ch" }}>
-                You choose the stores and the volume; the cost per thousand is shown beside every
-                option before anything is confirmed. Founding advertisers take 50% off their first
-                cycle.
+        <div className="peek__two">
+          <Reveal y={20}>
+            <article className="peek__card peek__card--go">
+              <header>
+                <span className="mono">Addlyft Go · store owners</span>
+                <span className="tag tag--teal">All-in-one</span>
+              </header>
+              <p className="peek__price">
+                <span className="num">{money(GO_PRICE.annualPerMonth)}</span>
+                <span>/ mo billed annually</span>
               </p>
-              <div className="btn-row" style={{ marginTop: "1.6rem" }}>
-                <Link href="/pricing" className="btn">
-                  See full pricing
-                  <Arrow className="btn__ico" />
-                </Link>
-                <Link href="/contact?intent=brand" className="tlink tlink--reach">
-                  Talk to the team
-                  <Arrow />
-                </Link>
-              </div>
-            </div>
+              <p className="t-sm peek__alt num">
+                or {money(GO_PRICE.monthly)}/mo billed monthly
+              </p>
+              <ul className="peek__list">
+                <li>Audio, video and social — no separate subscriptions</li>
+                <li>Free in-store TV device and speaker included</li>
+                <li>${GO_PRICE.guarantee}/month guaranteed revenue from Addlyft</li>
+                <li>{GO_PRICE.trialDays}-day free trial, no card required</li>
+              </ul>
+              <Link href="/pricing#go" className="tlink tlink--teal">
+                See what is included
+                <Arrow />
+              </Link>
+            </article>
           </Reveal>
 
-          <Reveal delay={0.1}>
-            <dl className="peek__facts">
-              {REACH_FACTS.map(([k, v]) => (
-                <div key={k}>
-                  <dt className="mono">{k}</dt>
-                  <dd>{v}</dd>
-                </div>
-              ))}
-            </dl>
+          <Reveal y={20} delay={0.08}>
+            <article className="peek__card peek__card--reach">
+              <header>
+                <span className="mono">Addlyft Reach · advertisers</span>
+                <span className="tag tag--reach">5 plans</span>
+              </header>
+              <p className="peek__price">
+                <span className="num">from {money(cheapestReach.price)}</span>
+                <span>/ mo for 5 stores</span>
+              </p>
+              <p className="t-sm peek__alt">Base · Standard · Plus · Premium · Executive</p>
+              <ul className="peek__list">
+                <li>Pick the exact stores your ads run in</li>
+                <li>5 to 90 video plays a day, per store</li>
+                <li>Audio from the Standard plan upward</li>
+                <li>Volume discounts to 50% — applied automatically</li>
+              </ul>
+              <Link href="/pricing#reach" className="tlink tlink--reach">
+                Compare the five plans
+                <Arrow />
+              </Link>
+            </article>
           </Reveal>
         </div>
       </div>

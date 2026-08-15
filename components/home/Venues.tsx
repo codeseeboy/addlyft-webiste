@@ -6,77 +6,151 @@ import Img from "@/components/site/Img";
 import { EASE, LineReveal, Reveal } from "@/components/site/Motion";
 import type { ImageKey } from "@/lib/images";
 
-type Venue = {
-  name: string;
-  dwell: string;
-  line: string;
-  img: ImageKey;
-  alt: string;
-};
+/**
+ * Two columns, because there are two audiences — the shops that host the
+ * screens and the businesses that buy time on them. Both lists are the ones
+ * named on the call.
+ */
 
-const VENUES: Venue[] = [
+type Row = { name: string; note: string; img: ImageKey; alt: string };
+
+const HOSTS: Row[] = [
   {
     name: "Convenience & c-store",
-    dwell: "3–8 min",
-    line: "A drink, a snack, a lottery ticket. The highest-frequency room on the network, and the one people visit without planning to.",
+    note: "Daily deals, new arrivals, the lottery counter. The highest-frequency room on the network.",
     img: "cat-cstore",
-    alt: "A customer choosing a drink from a lit cooler in a convenience store",
+    alt: "A customer choosing a drink from a lit cooler",
   },
   {
     name: "Gas & fuel",
-    dwell: "5–10 min",
-    line: "A stop that has to happen, with a store attached. People come in for one thing and leave with three.",
+    note: "A stop that has to happen, with a shop attached to it.",
     img: "cat-gas",
-    alt: "A fuel station forecourt lit at dusk",
+    alt: "A fuel station forecourt at dusk",
   },
   {
-    name: "Salon & barbershop",
-    dwell: "30–60 min",
-    line: "Half an hour in a chair with the music on and nowhere else to be. The longest dwell time in local retail.",
-    img: "cat-salon",
-    alt: "Barbers cutting hair in a busy modern shop",
+    name: "Liquor & smoke shops",
+    note: "Weekend specials, new spirits, tasting events — to people already at the counter.",
+    img: "bodega",
+    alt: "Shelves inside a neighbourhood store",
   },
   {
-    name: "Pharmacy",
-    dwell: "6–15 min",
-    line: "A queue, a wait, and a decision people take seriously. Trust carries further here than anywhere on the list.",
-    img: "cat-pharmacy",
-    alt: "A well-stocked neighbourhood pharmacy",
-  },
-  {
-    name: "Café & quick service",
-    dwell: "4–20 min",
-    line: "Morning rush, same faces, same hour. The most repeatable audience a local business can put a message in front of.",
+    name: "Restaurants & cafés",
+    note: "Lunch specials and happy hour, in front of the queue that is already forming.",
     img: "cat-cafe",
     alt: "Customers at the counter of a busy café",
   },
   {
-    name: "Laundromat",
-    dwell: "30–90 min",
-    line: "An hour with genuinely nothing to do. Nobody scrolls past a wash cycle — they sit inside it.",
-    img: "cat-laundromat",
-    alt: "Rows of machines and carts inside a laundromat",
+    name: "Salon & barbershop",
+    note: "Half an hour in a chair with the music on. The longest dwell time in local retail.",
+    img: "cat-salon",
+    alt: "Barbers cutting hair in a modern shop",
+  },
+  {
+    name: "Pharmacy",
+    note: "A queue and a decision people take seriously. Trust carries furthest here.",
+    img: "cat-pharmacy",
+    alt: "A well-stocked neighbourhood pharmacy",
   },
 ];
 
-export default function Venues() {
-  const [i, setI] = useState(0);
-  const v = VENUES[i];
+const ADVERTISERS: Row[] = [
+  {
+    name: "Auto dealers",
+    note: "Showroom visits and seasonal sales events, in front of people two minutes away.",
+    img: "reach-auto",
+    alt: "A car on display in a dealership showroom",
+  },
+  {
+    name: "Real estate agents",
+    note: "New listings and Sunday open houses, in the shops the neighbourhood walks into.",
+    img: "reach-realestate",
+    alt: "A house with a for-sale sign in the front yard",
+  },
+  {
+    name: "Healthcare providers",
+    note: "Clinics, dentists and practices introducing themselves to the street they sit on.",
+    img: "reach-health",
+    alt: "A dentist talking with a patient in a bright clinic",
+  },
+  {
+    name: "Trades & home services",
+    note: "Plumbers, electricians, cleaners and roofers — found late, and usually by asking around.",
+    img: "reach-home",
+    alt: "A house on a quiet residential street",
+  },
+];
 
+function Column({
+  eyebrow,
+  title,
+  rows,
+  accent,
+}: {
+  eyebrow: string;
+  title: string;
+  rows: Row[];
+  accent: "teal" | "reach";
+}) {
+  const [i, setI] = useState(0);
+  const row = rows[i];
+
+  return (
+    <div className="vencol" data-accent={accent}>
+      <header className="vencol__head">
+        <span className={`kicker kicker--${accent}`}>{eyebrow}</span>
+        <h3 className="t-d3">{title}</h3>
+      </header>
+
+      <div className="vencol__frame">
+        <AnimatePresence mode="popLayout" initial={false}>
+          <motion.div
+            key={row.img}
+            className="vencol__img"
+            initial={{ opacity: 0, scale: 1.05 }}
+            animate={{ opacity: 1, scale: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.55, ease: EASE }}
+          >
+            <Img name={row.img} alt={row.alt} sizes="(max-width: 900px) 100vw, 40vw" />
+          </motion.div>
+        </AnimatePresence>
+      </div>
+
+      <ul className="vencol__list">
+        {rows.map((r, k) => (
+          <li key={r.name}>
+            <button
+              data-on={k === i}
+              onMouseEnter={() => setI(k)}
+              onFocus={() => setI(k)}
+              onClick={() => setI(k)}
+              aria-pressed={k === i}
+            >
+              <span className="vencol__name">{r.name}</span>
+              <span className="vencol__note t-xs">{r.note}</span>
+            </button>
+          </li>
+        ))}
+      </ul>
+    </div>
+  );
+}
+
+export default function Venues() {
   return (
     <section className="ven bay on-paper2" id="venues">
       <div className="shell">
         <div className="sec-head sec-head--split">
           <div>
             <Reveal>
-              <span className="kicker">Where it runs</span>
+              <span className="kicker">Who it is for</span>
             </Reveal>
-            <h2 className="t-d1" style={{ marginTop: "1.25rem" }}>
+            <h2 className="t-d1" style={{ marginTop: "0.9rem" }}>
               <LineReveal
                 lines={[
-                  <span key="ln1">Ordinary rooms.</span>,
-                  <span key="ln2">
-                    <span key="ln3" className="em">Extraordinary attention.</span>
+                  <span key="v1">Built for every business</span>,
+                  <span key="v2">
+                    in your <span key="v3" className="em">neighbourhood.</span>
                   </span>,
                 ]}
               />
@@ -84,63 +158,30 @@ export default function Venues() {
           </div>
           <Reveal delay={0.1}>
             <p className="t-lead">
-              Every venue on the network was chosen for one reason: people are already inside it,
-              already unhurried, already about to spend. Dwell time is the whole product.
+              One side hosts the screens and gets paid for it. The other side buys time on
+              them. Most towns have plenty of both, and until now no practical way to connect
+              the two.
             </p>
           </Reveal>
         </div>
 
-        <div className="ven__body">
-          <ul className="ven__list">
-            {VENUES.map((venue, k) => (
-              <li key={venue.name}>
-                <button
-                  className="ven__row"
-                  data-on={k === i}
-                  onMouseEnter={() => setI(k)}
-                  onFocus={() => setI(k)}
-                  onClick={() => setI(k)}
-                  aria-pressed={k === i}
-                >
-                  <span className="mono ven__row-n">{String(k + 1).padStart(2, "0")}</span>
-                  <span className="ven__row-name">{venue.name}</span>
-                  <span className="mono ven__row-d num">{venue.dwell}</span>
-                </button>
-              </li>
-            ))}
-          </ul>
-
-          <div className="ven__stage">
-            <div className="ven__frame">
-              <AnimatePresence mode="popLayout" initial={false}>
-                <motion.div
-                  key={v.img}
-                  className="ven__img"
-                  initial={{ opacity: 0, scale: 1.06 }}
-                  animate={{ opacity: 1, scale: 1 }}
-                  exit={{ opacity: 0, scale: 1.02 }}
-                  transition={{ duration: 0.7, ease: EASE }}
-                >
-                  <Img name={v.img} alt={v.alt} sizes="(max-width: 900px) 100vw, 42vw" />
-                </motion.div>
-              </AnimatePresence>
-            </div>
-
-            <AnimatePresence mode="wait" initial={false}>
-              <motion.figcaption
-                key={v.name}
-                className="ven__cap"
-                initial={{ opacity: 0, y: 10 }}
-                animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0, y: -6 }}
-                transition={{ duration: 0.4, ease: EASE }}
-              >
-                <h3 className="t-d4">{v.name}</h3>
-                <p className="t-sm">{v.line}</p>
-                <span className="mono ven__cap-d">Typical dwell · {v.dwell}</span>
-              </motion.figcaption>
-            </AnimatePresence>
-          </div>
+        <div className="ven__cols">
+          <Reveal y={20}>
+            <Column
+              eyebrow="Hosts with Addlyft Go"
+              title="Shops that carry the screen"
+              rows={HOSTS}
+              accent="teal"
+            />
+          </Reveal>
+          <Reveal y={20} delay={0.08}>
+            <Column
+              eyebrow="Advertises with Addlyft Reach"
+              title="Businesses that buy the time"
+              rows={ADVERTISERS}
+              accent="reach"
+            />
+          </Reveal>
         </div>
       </div>
     </section>

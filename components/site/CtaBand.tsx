@@ -34,17 +34,17 @@ export default function CtaBand({
           <Link href="/contact?intent=store" className="cta__door cta__door--go">
             <span className="cta__door-badge">Go</span>
             <span>
-              <span className="cta__door-t">I own a store</span>
+              <span className="cta__door-t">I&rsquo;m a store</span>
               <br />
-              <span className="cta__door-d">Put your airtime to work</span>
+              <span className="cta__door-d">Market your own store with Go</span>
             </span>
             <Arrow className="cta__door-arrow" />
           </Link>
 
-          <Link href="/contact?intent=brand" className="cta__door cta__door--reach">
+          <Link href="/contact?intent=advertiser" className="cta__door cta__door--reach">
             <span className="cta__door-badge">Re</span>
             <span>
-              <span className="cta__door-t">I want to advertise</span>
+              <span className="cta__door-t">I&rsquo;m an advertiser</span>
               <br />
               <span className="cta__door-d">Book stores near your customers</span>
             </span>

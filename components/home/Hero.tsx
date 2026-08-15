@@ -48,7 +48,7 @@ export default function Hero() {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8, ease: EASE, delay: 0.15 }}
           >
-            Local retail media
+            AI-powered marketing for small retail
           </motion.span>
 
           <h1 className="t-hero hero__title">
@@ -56,9 +56,10 @@ export default function Hero() {
               trigger="mount"
               delay={0.24}
               lines={[
-                <span key="ln1">Grow Local.</span>,
-                <span key="ln2">
-                  <span key="ln3" className="em">Reach Further.</span>
+                <span key="ln1">The marketing platform</span>,
+                <span key="ln2">small retail has</span>,
+                <span key="ln3" className="em">
+                  been waiting for.
                 </span>,
               ]}
             />
@@ -70,9 +71,9 @@ export default function Hero() {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.9, ease: EASE, delay: 0.62 }}
           >
-            ADD-LYFT turns everyday stores into measurable media. Fifteen seconds of spoken
-            audio between the songs. Ten seconds on the screen by the counter. Heard and seen at
-            the one moment that decides the sale.
+            Addlyft Go turns your store into a marketing powerhouse. Addlyft Reach puts
+            your business inside real local stores. Two products, one ecosystem — built so a
+            small retailer never has to hire an agency again.
           </motion.p>
 
           <motion.div
@@ -83,13 +84,13 @@ export default function Hero() {
           >
             <Magnetic strength={0.22}>
               <Link href="/go" className="btn btn--teal btn--lg">
-                I own a store
+                I'm a store
                 <Arrow className="btn__ico" />
               </Link>
             </Magnetic>
             <Magnetic strength={0.22}>
               <Link href="/reach" className="btn btn--ghost btn--lg">
-                I&rsquo;m a brand
+                I'm an advertiser
                 <Arrow className="btn__ico" />
               </Link>
             </Magnetic>
@@ -103,7 +104,7 @@ export default function Hero() {
           >
             <span className="dot dot--live" />
             <p className="t-xs">
-              Two products, one network. <b>Go</b> for store owners, <b>Reach</b> for brands.
+              <b>Go</b> markets your own store. <b>Reach</b> puts you inside other local stores.
             </p>
           </motion.div>
         </motion.div>
@@ -118,10 +119,10 @@ export default function Hero() {
           >
             <motion.div className="hero__frame-inner" style={reduce ? undefined : { scale }}>
               <LoopVideo
-                src="/media/hero-store.mp4"
-                poster="/media/hero-store-poster.jpg"
+                src="/media/store-screen.mp4"
+                poster="/media/store-screen-poster.jpg"
                 className="hero__video"
-                alt="A shopper choosing fruit in a neighbourhood grocery store"
+                alt="An Addlyft screen above a shop counter, cycling local advertisers"
               />
             </motion.div>
             <FormatSlate />
@@ -135,8 +136,8 @@ export default function Hero() {
             transition={{ duration: 1.2, ease: EASE, delay: 0.85 }}
           >
             <Img
-              name="cooler-decision"
-              alt="A shopper reaching into a lit drinks cooler"
+              name="store-live-counter"
+              alt="A digital board above a service counter running a local ad"
               sizes="(max-width: 900px) 40vw, 20vw"
             />
           </motion.figure>

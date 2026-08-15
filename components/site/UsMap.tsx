@@ -2,14 +2,16 @@
 
 import { useState } from "react";
 import { useReducedMotion } from "framer-motion";
-import { DOTS, MAP_H, MAP_W, MARKETS } from "@/lib/usmap";
+import { MAP_H, MAP_W, MARKETS, STATES_PATH } from "@/lib/usmap";
 
 /**
- * The lattice is sampled inside the real national border (Albers projection),
- * so the silhouette is the country rather than a decorative scatter. The
- * highlighted points are the markets opening first, and the legend says so —
- * a map that implies coverage we do not have is a lie with a nice gradient on
- * it.
+ * A real map, not a decorative lattice.
+ *
+ * The previous version drew a dot grid and placed the cities from a projection
+ * that was vertically mirrored — north came out at the bottom, which is why
+ * the client said "the mappings are not right" and could not find his own
+ * state. This draws actual state borders from us-atlas through an Albers USA
+ * projection, and every market below sits on its true coordinates.
  */
 export default function UsMap({ legend = true }: { legend?: boolean }) {
   const [hover, setHover] = useState<string | null>(null);
@@ -19,19 +21,15 @@ export default function UsMap({ legend = true }: { legend?: boolean }) {
     <div className="usmap">
       <svg
         className="net__map"
-        viewBox={`-14 -14 ${MAP_W + 28} ${MAP_H + 28}`}
+        viewBox={`-16 -16 ${MAP_W + 32} ${MAP_H + 32}`}
         role="img"
-        aria-label="Map of the continental United States with ADD-LYFT priority markets"
+        aria-label="Map of the United States showing Addlyft priority markets"
       >
-        <g className="net__dots">
-          {DOTS.map(([x, y], i) => (
-            <circle key={i} cx={x} cy={y} r={2.6} />
-          ))}
-        </g>
+        <path className="net__states" d={STATES_PATH} />
 
         {MARKETS.map((m) => (
           <g
-            key={m.name}
+            key={`${m.name}-${m.state}`}
             className="net__mk"
             data-major={m.major}
             data-on={hover === m.name}
@@ -42,14 +40,14 @@ export default function UsMap({ legend = true }: { legend?: boolean }) {
               <circle className="net__ping" cx={m.x} cy={m.y} r={7}>
                 <animate
                   attributeName="r"
-                  values="6;20;20"
+                  values="5;18;18"
                   dur="3.4s"
                   repeatCount="indefinite"
                   begin={`${(Math.round(m.x) % 7) * 0.42}s`}
                 />
                 <animate
                   attributeName="opacity"
-                  values="0.5;0;0"
+                  values="0.45;0;0"
                   dur="3.4s"
                   repeatCount="indefinite"
                   begin={`${(Math.round(m.x) % 7) * 0.42}s`}
@@ -57,8 +55,8 @@ export default function UsMap({ legend = true }: { legend?: boolean }) {
               </circle>
             )}
             <circle className="net__hit" cx={m.x} cy={m.y} r={16} />
-            <circle className="net__core" cx={m.x} cy={m.y} r={m.major ? 6 : 4.2} />
-            <text className="net__lbl" x={m.x} y={m.y - 14} textAnchor="middle">
+            <circle className="net__core" cx={m.x} cy={m.y} r={m.major ? 5.5 : 3.8} />
+            <text className="net__lbl" x={m.x} y={m.y - 12} textAnchor="middle">
               {m.name}
             </text>
           </g>
@@ -71,7 +69,7 @@ export default function UsMap({ legend = true }: { legend?: boolean }) {
             <i className="net__key net__key--major" /> Priority markets
           </span>
           <span>
-            <i className="net__key net__key--dot" /> Continental United States
+            <i className="net__key net__key--minor" /> Opening next
           </span>
         </p>
       )}

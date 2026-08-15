@@ -11,14 +11,14 @@ const PRODUCTS = [
   {
     href: "/go",
     key: "go" as const,
-    name: "ADD-LYFT Go",
-    desc: "For store owners. Turn your floor into earning airtime.",
+    name: "Addlyft Go",
+    desc: "For store owners. Advertise your own store, on your own screen and speaker.",
   },
   {
     href: "/reach",
     key: "reach" as const,
-    name: "ADD-LYFT Reach",
-    desc: "For brands. Buy attention where the decision happens.",
+    name: "Addlyft Reach",
+    desc: "For advertisers. Run your ads inside other local stores.",
   },
 ];
 
@@ -90,6 +90,12 @@ export default function Header() {
       <header className="hdr" data-solid={solid || open} data-hidden={hidden && !open}>
         <div className="hdr__in">
           <BrandLink />
+
+          {/* Requested on the call: a launch line in the header. */}
+          <span className="hdr__badge">
+            <span className="hdr__badge-dot" aria-hidden="true" />
+            AI-Powered Marketing &amp; Advertising · Launching 2026
+          </span>
 
           <nav className="nav" aria-label="Primary">
             <div

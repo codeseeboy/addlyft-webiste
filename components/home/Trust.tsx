@@ -34,7 +34,7 @@ const FACES: { img: ImageKey; alt: string; role: string; note: string }[] = [
 const COMMITMENTS: [string, string][] = [
   [
     "A revenue floor we carry, not you",
-    "Stores on the Full Bundle plan are paid a guaranteed $49 a month per active location. If advertiser demand in that aisle falls short, the difference is ADD-LYFT's cost to absorb.",
+    "Every active Addlyft Go store is paid a guaranteed $49 a month. If advertiser demand for that store falls short in a given month, the difference is Addlyft's cost to absorb.",
   ],
   [
     "No competitor in your own aisle",
@@ -53,8 +53,8 @@ const COMMITMENTS: [string, string][] = [
     "The trial runs a full week and the payment method is not touched until it ends. The first charge date is shown before anyone confirms.",
   ],
   [
-    "Two messages, then the music",
-    "The format is capped by design. We would rather sell less airtime than turn a neighbourhood store into commercial radio.",
+    "One read, then the music",
+    "A break is a single fifteen-second read, not a commercial block. We would rather sell less airtime than turn a neighbourhood shop into commercial radio.",
   ],
 ];
 

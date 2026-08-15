@@ -59,7 +59,7 @@ export const metadata: Metadata = {
     "convenience store advertising",
     "audio advertising",
     "in-store screens",
-    "ADD-LYFT",
+    "Addlyft",
   ],
   openGraph: {
     type: "website",

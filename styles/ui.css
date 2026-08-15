@@ -1,5 +1,5 @@
 /* ==========================================================================
-   ADD-LYFT — shared UI
+   Addlyft — shared UI
    Layout primitives, buttons, navigation, footer, recurring blocks.
    ========================================================================== */
 
@@ -452,34 +452,101 @@ a:hover .shot--zoom img {
   padding-inline: var(--gutter);
 }
 
+/* ------------------------------------------------------------- wordmark */
+/* One word, no hyphen. The mark is the letter A and the type carries on from
+   it, so the lockup reads "Addlyft" with the colour break after "Add". */
+
 .brand {
   display: inline-flex;
   align-items: center;
-  gap: 0.55rem;
-  font-weight: 600;
-  font-size: 1.02rem;
-  letter-spacing: -0.03em;
   color: var(--ink);
   flex: none;
 }
 
-.brand__mark {
-  width: 1.5rem;
-  height: 1.5rem;
+.wm {
+  --wm-pale: var(--teal-bright);
+  --wm-ink: var(--ink);
+  display: inline-flex;
+  align-items: baseline;
+  gap: 0;
+  font-size: 1.16rem;
+}
+
+.wm__mark {
+  width: 1.12em;
+  height: 1.12em;
+  flex: none;
+  color: var(--wm-pale);
+  /* Closes the optical gap so the mark reads as the A of the word. */
+  margin-right: -0.17em;
+  margin-left: -0.11em;
+  align-self: center;
+  position: relative;
+  top: 0.055em;
+}
+
+.wm__mark path {
+  transition: transform 0.45s var(--ease);
+  transform-origin: 50% 60%;
+}
+
+.brand:hover .wm__mark .m-bar {
+  transform: translateY(-1.5px);
+}
+
+.wm__type {
+  font-weight: 600;
+  letter-spacing: -0.045em;
+  line-height: 1;
+  /* Deliberately the plain sans, not the display serif — the client's note
+     was that the big editorial type "looks like a blog". */
+  font-family: var(--f-sans);
+}
+
+.wm__pale {
+  color: var(--wm-pale);
+}
+
+.wm__ink {
+  color: var(--wm-ink);
+}
+
+/* Dark surfaces: black "lyft" would vanish. */
+.ftr .wm,
+.on-night .wm,
+.cta .wm {
+  --wm-ink: var(--night-ink);
+}
+
+/* Launch badge — sits beside the wordmark, hides before it can crowd the nav. */
+.hdr__badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  padding: 0.32rem 0.7rem;
+  border: 1px solid var(--teal-line);
+  background: var(--teal-wash);
+  border-radius: var(--r-pill);
+  font-size: 0.72rem;
+  font-weight: 500;
+  letter-spacing: -0.005em;
+  color: var(--teal-deep);
+  white-space: nowrap;
   flex: none;
 }
 
-.brand__mark path,
-.brand__mark rect {
-  transition: transform 0.5s var(--ease), opacity 0.5s var(--ease);
+.hdr__badge-dot {
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: var(--teal-bright);
+  flex: none;
 }
 
-.brand:hover .brand__mark .m-a {
-  transform: translateY(-1.4px);
-}
-
-.brand:hover .brand__mark .m-c {
-  transform: translateY(1.4px);
+@media (max-width: 1180px) {
+  .hdr__badge {
+    display: none;
+  }
 }
 
 .nav {
@@ -793,23 +860,46 @@ a:hover .shot--zoom img {
   color: var(--night-ink);
 }
 
-/* The wordmark bleeds off the bottom edge — a deliberate, confident sign-off
-   rather than another centred logo. */
+/* The wordmark bleeds off the bottom edge — a deliberate sign-off rather
+   than another centred logo. Same A-is-the-logo lockup as the header. */
 .ftr__word {
-  display: block;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0;
   width: 100%;
-  margin-bottom: -0.12em;
   overflow: hidden;
+  margin-bottom: -0.14em;
+  line-height: 0.78;
+  color: rgba(255, 255, 255, 0.085);
+  user-select: none;
 }
 
-.ftr__word svg {
-  width: 100%;
-  height: auto;
+.ftr__word-mark {
   display: block;
+  width: 0.9em;
+  height: 0.9em;
+  flex: none;
+  font-size: clamp(5rem, 20vw, 17rem);
+  margin-right: -0.13em;
+  margin-left: -0.08em;
+  color: rgba(20, 184, 166, 0.16);
 }
 
-.ftr__word .w-fill {
-  fill: rgba(255, 255, 255, 0.075);
+.ftr__word-mark svg {
+  width: 100%;
+  height: 100%;
+}
+
+.ftr__word-type {
+  font-size: clamp(5rem, 20vw, 17rem);
+  font-weight: 600;
+  letter-spacing: -0.05em;
+  white-space: nowrap;
+}
+
+.ftr__word-pale {
+  color: rgba(20, 184, 166, 0.16);
 }
 
 /* ------------------------------------------------------------------- misc */

@@ -43,7 +43,7 @@ export default function GlobalError({
               margin: "0 0 1rem",
             }}
           >
-            ADD-LYFT
+            Addlyft
           </p>
           <h1
             style={{

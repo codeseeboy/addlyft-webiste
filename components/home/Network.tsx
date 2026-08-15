@@ -27,7 +27,7 @@ export default function Network() {
           </div>
           <Reveal delay={0.1}>
             <p className="t-lead">
-              ADD-LYFT is a United States network of independent businesses — the corner store,
+              Addlyft is a United States network of independent businesses — the corner store,
               the fuel stop, the salon, the laundromat. We switch stores on market by market, so
               every advertiser who opens a campaign finds real rooms with real footfall.
             </p>

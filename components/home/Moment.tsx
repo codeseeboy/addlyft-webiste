@@ -78,7 +78,7 @@ export default function Moment() {
               The last three feet is the only place a message can end at the{" "}
               <span className="em">register.</span>
             </p>
-            <cite>ADD-LYFT — why we build for the floor, not the feed</cite>
+            <cite>Addlyft — why we build for the floor, not the feed</cite>
           </blockquote>
         </Reveal>
       </div>

@@ -5,14 +5,14 @@ import { Reveal } from "@/components/site/Motion";
 
 export const metadata: Metadata = {
   title: "Privacy",
-  description: "How ADD-LYFT handles information for store owners, advertisers and shoppers.",
+  description: "How Addlyft handles information for store owners, advertisers and shoppers.",
 };
 
 const SECTIONS: [string, string[]][] = [
   [
     "Shoppers are not tracked",
     [
-      "ADD-LYFT media plays in a room. There is no app to install, no code to scan, no account to create and no identifier attached to anyone who happens to be standing in a store while a message plays.",
+      "Addlyft media plays in a room. There is no app to install, no code to scan, no account to create and no identifier attached to anyone who happens to be standing in a store while a message plays.",
       "We do not collect names, devices, faces or locations from customers of the businesses on our network, and we do not build profiles of them. Audience figures are derived from a store's own reported footfall band, not from individuals.",
     ],
   ],
@@ -55,7 +55,7 @@ export default function PrivacyPage() {
             <span className="kicker">Legal</span>
           </Reveal>
           <h1 className="t-d1 phero__title" style={{ maxWidth: "18ch" }}>
-            Privacy at ADD-LYFT
+            Privacy at Addlyft
           </h1>
           <Reveal delay={0.12}>
             <p className="t-lead legal__lede">

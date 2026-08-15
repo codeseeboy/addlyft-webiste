@@ -6,7 +6,7 @@ import { Reveal } from "@/components/site/Motion";
 export const metadata: Metadata = {
   title: "Contact",
   description:
-    "Talk to ADD-LYFT about listing your store with Go, running a campaign with Reach, partnerships or press.",
+    "Talk to Addlyft about listing your store with Go, running a campaign with Reach, partnerships or press.",
 };
 
 const ASIDE: [string, string][] = [

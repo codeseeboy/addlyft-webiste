@@ -5,91 +5,66 @@ import { useReducedMotion } from "framer-motion";
 import { LineReveal, Reveal } from "@/components/site/Motion";
 
 /**
- * The in-store cycle, to scale.
+ * Two channels, two clocks.
  *
- * Segment lengths are the real ones — a track runs about two minutes, fades
- * for five seconds, two fifteen-second messages play, and the music returns.
- * The playhead fast-forwards through music and slows to near real time for the
- * break, and the header states which it is doing, so nobody has to wait ten
- * seconds to see the part that matters.
+ * This is the correction that came out of the meeting. The screen and the
+ * speaker are NOT one synchronised break:
+ *
+ *   "the one which is played on TV doesn't have any audio"
+ *   "the audio advertisements are completely different, they are individual,
+ *    they are not together"
+ *   "if I'm having a video playing it's not like audio will be playing at the
+ *    same time, audio could be plus or minus on different times"
+ *
+ * So the diagram runs both lanes against ONE shared time axis and lets you
+ * watch them disagree: the screen is wall-to-wall ten-second spots all day,
+ * while the speaker is mostly music with a fifteen-second read after a track.
  */
 
-type Seg = {
-  id: string;
-  label: string;
-  detail: string;
-  len: number;
-  kind: "music" | "fade" | "ad";
-};
+const WINDOW = 140; // seconds of store time drawn across the full width
 
-const SEGS: Seg[] = [
-  {
-    id: "track-a",
-    label: "Music",
-    detail: "The store's own playlist — genre, language and mood chosen by the owner.",
-    len: 120,
-    kind: "music",
-  },
-  {
-    id: "fade",
-    label: "Fade",
-    detail: "The track eases down over five seconds. Nothing is ever cut off mid-song.",
-    len: 5,
-    kind: "fade",
-  },
-  {
-    id: "ad-1",
-    label: "Message 01",
-    detail: "Fifteen seconds, spoken clearly, for a business within a few miles of the door.",
-    len: 15,
-    kind: "ad",
-  },
-  {
-    id: "ad-2",
-    label: "Message 02",
-    detail: "A second fifteen. Two per break — never a block, never a commercial radio hour.",
-    len: 15,
-    kind: "ad",
-  },
-  {
-    id: "track-b",
-    label: "Music returns",
-    detail: "The next track comes up and the room goes back to being a room.",
-    len: 120,
-    kind: "music",
-  },
+type Seg = { id: string; label: string; len: number; kind: "music" | "fade" | "ad" };
+
+/* Speaker: a track, a fade, one read, and back to the music. */
+const AUDIO_LANE: Seg[] = [
+  { id: "a-music", label: "Music", len: 120, kind: "music" },
+  { id: "a-fade", label: "Fade", len: 5, kind: "fade" },
+  { id: "a-ad", label: "Audio ad · 15s", len: 15, kind: "ad" },
 ];
 
-const TOTAL = SEGS.reduce((s, x) => s + x.len, 0);
+/* Screen: ten-second spots, back to back, through trading hours. */
+const VIDEO_LANE: Seg[] = Array.from({ length: WINDOW / 10 }, (_, i) => ({
+  id: `v-${i}`,
+  label: `Spot ${String(i + 1).padStart(2, "0")}`,
+  len: 10,
+  kind: "ad" as const,
+}));
 
 /*
- * The bar is drawn to true scale, so music is 87% of the cycle. Playing that
- * back at one flat speed means staring at a moving line for ten seconds before
- * anything happens. Instead the playhead fast-forwards through music and drops
- * to near real time for the break — and the header says which it is doing, so
- * the compression is disclosed rather than hidden.
+ * The playhead fast-forwards through music and slows for the read, so nobody
+ * waits ten seconds to see the interesting part. The header says which speed
+ * it is running at rather than hiding the compression.
  */
-const RATE = { music: 46, fade: 3, ad: 3 } as const;
-const rateFor = (kind: Seg["kind"]) => RATE[kind];
+const RATE = { music: 30, fade: 4, ad: 3 } as const;
 
 const WAVE = [
   0.2, 0.44, 0.72, 0.5, 0.86, 0.62, 0.34, 0.58, 0.9, 0.68, 0.42, 0.76, 0.54, 0.28,
   0.64, 0.88, 0.6, 0.38, 0.7, 0.48, 0.82, 0.56, 0.3, 0.66, 0.92, 0.52, 0.36, 0.74,
-  0.46, 0.8, 0.6, 0.32,
 ];
 
-function segAt(t: number) {
+function segAt(lane: Seg[], t: number) {
   let acc = 0;
-  for (let i = 0; i < SEGS.length; i++) {
-    if (t < acc + SEGS[i].len) return { i, start: acc, local: t - acc };
-    acc += SEGS[i].len;
+  for (let i = 0; i < lane.length; i++) {
+    if (t < acc + lane[i].len) return { i, seg: lane[i], local: t - acc, start: acc };
+    acc += lane[i].len;
   }
-  return { i: SEGS.length - 1, start: acc - SEGS[SEGS.length - 1].len, local: SEGS[SEGS.length - 1].len };
+  const last = lane.length - 1;
+  return { i: last, seg: lane[last], local: lane[last].len, start: acc - lane[last].len };
 }
 
 export default function Cycle() {
   const reduce = useReducedMotion();
-  const [t, setT] = useState(118);
+  const [t, setT] = useState(112);
   const [playing, setPlaying] = useState(true);
   const raf = useRef(0);
   const last = useRef(0);
@@ -102,50 +77,27 @@ export default function Cycle() {
     const run = (now: number) => {
       const dt = Math.min(0.05, (now - last.current) / 1000);
       last.current = now;
-      setT((v) => {
-        const rate = rateFor(SEGS[segAt(v).i].kind);
-        return (v + dt * rate) % TOTAL;
-      });
+      setT((v) => (v + dt * RATE[segAt(AUDIO_LANE, v).seg.kind]) % WINDOW);
       raf.current = requestAnimationFrame(run);
     };
     raf.current = requestAnimationFrame(run);
     return () => cancelAnimationFrame(raf.current);
   }, [playing, reduce]);
 
-  const jump = useCallback((i: number) => {
-    let acc = 0;
-    for (let k = 0; k < i; k++) acc += SEGS[k].len;
-    setT(acc + 0.01);
-  }, []);
+  const audio = segAt(AUDIO_LANE, t);
+  const video = segAt(VIDEO_LANE, t);
+  const onAir = audio.seg.kind === "ad";
+  const pct = (t / WINDOW) * 100;
 
-  const { i, start, local } = segAt(t);
-  const seg = SEGS[i];
-  const onAir = seg.kind === "ad";
-  const pct = (t / TOTAL) * 100;
+  const jumpToRead = useCallback(() => setT(122), []);
 
-  /*
-   * The reel carries two ten-second advertisers back to back, so the first
-   * message plays the first one and the second message plays the second —
-   * the break really does come from two different local businesses.
-   */
+  /* The screen never stops, so the clip only pauses when the section does. */
   useEffect(() => {
     const v = vid.current;
-    if (!v) return;
-
-    // Seeking before there is data blanks the element, so wait for a frame.
-    if (v.readyState < 2) return;
-
-    if (onAir && playing) {
-      const offset = seg.id === "ad-2" ? 10 : 0;
-      if (Math.abs(v.currentTime - (offset + local)) > 1.2) {
-        v.currentTime = offset + Math.min(local, 9.4);
-      }
-      void v.play().catch(() => {});
-    } else {
-      v.pause();
-      if (!onAir && Math.abs(v.currentTime - 2.5) > 0.1) v.currentTime = 2.5;
-    }
-  }, [onAir, playing, seg.id, local, canPlay]);
+    if (!v || v.readyState < 2) return;
+    if (playing) void v.play().catch(() => {});
+    else v.pause();
+  }, [playing, canPlay]);
 
   return (
     <section className="cyc bay" id="cycle">
@@ -153,14 +105,14 @@ export default function Cycle() {
         <div className="sec-head sec-head--split">
           <div>
             <Reveal>
-              <span className="kicker kicker--teal">The cycle</span>
+              <span className="kicker kicker--teal">How the ads actually run</span>
             </Reveal>
-            <h2 className="t-d1" style={{ marginTop: "1.25rem" }}>
+            <h2 className="t-d1" style={{ marginTop: "0.9rem" }}>
               <LineReveal
                 lines={[
-                  <span key="ln1">Two minutes of music.</span>,
+                  <span key="ln1">Two channels.</span>,
                   <span key="ln2">
-                    Thirty seconds that <span key="ln3" className="em">pay for the room.</span>
+                    Two <span key="ln3" className="em">separate clocks.</span>
                   </span>,
                 ]}
               />
@@ -168,37 +120,38 @@ export default function Cycle() {
           </div>
           <Reveal delay={0.1}>
             <p className="t-lead">
-              This is the entire interruption, drawn to scale. Store owners keep their own
-              playlist and set the tone of the room. Brands get a clean, uncrowded break — two
-              messages, then the music comes back.
+              The screen and the speaker are deliberately not tied together. The screen runs
+              ten-second spots continuously and silently. The speaker plays the store&rsquo;s
+              music, with a fifteen-second read after a track. They never wait for each other.
             </p>
           </Reveal>
         </div>
 
-        <Reveal delay={0.12} y={34}>
+        <Reveal delay={0.1} y={26}>
           <div className="cyc__player" data-air={onAir}>
             <header className="cyc__head">
               <span className="cyc__phase">
                 <span className={`dot ${onAir ? "dot--live" : ""}`} />
-                <b>{seg.label}</b>
+                <b>{onAir ? "Audio read on air" : "Music playing"}</b>
                 <span className="mono cyc__clock num">
-                  {Math.floor(local)}s / {seg.len}s
+                  {Math.floor(t)}s of {WINDOW}s
                 </span>
               </span>
 
               <span className="cyc__controls">
-                {/* The compression is disclosed, not hidden: music is
-                    fast-forwarded, the break runs close to real time. */}
                 <span className="mono cyc__rate">
-                  {onAir || seg.kind === "fade"
-                    ? `break · ${rateFor(seg.kind)}× speed`
-                    : `music · ${rateFor(seg.kind)}× fast-forward`}
+                  {onAir || audio.seg.kind === "fade"
+                    ? `break · ${RATE[audio.seg.kind]}× speed`
+                    : `music · ${RATE.music}× fast-forward`}
                 </span>
+                <button className="cyc__jump" onClick={jumpToRead}>
+                  Skip to the read
+                </button>
                 <button
                   className="cyc__play"
                   onClick={() => setPlaying((p) => !p)}
                   aria-pressed={playing}
-                  aria-label={playing ? "Pause the cycle" : "Play the cycle"}
+                  aria-label={playing ? "Pause" : "Play"}
                 >
                   {playing ? (
                     <svg viewBox="0 0 16 16" aria-hidden="true">
@@ -214,52 +167,88 @@ export default function Cycle() {
               </span>
             </header>
 
-            {/* Bars are drawn to true scale, so the two ad segments are
-                genuinely small. Their labels therefore live in the legend
-                underneath rather than being squeezed into 4% of the width. */}
-            <div className="cyc__track" role="group" aria-label="In-store cycle timeline">
-              {SEGS.map((s, k) => (
-                <button
-                  key={s.id}
-                  className="cyc__seg"
-                  data-kind={s.kind}
-                  data-on={k === i}
-                  style={{ flexGrow: s.len }}
-                  onClick={() => jump(k)}
-                  aria-label={`Jump to ${s.label}, ${s.len} seconds`}
-                >
-                  <span className="cyc__seg-bar">
+            {/* Both lanes share one time axis, which is what makes the point. */}
+            <div className="lanes">
+              <span className="lanes__head-line" style={{ left: `${pct}%` }} aria-hidden="true" />
+
+              <div className="lane" data-kind="video">
+                <div className="lane__label">
+                  <span className="mono">Screen · video</span>
+                  <b>10s spots, back to back, no sound</b>
+                </div>
+                <div className="lane__track">
+                  {VIDEO_LANE.map((s, k) => (
                     <span
-                      className="cyc__seg-fill"
-                      style={{
-                        transform: `scaleX(${
-                          k < i ? 1 : k > i ? 0 : Math.min(1, local / s.len)
-                        })`,
-                      }}
+                      key={s.id}
+                      className="lane__seg"
+                      data-kind="ad"
+                      data-on={k === video.i}
+                      style={{ flexGrow: s.len }}
+                      title={`${s.label} · 10s`}
                     />
-                  </span>
-                </button>
-              ))}
-              <span className="cyc__head-line" style={{ left: `${pct}%` }} aria-hidden="true" />
+                  ))}
+                </div>
+              </div>
+
+              <div className="lane" data-kind="audio">
+                <div className="lane__label">
+                  <span className="mono">Speaker · audio</span>
+                  <b>Music, then one 15s read</b>
+                </div>
+                <div className="lane__track">
+                  {AUDIO_LANE.map((s, k) => (
+                    <span
+                      key={s.id}
+                      className="lane__seg"
+                      data-kind={s.kind}
+                      data-on={k === audio.i}
+                      style={{ flexGrow: s.len }}
+                      title={`${s.label} · ${s.len}s`}
+                    >
+                      {s.len >= 30 && <em>{s.label}</em>}
+                    </span>
+                  ))}
+                </div>
+              </div>
+
+              <div className="lanes__axis" aria-hidden="true">
+                <span>0s</span>
+                <span>35s</span>
+                <span>70s</span>
+                <span>105s</span>
+                <span>140s</span>
+              </div>
             </div>
 
-            <ol className="cyc__legend">
-              {SEGS.map((s, k) => (
-                <li key={s.id} data-kind={s.kind} data-on={k === i}>
-                  <button onClick={() => jump(k)} aria-label={`Jump to ${s.label}`}>
-                    <i aria-hidden="true" />
-                    <b>{s.label}</b>
-                    <span className="mono num">{s.len}s</span>
-                  </button>
-                </li>
-              ))}
-            </ol>
-
             <div className="cyc__panes">
+              <div className="cyc__pane cyc__pane--screen" data-on>
+                <span className="mono cyc__pane-h">
+                  Screen channel
+                  <b>{video.seg.label} · always on</b>
+                </span>
+                <div className="cyc__screen" aria-hidden="true">
+                  <video
+                    ref={vid}
+                    className="cyc__screen-vid"
+                    src="/media/instore-spot.mp4"
+                    poster="/media/instore-spot-poster.jpg"
+                    muted
+                    loop
+                    playsInline
+                    preload="auto"
+                    onLoadedData={() => setCanPlay(true)}
+                  />
+                </div>
+                <p className="t-xs">
+                  A silent ten-second spot on the display above the counter, repeating through
+                  trading hours. <em>Sample creative.</em>
+                </p>
+              </div>
+
               <div className="cyc__pane cyc__pane--audio" data-on={onAir}>
                 <span className="mono cyc__pane-h">
                   Audio channel
-                  <b>{onAir ? "message playing" : "music playing"}</b>
+                  <b>{onAir ? "read on air" : "music playing"}</b>
                 </span>
                 <div className="cyc__wave" aria-hidden="true">
                   {WAVE.map((h, k) => (
@@ -272,36 +261,10 @@ export default function Cycle() {
                     />
                   ))}
                 </div>
-                <p className="t-xs">{seg.detail}</p>
-              </div>
-
-              <div className="cyc__pane cyc__pane--screen" data-on={onAir}>
-                <span className="mono cyc__pane-h">
-                  Screen channel
-                  <b>{onAir ? (seg.id === "ad-2" ? "advertiser 02" : "advertiser 01") : "standby"}</b>
-                </span>
-                <div className="cyc__screen" aria-hidden="true">
-                  {/* preload="auto": with metadata only, seeking to the
-                      standby frame dropped the poster and left the panel
-                      black until data arrived. */}
-                  <video
-                    ref={vid}
-                    className="cyc__screen-vid"
-                    src="/media/instore-spot.mp4"
-                    poster="/media/instore-spot-poster.jpg"
-                    muted
-                    loop
-                    playsInline
-                    preload="auto"
-                    onLoadedData={() => setCanPlay(true)}
-                  />
-                  <span className="cyc__screen-bar">
-                    <i style={{ transform: `scaleX(${onAir ? Math.min(1, local / 10) : 0})` }} />
-                  </span>
-                </div>
                 <p className="t-xs">
-                  A ten-second spot runs on the display by the counter, inside the same break —
-                  a different local advertiser on each message. <em>Sample creative.</em>
+                  {onAir
+                    ? "Fifteen seconds, spoken, for a business a few miles from the door — then the music comes back."
+                    : "The store's own playlist: genre, language and mood chosen by the owner."}
                 </p>
               </div>
             </div>
@@ -310,11 +273,20 @@ export default function Cycle() {
 
         <div className="cyc__notes">
           {[
-            ["Never more than two", "A break is two messages long. Nobody has to sit through a commercial block to buy a coffee."],
-            ["The owner sets the room", "Genre, language, mood, explicit-lyrics off by default. The music belongs to the store."],
-            ["No competitor next door", "A business never hears a direct competitor advertised in its own aisle. That is a rule, not a setting."],
-          ].map(([h, p], k) => (
-            <Reveal className="cyc__note" delay={0.06 * k} key={h}>
+            [
+              "The screen has no sound",
+              "Video spots are picture and text only, so they never fight the music the store is already playing.",
+            ],
+            [
+              "The speaker is mostly music",
+              "One read after a track, not a commercial block. Nobody has to sit through an ad break to buy a coffee.",
+            ],
+            [
+              "Same ad, repeated",
+              "You do not make a new ad every day. One spot runs all month — the way a television ad repeats through an evening.",
+            ],
+          ].map(([h, p]) => (
+            <Reveal className="cyc__note" key={h}>
               <h3 className="t-d4">{h}</h3>
               <p className="t-sm">{p}</p>
             </Reveal>

@@ -1,7 +1,7 @@
 "use client";
 
 /*
- * ADD-LYFT — "inside the store".
+ * Addlyft — "inside the store".
  *
  * The copy shell: the pinned stage, the chapter text, and the scroll reader
  * that decides which shot the camera holds. The WebGL room is a separate
@@ -26,26 +26,27 @@ const RoomScene = dynamic(() => import("./RoomScene"), { ssr: false });
 
 const CHAPTERS = [
   {
-    tag: "The venue",
-    h: "A room somebody already runs by hand",
-    p: "Every ADD-LYFT placement sits inside a real business — the lights, the music, the counter, the regulars. We do not build the audience. We meet it where it already stands.",
+    tag: "The store",
+    h: "A shop somebody already runs by hand",
+    p: "The lights, the stock, the music, the person at the till. Addlyft does not build the audience — it meets the one already walking through the door.",
   },
   {
-    tag: "The aisle",
-    h: "Where the decision actually gets made",
-    p: "Four steps from the cooler, basket in hand, mind not yet made up. This is the last stretch of a purchase, and until now it has been the least measurable place a local business could advertise.",
+    tag: "The counter",
+    h: "Everyone ends up here",
+    p: "Whatever someone came in for, the transaction happens at the counter. It is the one spot in the shop every single customer stands still in, and looks up from.",
   },
   {
-    tag: "The audio",
-    h: "Fifteen seconds, between the songs",
-    p: "The music plays and fades. Two spoken messages run — fifteen seconds each — and the music comes back. No scrolling past it, no muting it, no ad-block. Just the room, speaking once.",
+    tag: "The speaker",
+    h: "A fifteen-second read between songs",
+    p: "The store's own playlist runs all day. After a track fades, one spoken message plays — then the music comes straight back. Never a commercial block.",
   },
   {
     tag: "The screen",
-    h: "Ten seconds where the queue forms",
-    p: "The display by the register carries the same story in picture: a ten-second spot, on the last surface anyone looks at before they pay.",
+    h: "Ten-second spots, above the till",
+    p: "The display over the counter runs silent video through trading hours, on its own schedule. It never waits for the speaker, and the speaker never waits for it.",
   },
 ];
+
 
 function pickTier(): { tier: Tier; gl: boolean } {
   if (typeof window === "undefined") return { tier: "mid", gl: false };
@@ -187,7 +188,7 @@ export default function StoreRoom() {
           <div className="room__plate" data-hidden={ready} />
         ) : (
           <div className="room__flat">
-            <Img name="bodega" alt="" sizes="100vw" />
+            <Img name="store-live-cafe" alt="" sizes="100vw" />
           </div>
         )}
 
@@ -212,9 +213,9 @@ export default function StoreRoom() {
 
       <div className="room__scroll">
         <div className="shell room__lede">
-          <span className="kicker kicker--night">Inside the store</span>
+          <span className="kicker kicker--teal">Inside the store</span>
           <h2 className="t-d1" style={{ marginTop: "1.1rem", maxWidth: "16ch" }}>
-            Walk the room the <span className="em">media lives in.</span>
+            See exactly where the <span className="em">ads actually play.</span>
           </h2>
         </div>
 

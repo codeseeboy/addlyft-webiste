@@ -21,7 +21,7 @@ import { CONTACT_EMAIL, SITE_NAME } from "@/lib/site";
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
 
-const INTENTS = ["store", "brand", "partner", "press"] as const;
+const INTENTS = ["store", "advertiser", "partner", "press"] as const;
 type Intent = (typeof INTENTS)[number];
 
 export type ContactPayload = {

@@ -54,7 +54,7 @@ export default function Measurement() {
             <p className="t-lead meas__lede">
               Local advertising has always ended with a shrug — a flyer, a banner, a hope. The
               point of putting media inside a room you control is that you can count what came
-              out of the speaker, and say so plainly to both sides of the network.
+              out of the speaker and off the screen, and say so plainly to both sides.
             </p>
           </Reveal>
         </div>
@@ -116,10 +116,9 @@ export default function Measurement() {
 
         <div className="stats stats--night meas__stats">
           {[
-            { v: <Counter to={15} suffix="s" />, l: "Spoken audio, the standard message length" },
-            { v: <Counter to={10} suffix="s" />, l: "On-screen spot, inside the same break" },
-            { v: <Counter to={2} />, l: "Messages per break — never a commercial block" },
-            { v: <Counter to={49} prefix="$" />, l: "Guaranteed monthly floor on the Full Bundle plan" },
+            { v: <Counter to={15} suffix="s" />, l: "Spoken audio, between songs on the speaker" },
+            { v: <Counter to={10} suffix="s" />, l: "Screen spots, running silently all day" },
+            { v: <Counter to={49} prefix="$" />, l: "Guaranteed monthly floor for every active store" },
           ].map((s, i) => (
             <Reveal className="stat" delay={i * 0.06} key={s.l}>
               <span className="stat__v">{s.v}</span>

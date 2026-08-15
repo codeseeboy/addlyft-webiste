@@ -1,29 +1,25 @@
 "use client";
 
 /*
- * ADD-LYFT — the room, in three dimensions.
+ * Addlyft — the checkout counter, in three dimensions.
  *
- * WebGL earns its place here for one reason: the product is a ceiling
- * speaker, a wall screen and an aisle between them. The room *is* the
- * explanation, and no photograph can be walked through. Everything in this
- * scene is a physical object under a 3.2m ceiling — every light is attached
- * to a fixture. No particles, no constellations, no gradient fog toys.
+ * Rebuilt to the brief given on the call. The previous version was a dark
+ * aisle of shelving; the client said it "looks like a library to me" and
+ * asked for a convenience store instead — specifically the cash counter:
  *
- * PERFORMANCE — the whole file is shaped by one rule: a sticky full-height
- * canvas has to hold 60fps *while the page is scrolling*, or the section is
- * worse than the photograph it replaced.
+ *   "use like a counter, where you go to shopping, you go to the cash
+ *    counter... where you purchase the stuff... on the top of the counter
+ *    you can put a TV and on the side or wherever"
  *
- *   - Every repeated fixture (shelf panels, decks, lips, price rails, cooler
- *     cabinets, glass, ceiling troffers) is drawn with instancing. The first
- *     version issued ~182 individual draw calls; this one issues about 15.
- *   - Four dynamic lights, not ten. Lit surface cost is meshes × lights, so
- *     that change alone is worth more than every other optimisation here.
- *   - The reflective floor is a second full scene render, so it is reserved
- *     for the top tier and runs at a quarter of its old resolution.
- *   - The frameloop stops dead when the section leaves the viewport.
+ * and, asked whether it should stay in the skeleton style: "Colored."
  *
- * Loaded through next/dynamic so three.js never reaches a visitor who is
- * going to be shown the photograph instead.
+ * So: a lit daytime store, a real service counter with a POS on it, a
+ * back-bar of stock, the screen mounted above the counter playing a spot,
+ * and the speaker overhead. Warm and colourful rather than near-black.
+ *
+ * PERFORMANCE — a sticky full-height canvas has to hold frame rate while the
+ * page scrolls. Every repeated fixture is instanced, there are five dynamic
+ * lights, and the frameloop stops when the section leaves the viewport.
  */
 
 import { Canvas, useFrame, useThree } from "@react-three/fiber";
@@ -32,34 +28,37 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import * as THREE from "three";
 
 const C = {
-  dark: "#080809",
-  floor: "#101013",
-  shelf: "#191920",
-  shelfEdge: "#2b2b33",
-  tungsten: "#ffdfb4",
-  cool: "#8fb4cf",
-  screen: "#cfe0f2",
-  audio: "#14b8a6",
+  bg: "#aab6c0",
+  floor: "#9d9a92",
+  wall: "#d8d3ca",
+  ceiling: "#e9e7e2",
+  counterTop: "#8a5c36",
+  counterBody: "#26333a",
+  shelf: "#c6c2b9",
+  shelfEdge: "#b0aca3",
+  daylight: "#fff4e2",
+  cool: "#cfe3f2",
+  audio: "#0d9488",
 };
 
-const DRY = ["#8a7f6d", "#6f7a6a", "#7d6a5c", "#5f6672", "#8b8378", "#6a6560", "#94836a"];
-const COLD = ["#7d94a6", "#6a8a86", "#8a8f9c", "#5f7d8c", "#93a2ad"];
+/* Convenience-store stock is loud. That is what makes it read as a shop. */
+const GOODS = [
+  "#c0392b", "#e67e22", "#f1c40f", "#27ae60", "#2980b9",
+  "#8e44ad", "#d35400", "#16a085", "#c0546b", "#e8b33c",
+];
+const COLD = ["#2f6f9f", "#3f9d8c", "#6a7fb0", "#4f8fa8", "#8ab4c9"];
 
 export type Tier = "high" | "mid" | "low";
 
-const TIERS: Record<Tier, {
-  units: number;
-  perShelf: number;
-  perCooler: number;
-  ceilRows: number;
-  reflector: boolean;
-}> = {
-  high: { units: 7, perShelf: 7, perCooler: 8, ceilRows: 8, reflector: true },
-  mid: { units: 6, perShelf: 5, perCooler: 6, ceilRows: 7, reflector: false },
-  low: { units: 4, perShelf: 4, perCooler: 4, ceilRows: 5, reflector: false },
+const TIERS: Record<Tier, { units: number; perShelf: number; backBar: number; reflector: boolean }> = {
+  high: { units: 6, perShelf: 7, backBar: 9, reflector: true },
+  mid: { units: 5, perShelf: 5, backBar: 7, reflector: false },
+  low: { units: 3, perShelf: 4, backBar: 5, reflector: false },
 };
 
 const UNIT_D = 2.2;
+const BACK_Z = -6;
+const COUNTER_Z = -3.5;
 
 function prng(seed: number) {
   let s = seed >>> 0;
@@ -75,20 +74,16 @@ type V3 = [number, number, number];
 
 type Shot = { p: number; pos: V3; look: V3; fov: number };
 
+/* The whole path now faces the counter, because the counter is the subject. */
 const SHOTS: Shot[] = [
-  { p: 0.0, pos: [0, 1.52, 13.2], look: [0, 1.72, -6], fov: 52 },
-  { p: 0.25, pos: [0, 1.58, 8.0], look: [0, 1.68, -6], fov: 47 },
-  { p: 0.42, pos: [-0.52, 1.82, 4.6], look: [0.22, 2.48, -1], fov: 43 },
-  /* Held on the speaker, but far enough back that the ceiling stays in shot. */
-  { p: 0.55, pos: [0.42, 1.72, 3.9], look: [0, 2.82, 0.9], fov: 42 },
-  { p: 0.72, pos: [-0.3, 1.8, 3.4], look: [0, 2.82, 0.9], fov: 41 },
-  { p: 0.84, pos: [0.25, 1.78, -1.2], look: [-0.85, 1.95, -8.8], fov: 34 },
-  /*
-   * The look target sits LEFT of the screen, which is what pushes the screen
-   * into the right third of the frame — aiming right of it did the opposite —
-   * so the chapter copy on the left keeps a dark ground to sit on.
-   */
-  { p: 1.0, pos: [0.45, 1.88, -3.6], look: [-1.35, 1.95, -8.86], fov: 32 },
+  { p: 0.0, pos: [0, 1.62, 8.6], look: [0, 1.55, -4.2], fov: 54 },
+  { p: 0.28, pos: [0, 1.6, 5.0], look: [0, 1.5, -4.4], fov: 48 },
+  /* Held on the overhead speaker while the audio channel is explained. */
+  { p: 0.5, pos: [0.75, 1.5, 2.4], look: [0, 2.85, 0.5], fov: 44 },
+  { p: 0.66, pos: [-0.5, 1.6, 2.0], look: [0, 2.85, 0.5], fov: 43 },
+  /* Then down onto the counter and up to the screen above it. */
+  { p: 0.84, pos: [-1.15, 1.66, 2.2], look: [0.15, 1.9, -5.4], fov: 40 },
+  { p: 1.0, pos: [-1.0, 1.78, 0.9], look: [0.25, 2.24, -5.9], fov: 36 },
 ];
 
 const vA = new THREE.Vector3();
@@ -101,7 +96,7 @@ function sampleShots(p: number, outPos: THREE.Vector3, outLook: THREE.Vector3) {
   const b = SHOTS[i + 1];
   const span = b.p - a.p;
   const t = Math.max(0, Math.min(1, span <= 0 ? 0 : (p - a.p) / span));
-  const e = t * t * (3 - 2 * t); /* smoothstep — honest accel/decel, no bounce */
+  const e = t * t * (3 - 2 * t);
 
   outPos.set(...a.pos).lerp(vA.set(...b.pos), e);
   outLook.set(...a.look).lerp(vB.set(...b.look), e);
@@ -129,19 +124,13 @@ function CameraRig({ progress, still }: { progress: React.RefObject<number>; sti
     const k = 1 - Math.pow(0.0018, Math.min(delta, 0.05));
     cur.current.lerp(pos.current, k);
     curLook.current.lerp(look.current, k);
-
     camera.position.copy(cur.current);
     camera.lookAt(curLook.current);
 
     const cam = camera as THREE.PerspectiveCamera;
-    /*
-     * Vertical FOV is fixed, so a portrait viewport crops the aisle away at
-     * the sides and the shot stops reading as a room. Widen the lens as the
-     * frame narrows — the same thing a camera operator would do.
-     */
+    /* Portrait crops the room away at the sides, so widen the lens. */
     const wide = cam.aspect < 1 ? 1 + Math.min(0.42, (1 - cam.aspect) * 0.72) : 1;
     const target = fov * wide;
-
     if (Math.abs(cam.fov - target) > 0.01) {
       cam.fov += (target - cam.fov) * k;
       cam.updateProjectionMatrix();
@@ -151,106 +140,84 @@ function CameraRig({ progress, still }: { progress: React.RefObject<number>; sti
   return null;
 }
 
-/* ------------------------------------------------------------- fixtures */
-/* Each of these returns one instanced batch per material. Geometry is unit
-   sized and scaled per instance, so a whole aisle of shelving is a single
-   draw call rather than one per plank. */
+/* ------------------------------------------------------------- the store */
 
-const SHELF_LEVELS = [0.42, 0.94, 1.46, 1.98];
+const SHELF_LEVELS = [0.45, 0.98, 1.51, 2.04];
 
-function Gondola({ tier }: { tier: Tier }) {
+/** Aisle shelving down both sides, so the camera flies between it. */
+function Aisles({ tier }: { tier: Tier }) {
   const { units, perShelf } = TIERS[tier];
-  const from = 11.4;
-  const side = 1;
-  const x = 2.7 * side;
+  const from = 8.6;
 
   const geo = useMemo(() => {
     const backs: V3[] = [];
-    const bases: V3[] = [];
     const decks: V3[] = [];
-    const lips: V3[] = [];
-    const rails: V3[] = [];
-
-    for (let u = 0; u < units; u++) {
-      const z = from - u * UNIT_D;
-      backs.push([x + side * 0.36, 1.15, z]);
-      bases.push([x + side * 0.1, 0.12, z]);
-      for (const y of SHELF_LEVELS) {
-        decks.push([x + side * -0.06, y - 0.016, z]);
-        lips.push([x + side * -0.28, y, z]);
-        rails.push([x + side * -0.297, y + 0.004, z]);
+    const bases: V3[] = [];
+    for (const side of [-1, 1]) {
+      const x = 3.1 * side;
+      for (let u = 0; u < units; u++) {
+        const z = from - u * UNIT_D;
+        backs.push([x + side * 0.34, 1.2, z]);
+        bases.push([x + side * 0.06, 0.13, z]);
+        for (const y of SHELF_LEVELS) decks.push([x + side * -0.08, y - 0.02, z]);
       }
     }
-    return { backs, bases, decks, lips, rails };
-  }, [units, x]);
+    return { backs, decks, bases };
+  }, [units]);
 
   const stock = useMemo(() => {
-    const rand = prng(4421);
+    const rand = prng(1877);
     const out: { pos: V3; scale: V3; color: string }[] = [];
-    for (let u = 0; u < units; u++) {
-      const z = from - u * UNIT_D;
-      for (const y of SHELF_LEVELS) {
-        for (let n = 0; n < perShelf; n++) {
-          if (rand() < 0.16) continue; /* gaps — a real shelf is never full */
-          const w = 0.11 + rand() * 0.09;
-          const h = 0.17 + rand() * 0.15;
-          out.push({
-            pos: [x - side * (0.12 + rand() * 0.14), y + h / 2, z - 0.95 + n * (1.9 / perShelf)],
-            scale: [w, h, w * 0.78],
-            color: DRY[Math.floor(rand() * DRY.length)],
-          });
+    for (const side of [-1, 1]) {
+      const x = 3.1 * side;
+      for (let u = 0; u < units; u++) {
+        const z = from - u * UNIT_D;
+        for (const y of SHELF_LEVELS) {
+          for (let n = 0; n < perShelf; n++) {
+            if (rand() < 0.14) continue;
+            const w = 0.12 + rand() * 0.1;
+            const h = 0.18 + rand() * 0.16;
+            out.push({
+              pos: [x - side * (0.1 + rand() * 0.16), y + h / 2, z - 0.95 + n * (1.9 / perShelf)],
+              scale: [w, h, w * 0.8],
+              color: GOODS[Math.floor(rand() * GOODS.length)],
+            });
+          }
         }
       }
     }
     return out;
-  }, [units, perShelf, x]);
+  }, [units, perShelf]);
 
   return (
     <group>
       <Instances limit={geo.backs.length} range={geo.backs.length}>
-        <boxGeometry args={[0.66, 2.3, 2.14]} />
-        <meshStandardMaterial color="#24242e" roughness={0.85} metalness={0.08} />
+        <boxGeometry args={[0.62, 2.4, 2.14]} />
+        <meshStandardMaterial color={C.shelf} roughness={0.9} />
         {geo.backs.map((p, i) => (
           <Instance key={i} position={p} />
         ))}
       </Instances>
 
       <Instances limit={geo.bases.length} range={geo.bases.length}>
-        <boxGeometry args={[0.5, 0.24, 2.14]} />
-        <meshStandardMaterial color="#101015" roughness={0.9} />
+        <boxGeometry args={[0.56, 0.26, 2.14]} />
+        <meshStandardMaterial color={C.shelfEdge} roughness={0.85} />
         {geo.bases.map((p, i) => (
           <Instance key={i} position={p} />
         ))}
       </Instances>
 
       <Instances limit={geo.decks.length} range={geo.decks.length}>
-        <boxGeometry args={[0.44, 0.03, 2.12]} />
-        <meshStandardMaterial color="#2e2e38" roughness={0.55} metalness={0.35} />
+        <boxGeometry args={[0.5, 0.04, 2.12]} />
+        <meshStandardMaterial color="#efece6" roughness={0.7} metalness={0.1} />
         {geo.decks.map((p, i) => (
-          <Instance key={i} position={p} />
-        ))}
-      </Instances>
-
-      <Instances limit={geo.lips.length} range={geo.lips.length}>
-        <boxGeometry args={[0.035, 0.05, 2.12]} />
-        <meshStandardMaterial color={C.shelfEdge} roughness={0.35} metalness={0.45} />
-        {geo.lips.map((p, i) => (
-          <Instance key={i} position={p} />
-        ))}
-      </Instances>
-
-      {/* price rails are unlit on purpose — they read as printed strips */}
-      <Instances limit={geo.rails.length} range={geo.rails.length}>
-        <boxGeometry args={[0.014, 0.018, 1.98]} />
-        <meshBasicMaterial color="#5a5240" toneMapped={false} />
-        {geo.rails.map((p, i) => (
           <Instance key={i} position={p} />
         ))}
       </Instances>
 
       <Instances limit={stock.length} range={stock.length}>
         <boxGeometry />
-        <meshStandardMaterial roughness={0.78} metalness={0.02} />
+        <meshStandardMaterial roughness={0.68} />
         {stock.map((s, i) => (
           <Instance key={i} position={s.pos} scale={s.scale} color={s.color} />
         ))}
@@ -259,132 +226,100 @@ function Gondola({ tier }: { tier: Tier }) {
   );
 }
 
-function Coolers({ tier }: { tier: Tier }) {
-  const { units, perCooler } = TIERS[tier];
-  const from = 11.4;
-  const x = -2.7;
-
-  const geo = useMemo(() => {
-    const cabs: V3[] = [];
-    const panels: V3[] = [];
-    const mullions: V3[] = [];
-    const glass: V3[] = [];
-    for (let u = 0; u < units; u++) {
-      const z = from - u * UNIT_D;
-      cabs.push([x - 0.36, 1.24, z]);
-      panels.push([x - 0.1, 1.24, z]);
-      mullions.push([x + 0.02, 1.24, z]);
-      glass.push([x + 0.03, 1.24, z]);
-    }
-    return { cabs, panels, mullions, glass };
-  }, [units, x]);
+/** The service counter: the thing the client actually asked for. */
+function Counter({ tier }: { tier: Tier }) {
+  const { backBar } = TIERS[tier];
 
   const bottles = useMemo(() => {
-    const rand = prng(2255);
+    const rand = prng(5521);
     const out: { pos: V3; scale: V3; color: string }[] = [];
-    for (let u = 0; u < units; u++) {
-      const z = from - u * UNIT_D;
-      for (let level = 0; level < 4; level++) {
-        const y = 0.45 + level * 0.5;
-        for (let n = 0; n < perCooler; n++) {
-          if (rand() < 0.12) continue;
-          const h = 0.2 + rand() * 0.12;
-          out.push({
-            pos: [x + 0.16 + rand() * 0.1, y + h / 2, z - 0.92 + n * (1.84 / perCooler)],
-            scale: [0.055, h, 0.055],
-            color: COLD[Math.floor(rand() * COLD.length)],
-          });
-        }
+    for (let row = 0; row < 2; row++) {
+      const y = 0.56 + row * 0.52;
+      for (let n = 0; n < backBar; n++) {
+        const h = 0.22 + rand() * 0.14;
+        out.push({
+          pos: [-2.4 + n * (4.8 / backBar) + rand() * 0.1, y + h / 2, BACK_Z + 0.46],
+          scale: [0.11, h, 0.11],
+          color: rand() > 0.55 ? GOODS[Math.floor(rand() * GOODS.length)] : COLD[Math.floor(rand() * COLD.length)],
+        });
       }
     }
     return out;
-  }, [units, perCooler, x]);
+  }, [backBar]);
 
   return (
     <group>
-      <Instances limit={geo.cabs.length} range={geo.cabs.length}>
-        <boxGeometry args={[0.7, 2.48, 2.16]} />
-        <meshStandardMaterial color="#1c1c23" roughness={0.7} metalness={0.25} />
-        {geo.cabs.map((p, i) => (
-          <Instance key={i} position={p} />
-        ))}
-      </Instances>
+      {/* counter body + overhanging top */}
+      <mesh position={[0, 0.5, COUNTER_Z]} castShadow={false}>
+        <boxGeometry args={[3.6, 1.0, 0.8]} />
+        <meshStandardMaterial color={C.counterBody} roughness={0.6} metalness={0.15} />
+      </mesh>
+      <mesh position={[0, 1.03, COUNTER_Z]}>
+        <boxGeometry args={[3.85, 0.07, 0.95]} />
+        <meshStandardMaterial color={C.counterTop} roughness={0.42} metalness={0.06} />
+      </mesh>
+      {/* kick rail — a small real-world detail that sells the scale */}
+      <mesh position={[0, 0.06, COUNTER_Z + 0.38]}>
+        <boxGeometry args={[3.6, 0.12, 0.06]} />
+        <meshStandardMaterial color="#161d21" roughness={0.8} />
+      </mesh>
 
-      {/* the lit interior, facing the aisle */}
-      <Instances limit={geo.panels.length} range={geo.panels.length}>
-        <planeGeometry args={[2.06, 2.24]} />
-        <meshBasicMaterial color={C.cool} toneMapped={false} side={THREE.DoubleSide} />
-        {geo.panels.map((p, i) => (
-          <Instance key={i} position={p} rotation={[0, Math.PI / 2, 0]} />
-        ))}
-      </Instances>
+      {/* POS terminal, screen tilted toward the cashier */}
+      <group position={[-1.05, 1.06, COUNTER_Z - 0.05]}>
+        <mesh position={[0, 0.04, 0]}>
+          <boxGeometry args={[0.34, 0.05, 0.26]} />
+          <meshStandardMaterial color="#20282c" roughness={0.5} metalness={0.3} />
+        </mesh>
+        <mesh position={[0, 0.24, -0.05]} rotation={[-0.28, 0, 0]}>
+          <boxGeometry args={[0.34, 0.26, 0.03]} />
+          <meshStandardMaterial color="#11171a" roughness={0.35} metalness={0.4} />
+        </mesh>
+        <mesh position={[0, 0.24, -0.033]} rotation={[-0.28, 0, 0]}>
+          <planeGeometry args={[0.29, 0.21]} />
+          <meshBasicMaterial color="#3d6f8a" toneMapped={false} />
+        </mesh>
+      </group>
 
-      <Instances limit={geo.mullions.length} range={geo.mullions.length}>
-        <boxGeometry args={[0.06, 2.4, 0.07]} />
-        <meshStandardMaterial color="#1d1d24" roughness={0.4} metalness={0.6} />
-        {geo.mullions.map((p, i) => (
-          <Instance key={i} position={p} />
-        ))}
-      </Instances>
+      {/* card reader on the customer side */}
+      <group position={[0.95, 1.07, COUNTER_Z + 0.22]}>
+        <mesh rotation={[-0.35, 0, 0]}>
+          <boxGeometry args={[0.13, 0.19, 0.03]} />
+          <meshStandardMaterial color="#2b3237" roughness={0.5} metalness={0.3} />
+        </mesh>
+      </group>
 
-      <Instances limit={geo.glass.length} range={geo.glass.length}>
-        <planeGeometry args={[2.1, 2.4]} />
-        <meshStandardMaterial
-          color="#dfeaf5"
-          transparent
-          opacity={0.09}
-          roughness={0.06}
-          metalness={0.1}
-          side={THREE.DoubleSide}
-        />
-        {geo.glass.map((p, i) => (
-          <Instance key={i} position={p} rotation={[0, Math.PI / 2, 0]} />
+      {/* a few goods mid-checkout on the countertop */}
+      <group position={[0.15, 1.07, COUNTER_Z + 0.02]}>
+        {[
+          [0, 0.07, 0, "#c0392b", 0.1, 0.14],
+          [0.22, 0.05, 0.05, "#27ae60", 0.09, 0.1],
+          [-0.24, 0.06, -0.04, "#f1c40f", 0.08, 0.12],
+        ].map(([x, y, z, col, w, h], i) => (
+          <mesh key={i} position={[x as number, y as number, z as number]}>
+            <boxGeometry args={[w as number, h as number, (w as number) * 0.8]} />
+            <meshStandardMaterial color={col as string} roughness={0.65} />
+          </mesh>
         ))}
-      </Instances>
+      </group>
 
+      {/* back-bar behind the counter */}
+      {/* Kept low and pulled clear of the wall so it never intersects the
+          screen mounted above it. */}
+      <mesh position={[0, 0.8, BACK_Z + 0.34]}>
+        <boxGeometry args={[5.4, 1.6, 0.44]} />
+        <meshStandardMaterial color={C.shelf} roughness={0.9} />
+      </mesh>
+      {[0.5, 1.02].map((y) => (
+        <mesh key={y} position={[0, y, BACK_Z + 0.48]}>
+          <boxGeometry args={[5.2, 0.04, 0.32]} />
+          <meshStandardMaterial color="#efece6" roughness={0.7} metalness={0.1} />
+        </mesh>
+      ))}
       <Instances limit={bottles.length} range={bottles.length}>
-        <cylinderGeometry args={[1, 1, 1, 6]} />
-        <meshStandardMaterial roughness={0.35} metalness={0.05} />
+        <cylinderGeometry args={[1, 1, 1, 8]} />
+        <meshStandardMaterial roughness={0.5} />
         {bottles.map((b, i) => (
           <Instance key={i} position={b.pos} scale={b.scale} color={b.color} />
-        ))}
-      </Instances>
-    </group>
-  );
-}
-
-function Ceiling({ tier }: { tier: Tier }) {
-  const { ceilRows } = TIERS[tier];
-  const step = 2.8;
-
-  const geo = useMemo(() => {
-    const housings: V3[] = [];
-    const panels: V3[] = [];
-    for (let i = 0; i < ceilRows; i++) {
-      const z = 11.5 - i * step;
-      for (const x of [-1.25, 1.25]) {
-        housings.push([x, 3.24, z]);
-        panels.push([x, 3.185, z]);
-      }
-    }
-    return { housings, panels };
-  }, [ceilRows]);
-
-  return (
-    <group>
-      <Instances limit={geo.housings.length} range={geo.housings.length}>
-        <boxGeometry args={[0.34, 0.08, 1.9]} />
-        <meshStandardMaterial color="#17171c" roughness={0.6} metalness={0.4} />
-        {geo.housings.map((p, i) => (
-          <Instance key={i} position={p} />
-        ))}
-      </Instances>
-
-      <Instances limit={geo.panels.length} range={geo.panels.length}>
-        <planeGeometry args={[0.26, 1.8]} />
-        <meshBasicMaterial color={C.tungsten} toneMapped={false} />
-        {geo.panels.map((p, i) => (
-          <Instance key={i} position={p} rotation={[Math.PI / 2, 0, 0]} />
         ))}
       </Instances>
     </group>
@@ -405,18 +340,14 @@ function Marker({
   progress: React.RefObject<number>;
 }) {
   const el = useRef<HTMLDivElement>(null);
-
   useFrame(() => {
     if (!el.current) return;
     const p = progress.current ?? 0;
     const [a, b] = visibleAt;
     const mid = (a + b) / 2;
     const half = (b - a) / 2;
-    const near = Math.max(0, 1 - Math.abs(p - mid) / half);
-    el.current.style.opacity = String(Math.min(1, near * 1.6));
+    el.current.style.opacity = String(Math.min(1, Math.max(0, 1 - Math.abs(p - mid) / half) * 1.6));
   });
-
-  /* No distanceFactor: these are annotation pins, not objects in the room. */
   return (
     <Html center zIndexRange={[10, 0]} occlude={false} style={{ pointerEvents: "none" }}>
       <div className="marker" ref={el} style={{ opacity: 0, width }}>
@@ -426,56 +357,43 @@ function Marker({
   );
 }
 
-function AudioDevice({ progress }: { progress: React.RefObject<number> }) {
+/** Overhead speaker — the audio channel. */
+function Speaker({ progress }: { progress: React.RefObject<number> }) {
   const ring = useRef<THREE.Mesh>(null);
-
   useFrame(({ clock }) => {
     if (!ring.current) return;
     const p = progress.current ?? 0;
-    const near = Math.max(0, 1 - Math.abs(p - 0.62) / 0.3);
+    const near = Math.max(0, 1 - Math.abs(p - 0.56) / 0.28);
     const pulse = 0.55 + Math.sin(clock.elapsedTime * 2.1) * 0.45;
-    (ring.current.material as THREE.MeshBasicMaterial).opacity = near * (0.24 + pulse * 0.5);
+    (ring.current.material as THREE.MeshBasicMaterial).opacity = near * (0.3 + pulse * 0.55);
   });
 
   return (
-    <group position={[0, 2.94, 0.88]}>
+    <group position={[0, 2.92, 0.5]}>
       <mesh>
-        <cylinderGeometry args={[0.27, 0.32, 0.18, 24]} />
-        <meshStandardMaterial color="#1c1c22" roughness={0.5} metalness={0.55} />
+        <cylinderGeometry args={[0.28, 0.33, 0.2, 24]} />
+        <meshStandardMaterial color="#3b4449" roughness={0.55} metalness={0.4} />
       </mesh>
-      <mesh position={[0, -0.095, 0]}>
-        <cylinderGeometry args={[0.25, 0.25, 0.022, 24]} />
-        <meshStandardMaterial color="#0d0d11" roughness={0.9} metalness={0.2} />
+      <mesh position={[0, -0.105, 0]}>
+        <cylinderGeometry args={[0.26, 0.26, 0.025, 24]} />
+        <meshStandardMaterial color="#1b2226" roughness={0.85} />
       </mesh>
-      {/* unlit ring — it glows without costing a dynamic light */}
-      <mesh ref={ring} position={[0, -0.108, 0]} rotation={[-Math.PI / 2, 0, 0]}>
-        <ringGeometry args={[0.16, 0.192, 32]} />
-        <meshBasicMaterial
-          color={C.audio}
-          transparent
-          opacity={0}
-          toneMapped={false}
-          side={THREE.DoubleSide}
-        />
+      <mesh ref={ring} position={[0, -0.12, 0]} rotation={[-Math.PI / 2, 0, 0]}>
+        <ringGeometry args={[0.17, 0.2, 32]} />
+        <meshBasicMaterial color={C.audio} transparent opacity={0} toneMapped={false} side={THREE.DoubleSide} />
       </mesh>
-      <group position={[0.72, -0.05, 0]}>
-        <Marker visibleAt={[0.46, 0.8]} width={168} progress={progress}>
-          <b>In-store audio</b>
-          <span>15 seconds, spoken, between tracks</span>
+      <group position={[0.95, -0.12, 0]}>
+        <Marker visibleAt={[0.38, 0.74]} width={172} progress={progress}>
+          <b>Speaker · audio</b>
+          <span>15s read between songs</span>
         </Marker>
       </group>
     </group>
   );
 }
 
-/* ---------------------------------------------------------- wall screen */
-
-/**
- * A real ten-second spot, decoded straight onto the display by the counter.
- * The video only runs while the section is on screen — a paused <video> that
- * nobody can see is pure battery cost.
- */
-function WallScreen({
+/** The screen, mounted above the counter — the video channel. */
+function CounterScreen({
   progress,
   playing,
 }: {
@@ -487,8 +405,6 @@ function WallScreen({
 
   useEffect(() => {
     const v = document.createElement("video");
-    // muted/playsInline must be set BEFORE src, or the autoplay policy has
-    // already decided by the time the source is attached.
     v.muted = true;
     v.defaultMuted = true;
     v.playsInline = true;
@@ -497,9 +413,6 @@ function WallScreen({
     v.loop = true;
     v.preload = "auto";
     v.src = "/media/instore-spot.mp4";
-
-    // A fully detached element is unreliable for decoding across browsers, so
-    // it lives in the document — one pixel, hidden, out of the a11y tree.
     v.style.cssText =
       "position:fixed;top:0;left:0;width:1px;height:1px;opacity:0.01;pointer-events:none;";
     v.setAttribute("aria-hidden", "true");
@@ -508,16 +421,12 @@ function WallScreen({
 
     const t = new THREE.VideoTexture(v);
     t.colorSpace = THREE.SRGBColorSpace;
-    /*
-     * Mipmaps, not plain linear filtering. Seen from the far end of the aisle
-     * the display is ~120px wide while the texture is 640px, and sampling that
-     * without mipmaps produced a crawling moiré across the screen that read as
-     * a scanning band. Anisotropy keeps it sharp at the oblique angles the
-     * camera passes through.
-     */
-    t.minFilter = THREE.LinearMipmapLinearFilter;
+    /* No mipmaps on a video texture: three would have to regenerate them on
+       every frame, and on several drivers the mip chain never completes, so
+       the sampler returns black and the screen looks switched off. */
+    t.minFilter = THREE.LinearFilter;
     t.magFilter = THREE.LinearFilter;
-    t.generateMipmaps = true;
+    t.generateMipmaps = false;
     t.anisotropy = 4;
     setTex(t);
 
@@ -538,36 +447,30 @@ function WallScreen({
   }, [playing]);
 
   return (
-    <group position={[0, 1.95, -8.86]}>
+    <group position={[0, 2.34, BACK_Z + 0.06]}>
+      {/* Bezel sits behind the picture. The plane used to be at local z=0
+          while the bezel box spanned -0.05..+0.01, so the picture was buried
+          5mm inside the frame and the screen read as switched off. */}
       <mesh position={[0, 0, -0.04]}>
-        <boxGeometry args={[3.05, 1.79, 0.08]} />
-        <meshStandardMaterial color="#141417" roughness={0.45} metalness={0.5} />
+        <boxGeometry args={[2.32, 1.36, 0.07]} />
+        <meshStandardMaterial color="#171c1f" roughness={0.45} metalness={0.45} />
       </mesh>
-      <mesh>
-        <planeGeometry args={[2.9, 1.64]} />
-        {/*
-         * The key is load-bearing. Swapping the props on one <meshBasicMaterial>
-         * lets React reconcile it as the same element, so the material instance
-         * is reused and the video map is never actually bound — the screen just
-         * stays black. Changing the key forces a fresh material once the
-         * texture exists.
-         */}
+      <mesh position={[0, 0, 0.02]}>
+        <planeGeometry args={[2.18, 1.22]} />
+        {/* keyed so the video map actually binds once the texture exists */}
         <meshBasicMaterial
           key={tex ? "spot" : "blank"}
           map={tex ?? undefined}
-          color={tex ? "#ffffff" : C.screen}
+          color={tex ? "#ffffff" : C.cool}
           toneMapped={false}
         />
       </mesh>
-      {/* The display is the only thing lighting the far end of the aisle,
-          which is exactly how it looks in a real store after dark. */}
-      <pointLight position={[0, 0.1, 1.6]} color={C.screen} intensity={11} distance={12} decay={2} />
-      {/* Left of the screen: the camera now holds it in the right third, and
-          on the right the pin ran off the edge of the frame. */}
-      <group position={[-2.15, -0.35, 0.2]}>
-        <Marker visibleAt={[0.8, 1.12]} width={156} progress={progress}>
-          <b>In-store screen</b>
-          <span>10 seconds, at the register</span>
+      {/* the screen throws its own light onto the counter below */}
+      <pointLight position={[0, -0.5, 1.5]} color="#cfe0f2" intensity={6} distance={7} decay={2} />
+      <group position={[1.72, -0.12, 0.25]}>
+        <Marker visibleAt={[0.78, 1.14]} width={168} progress={progress}>
+          <b>Screen · video</b>
+          <span>10s spots, above the counter</span>
         </Marker>
       </group>
     </group>
@@ -581,48 +484,63 @@ function Room({ tier }: { tier: Tier }) {
 
   return (
     <group>
+      {/* floor */}
       <mesh rotation={[-Math.PI / 2, 0, 0]}>
-        <planeGeometry args={[44, 52]} />
+        <planeGeometry args={[40, 48]} />
         {reflector ? (
           <MeshReflectorMaterial
             resolution={256}
-            blur={[120, 40]}
+            blur={[140, 50]}
             mixBlur={1}
-            mixStrength={3}
+            mixStrength={1.4}
             depthScale={1}
-            minDepthThreshold={0.35}
+            minDepthThreshold={0.4}
             maxDepthThreshold={1.3}
-            roughness={0.8}
-            metalness={0.3}
+            roughness={0.85}
+            metalness={0.1}
             color={C.floor}
             mirror={0}
           />
         ) : (
-          <meshStandardMaterial color={C.floor} roughness={0.62} metalness={0.42} />
+          <meshStandardMaterial color={C.floor} roughness={0.85} />
         )}
       </mesh>
 
-      <mesh rotation={[Math.PI / 2, 0, 0]} position={[0, 3.3, 0]}>
-        <planeGeometry args={[44, 52]} />
-        <meshStandardMaterial color="#0c0c0f" roughness={1} />
+      {/* ceiling and walls */}
+      <mesh rotation={[Math.PI / 2, 0, 0]} position={[0, 3.2, 0]}>
+        <planeGeometry args={[40, 48]} />
+        <meshStandardMaterial color={C.ceiling} roughness={1} />
+      </mesh>
+      <mesh position={[0, 1.6, BACK_Z]}>
+        <planeGeometry args={[16, 3.2]} />
+        <meshStandardMaterial color={C.wall} roughness={0.95} />
       </mesh>
 
-      <mesh position={[0, 1.65, -9]}>
-        <planeGeometry args={[18, 3.3]} />
-        <meshStandardMaterial color="#15151a" roughness={0.95} />
-      </mesh>
+      {/* ceiling light panels */}
+      {[6.2, 2.6, -1.0, -4.4].map((z) =>
+        [-2.0, 2.0].map((x) => (
+          <group key={`${z}-${x}`}>
+            <mesh position={[x, 3.14, z]}>
+              <boxGeometry args={[0.42, 0.1, 2.1]} />
+              <meshStandardMaterial color="#cdd2d6" roughness={0.6} metalness={0.3} />
+            </mesh>
+            <mesh position={[x, 3.08, z]} rotation={[Math.PI / 2, 0, 0]}>
+              <planeGeometry args={[0.34, 2.0]} />
+              <meshBasicMaterial color={C.daylight} toneMapped={false} />
+            </mesh>
+          </group>
+        )),
+      )}
 
-      <Coolers tier={tier} />
-      <Gondola tier={tier} />
-      <Ceiling tier={tier} />
+      <Aisles tier={tier} />
+      <Counter tier={tier} />
 
-      {/* Five dynamic lights for the whole room, spaced down the aisle so the
-          far end still reads when the camera reaches the screen. Everything
-          else that appears to glow is an unlit material on a real fixture. */}
-      <pointLight position={[0, 3.0, 9.2]} color={C.tungsten} intensity={20} distance={16} decay={2} />
-      <pointLight position={[0, 3.0, 3.6]} color={C.tungsten} intensity={20} distance={16} decay={2} />
-      <pointLight position={[0, 3.0, -2.0]} color={C.tungsten} intensity={20} distance={16} decay={2} />
-      <pointLight position={[-2.1, 1.4, 5.2]} color={C.cool} intensity={12} distance={11} decay={2} />
+      {/* Daylight-ish store lighting: five lamps for the whole room. */}
+      <pointLight position={[0, 3.0, 6.0]} color={C.daylight} intensity={13} distance={15} decay={2} />
+      <pointLight position={[0, 3.0, 1.2]} color={C.daylight} intensity={13} distance={15} decay={2} />
+      <pointLight position={[0, 2.9, -3.2]} color={C.daylight} intensity={12} distance={14} decay={2} />
+      <pointLight position={[-3.0, 2.2, 3.0]} color="#ffffff" intensity={5} distance={10} decay={2} />
+      <pointLight position={[3.0, 2.2, 3.0]} color="#ffffff" intensity={5} distance={10} decay={2} />
     </group>
   );
 }
@@ -644,39 +562,30 @@ export default function RoomScene({
   onReady: () => void;
   onLost: () => void;
 }) {
-  const dpr: [number, number] =
-    tier === "high" ? [1, 1.6] : tier === "mid" ? [1, 1.35] : [1, 1];
+  const dpr: [number, number] = tier === "high" ? [1, 1.6] : tier === "mid" ? [1, 1.35] : [1, 1];
 
   return (
     <Canvas
       frameloop={visible ? "always" : "never"}
       dpr={dpr}
-      camera={{ position: [0, 1.52, 13.2], fov: 52, near: 0.1, far: 60 }}
-      gl={{
-        antialias: tier === "high",
-        powerPreference: "high-performance",
-        alpha: false,
-      }}
+      camera={{ position: [0, 1.62, 8.6], fov: 54, near: 0.1, far: 60 }}
+      gl={{ antialias: tier === "high", powerPreference: "high-performance", alpha: false }}
       onCreated={({ gl }) => {
-        /*
-         * WebGL enables dithering by default, and Intel drivers render it as a
-         * visible diagonal crosshatch over smooth gradients — most obviously
-         * across the video on the in-store screen, where it read as a scanning
-         * pattern crawling over the picture. Nothing here needs dithering.
-         */
+        /* WebGL dithers by default and Intel drivers draw it as a visible
+           crosshatch over gradients. Nothing here needs it. */
         const ctx = gl.getContext();
         ctx.disable(ctx.DITHER);
-
         gl.domElement.addEventListener("webglcontextlost", onLost);
         onReady();
       }}
     >
-      <color attach="background" args={[C.dark]} />
-      <fog attach="fog" args={[C.dark, 20, 58]} />
-      <ambientLight intensity={1.15} color="#a8bacd" />
+      <color attach="background" args={[C.bg]} />
+      <fog attach="fog" args={[C.bg, 22, 46]} />
+      <ambientLight intensity={0.55} color="#e8eef3" />
+      <hemisphereLight args={["#eaf1f6", "#8d8880", 0.55]} />
       <Room tier={tier} />
-      <AudioDevice progress={progress} />
-      <WallScreen progress={progress} playing={visible} />
+      <Speaker progress={progress} />
+      <CounterScreen progress={progress} playing={visible} />
       <CameraRig progress={progress} still={still} />
     </Canvas>
   );
