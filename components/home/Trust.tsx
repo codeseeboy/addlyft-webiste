@@ -1,0 +1,116 @@
+"use client";
+
+import Img from "@/components/site/Img";
+import { LineReveal, Reveal, RevealGroup, RevealItem } from "@/components/site/Motion";
+import type { ImageKey } from "@/lib/images";
+
+const FACES: { img: ImageKey; alt: string; role: string; note: string }[] = [
+  {
+    img: "owner-shop",
+    alt: "A shop owner standing behind the counter of her store",
+    role: "The owner who opens at six",
+    note: "Convenience & c-store",
+  },
+  {
+    img: "face-cafe",
+    alt: "A café worker in an apron behind the counter",
+    role: "The counter that never stops",
+    note: "Café & quick service",
+  },
+  {
+    img: "face-salon",
+    alt: "A shopkeeper smiling inside her store",
+    role: "The regular who became a friend",
+    note: "Independent retail",
+  },
+  {
+    img: "face-butcher",
+    alt: "A butcher standing in the doorway of his shop",
+    role: "The trade passed down twice",
+    note: "Food & speciality",
+  },
+];
+
+const COMMITMENTS: [string, string][] = [
+  [
+    "A revenue floor we carry, not you",
+    "Stores on the Full Bundle plan are paid a guaranteed $49 a month per active location. If advertiser demand in that aisle falls short, the difference is ADD-LYFT's cost to absorb.",
+  ],
+  [
+    "No competitor in your own aisle",
+    "Stores are automatically removed from the target list of any advertiser in their category. A café never carries a rival café. It is enforced by the network, not negotiated store by store.",
+  ],
+  [
+    "Nothing plays unreviewed",
+    "Every message is checked before it goes live in somebody's business. Rejections come with a reason, not a silence.",
+  ],
+  [
+    "The room stays the owner's room",
+    "Genre, language, mood and favourite artists are set per store, and explicit lyrics are off unless an owner turns them on.",
+  ],
+  [
+    "Seven days before a single charge",
+    "The trial runs a full week and the payment method is not touched until it ends. The first charge date is shown before anyone confirms.",
+  ],
+  [
+    "Two messages, then the music",
+    "The format is capped by design. We would rather sell less airtime than turn a neighbourhood store into commercial radio.",
+  ],
+];
+
+export default function Trust() {
+  return (
+    <section className="trust bay" id="trust">
+      <div className="shell">
+        <div className="sec-head sec-head--split">
+          <div>
+            <Reveal>
+              <span className="kicker">What we commit to</span>
+            </Reveal>
+            <h2 className="t-d1" style={{ marginTop: "1.25rem" }}>
+              <LineReveal
+                lines={[
+                  <span key="ln1">Built for the people</span>,
+                  <span key="ln2">
+                    <span key="ln3" className="em">behind the counter.</span>
+                  </span>,
+                ]}
+              />
+            </h2>
+          </div>
+          <Reveal delay={0.1}>
+            <p className="t-lead">
+              A network like this only works if the store trusts it first. So the rules that
+              protect the owner are written into the product rather than into a sales
+              conversation.
+            </p>
+          </Reveal>
+        </div>
+
+        <RevealGroup className="trust__faces" stagger={0.09}>
+          {FACES.map((f) => (
+            <RevealItem className="trust__face" key={f.role} as="figure">
+              <div className="shot shot--sq shot--zoom">
+                <Img name={f.img} alt={f.alt} sizes="(max-width: 820px) 46vw, 22vw" />
+              </div>
+              <figcaption>
+                <b>{f.role}</b>
+                <span className="mono">{f.note}</span>
+              </figcaption>
+            </RevealItem>
+          ))}
+        </RevealGroup>
+
+        <RevealGroup className="trust__grid" stagger={0.06}>
+          {COMMITMENTS.map(([h, p], i) => (
+            <RevealItem className="trust__item" key={h}>
+              <span className="mono trust__item-n">{String(i + 1).padStart(2, "0")}</span>
+              <h3 className="t-d4">{h}</h3>
+              <p className="t-sm">{p}</p>
+            </RevealItem>
+          ))}
+        </RevealGroup>
+      </div>
+    </section>
+  );
+}
