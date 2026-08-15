@@ -6,13 +6,26 @@
  * who they are.
  */
 
-function normalise(url: string) {
-  return url.replace(/\/+$/, "");
+function getValidSiteUrl(): string {
+  const envUrl =
+    process.env.NEXT_PUBLIC_SITE_URL?.trim() ||
+    (process.env.VERCEL_PROJECT_PRODUCTION_URL ? `https://${process.env.VERCEL_PROJECT_PRODUCTION_URL}` : "") ||
+    (process.env.VERCEL_URL ? `https://${process.env.VERCEL_URL}` : "");
+
+  let raw = envUrl || "https://addlyft.com";
+  if (!/^https?:\/\//i.test(raw)) {
+    raw = `https://${raw}`;
+  }
+
+  try {
+    const parsed = new URL(raw);
+    return parsed.origin;
+  } catch {
+    return "https://addlyft.com";
+  }
 }
 
-export const SITE_URL = normalise(
-  process.env.NEXT_PUBLIC_SITE_URL ?? "https://addlyft.com",
-);
+export const SITE_URL = getValidSiteUrl();
 
 export const SITE_NAME = "ADD-LYFT";
 export const SITE_TAGLINE = "Grow Local. Reach Further.";
@@ -20,7 +33,8 @@ export const SITE_TAGLINE = "Grow Local. Reach Further.";
 export const SITE_DESCRIPTION =
   "ADD-LYFT turns everyday stores into measurable local media. Fifteen seconds of spoken audio between songs, ten seconds on the screen — at the moment people decide. Go for store owners, Reach for brands.";
 
-export const CONTACT_EMAIL = process.env.NEXT_PUBLIC_CONTACT_EMAIL ?? "hello@addlyft.com";
+export const CONTACT_EMAIL =
+  process.env.NEXT_PUBLIC_CONTACT_EMAIL?.trim() || "hello@addlyft.com";
 
 /** Routes that belong in the sitemap, with their relative importance. */
 export const ROUTES: { path: string; priority: number; changeFrequency: "weekly" | "monthly" | "yearly" }[] = [
