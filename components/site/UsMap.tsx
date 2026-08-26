@@ -55,8 +55,14 @@ export default function UsMap({ legend = true }: { legend?: boolean }) {
               </circle>
             )}
             <circle className="net__hit" cx={m.x} cy={m.y} r={16} />
-            <circle className="net__core" cx={m.x} cy={m.y} r={m.major ? 5.5 : 3.8} />
-            <text className="net__lbl" x={m.x} y={m.y - 12} textAnchor="middle">
+            <circle className="net__core" cx={m.x} cy={m.y} r={m.major ? 6 : 3.6} />
+            <text
+              className="net__lbl"
+              data-always={m.major}
+              x={m.x}
+              y={m.y - 13}
+              textAnchor="middle"
+            >
               {m.name}
             </text>
           </g>

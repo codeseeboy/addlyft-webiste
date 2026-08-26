@@ -1400,12 +1400,15 @@
   width: 100%;
   height: auto;
   overflow: visible;
+  /* A faint ground under the outline. Fill alone read as too close to the
+     page's own white, which was most of why the map felt washed out. */
+  background: radial-gradient(120% 100% at 50% 42%, var(--paper-2) 0%, transparent 68%);
 }
 
 .net__states {
-  fill: var(--paper-2);
-  stroke: var(--line-hard);
-  stroke-width: 1.1;
+  fill: var(--paper-3);
+  stroke: var(--ink-4);
+  stroke-width: 1.3;
   stroke-linejoin: round;
   vector-effect: non-scaling-stroke;
 }
@@ -1424,8 +1427,8 @@
 }
 
 .net__mk[data-major="false"] .net__core {
-  fill: var(--ink);
-  opacity: 0.42;
+  fill: var(--ink-3);
+  opacity: 0.65;
 }
 
 .net__core {
@@ -1447,17 +1450,27 @@
 
 .net__lbl {
   font-family: var(--f-mono);
-  font-size: 13px;
-  letter-spacing: 0.06em;
+  font-size: 12.5px;
+  letter-spacing: 0.05em;
   text-transform: uppercase;
-  fill: var(--ink);
+  fill: var(--ink-3);
   opacity: 0;
-  transition: opacity 0.3s var(--ease), transform 0.35s var(--ease);
+  transition: opacity 0.3s var(--ease), fill 0.3s var(--ease);
   pointer-events: none;
 }
 
+/* Priority markets carry their name at rest — that footprint is the map's
+   whole point, and making a visitor hover nine separate dots to see it is
+   exactly the kind of interaction that reads as confusing rather than rich. */
+.net__lbl[data-always="true"] {
+  opacity: 0.85;
+  font-weight: 500;
+}
+
+.net__mk:hover .net__lbl,
 .net__mk[data-on="true"] .net__lbl {
   opacity: 1;
+  fill: var(--teal-deep);
 }
 
 .net__legend {
@@ -1523,8 +1536,26 @@
     grid-template-columns: 1fr;
   }
 
-  .net__lbl {
+  /*
+   * This used to size every label, but it was written when only one label
+   * ever showed at a time (on hover). Nine priority markets now sit on at
+   * rest, and at 20px several of them are close enough on the map — Atlanta
+   * and Birmingham chief among them — to overlap into a single unreadable
+   * mark. A hover label still gets the larger, touch-friendly size; the
+   * always-on set stays legible instead.
+   */
+  .net__lbl:not([data-always="true"]) {
     font-size: 20px;
+  }
+}
+
+@media (max-width: 640px) {
+  /* Below this width there is no longer room for nine simultaneous labels
+     without collision, priority or not. The market list underneath already
+     names every one of them in plain text, so the map reverts to dots — a
+     footprint you can read as a shape, not a paragraph you have to parse. */
+  .net__lbl[data-always="true"] {
+    opacity: 0;
   }
 }
 

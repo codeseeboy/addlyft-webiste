@@ -17,23 +17,21 @@ import Link from "next/link";
  */
 export function BrandMark({ className = "brand__mark" }: { className?: string }) {
   return (
-    <svg className={className} viewBox="0 0 32 32" fill="none" aria-hidden="true">
-      <path
-        className="m-a"
-        d="M6.2 26.4 16 6.1l9.8 20.3"
-        stroke="currentColor"
-        strokeWidth="3.5"
-        strokeLinecap="round"
-        strokeLinejoin="round"
+    <span className={className}>
+      <img
+        src="/images/image.png"
+        alt="A"
+        width={32}
+        height={32}
+        style={{
+          width: "1.24em",
+          height: "1.24em",
+          objectFit: "contain",
+          display: "block",
+          filter: "drop-shadow(0 2px 6px rgba(13,148,136,0.35))",
+        }}
       />
-      <path
-        className="m-bar"
-        d="M11.1 19.1h9.8"
-        stroke="currentColor"
-        strokeWidth="3.3"
-        strokeLinecap="round"
-      />
-    </svg>
+    </span>
   );
 }
 

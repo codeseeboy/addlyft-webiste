@@ -467,22 +467,22 @@ a:hover .shot--zoom img {
   --wm-pale: var(--teal-bright);
   --wm-ink: var(--ink);
   display: inline-flex;
-  align-items: baseline;
+  align-items: center;
   gap: 0;
-  font-size: 1.16rem;
+  font-size: 1.22rem;
 }
 
 .wm__mark {
-  width: 1.12em;
-  height: 1.12em;
+  width: 1.35em;
+  height: 1.35em;
   flex: none;
-  color: var(--wm-pale);
-  /* Closes the optical gap so the mark reads as the A of the word. */
-  margin-right: -0.17em;
-  margin-left: -0.11em;
-  align-self: center;
+  display: inline-flex;
+  align-items: center;
+  justifyContent: center;
+  /* Optical spacing so mark reads as the A of Addlyft */
+  margin-right: -0.04em;
   position: relative;
-  top: 0.055em;
+  top: -0.02em;
 }
 
 .wm__mark path {
