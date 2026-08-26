@@ -7,6 +7,7 @@ const COLS = [
     links: [
       { href: "/go", label: "Addlyft Go" },
       { href: "/reach", label: "Addlyft Reach" },
+      { href: "/how-it-works", label: "How it works" },
       { href: "/pricing", label: "Pricing" },
       { href: "/network", label: "Store network" },
     ],

@@ -46,7 +46,7 @@
 }
 
 .hero__title {
-  margin-top: 1.4rem;
+  margin-top: clamp(1.5rem, 2.6vw, 2rem);
 }
 
 .hero__title .em {
@@ -123,26 +123,6 @@
   height: 100%;
   object-fit: cover;
   display: block;
-}
-
-/* Sits clear of the slate at the bottom of the frame — overlapping it hid
-   the format labels, which are the point of the whole overlay. */
-.hero__frame--small {
-  position: absolute;
-  left: clamp(-3.5rem, -4vw, -1rem);
-  bottom: clamp(6rem, 11vw, 9rem);
-  width: clamp(8rem, 15vw, 12.5rem);
-  aspect-ratio: 4 / 5;
-  border-radius: 12px;
-  border: 5px solid var(--paper);
-  box-shadow: var(--sh-2);
-  z-index: 2;
-}
-
-.hero__frame--small img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
 }
 
 /* --- format slate --- */
@@ -345,19 +325,10 @@
 
   .hero__stage {
     min-height: 0;
-    margin-left: clamp(2.5rem, 9vw, 4rem);
   }
 
   .hero__frame--big {
     aspect-ratio: 4 / 3;
-  }
-}
-
-@media (max-width: 560px) {
-  .hero__frame--small {
-    width: 7.5rem;
-    left: -2.25rem;
-    border-width: 4px;
   }
 }
 
@@ -570,7 +541,7 @@
 .chapter[data-on="true"] .chapter__card {
   opacity: 1;
   transform: none;
-  border-left-color: var(--teal);
+  border-left-color: var(--teal-bright);
   padding-left: clamp(1rem, 1.8vw, 1.6rem);
 }
 
@@ -1021,59 +992,102 @@
 
 /* ============================================================== 5. PRODUCTS */
 
-.prods {
-  padding-top: var(--bay);
-}
-
-.prods__head {
-  max-width: 52rem;
-}
-
 .prods__head-t {
   margin-top: 1.25rem;
-  margin-bottom: 1.25rem;
 }
 
 .prods__head-t .em {
   color: var(--teal-deep);
 }
 
-.prods__head-t .em + .em,
-.prods__head-t .em:nth-of-type(2) {
-  color: var(--reach-deep);
+/* --- switcher ---
+   The two products are a choice, so they are presented as one. The pill slides
+   between them rather than cross-fading: the movement is what tells you the
+   panel below is the same slot showing a different answer. */
+
+.prods__switch {
+  position: relative;
+  display: inline-grid;
+  grid-auto-flow: column;
+  gap: 0.25rem;
+  margin-top: clamp(2rem, 4vw, 3rem);
+  padding: 0.3rem;
+  border: 1px solid var(--line);
+  border-radius: var(--r-pill);
+  background: var(--paper-2);
 }
+
+.prods__tab {
+  position: relative;
+  padding: 0.7rem 1.5rem;
+  border-radius: var(--r-pill);
+  color: var(--ink-3);
+  transition: color 0.3s var(--ease);
+}
+
+.prods__tab:hover {
+  color: var(--ink);
+}
+
+.prods__tab[data-on="true"] {
+  color: var(--ink);
+}
+
+.prods__tab-bg {
+  position: absolute;
+  inset: 0;
+  border-radius: var(--r-pill);
+  background: var(--paper);
+  box-shadow: var(--sh-1);
+  z-index: 0;
+}
+
+.prods__tab-in {
+  position: relative;
+  z-index: 1;
+  display: grid;
+  gap: 0.15rem;
+  justify-items: start;
+  font-size: var(--t-sm);
+  font-weight: 500;
+  line-height: 1.2;
+  white-space: nowrap;
+}
+
+.prods__tab-in em {
+  font-family: var(--f-mono);
+  font-size: var(--t-label);
+  font-style: normal;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--ink-4);
+  transition: color 0.3s var(--ease);
+}
+
+.prods__tab[data-on="true"][data-key="go"] .prods__tab-in em {
+  color: var(--teal);
+}
+
+.prods__tab[data-on="true"][data-key="reach"] .prods__tab-in em {
+  color: var(--reach);
+}
+
+/* --- panel --- */
 
 .prod {
-  position: relative;
-  padding-block: clamp(3.5rem, 8vw, 7rem);
-}
-
-.prod + .prod {
-  border-top: 1px solid var(--line-soft);
+  margin-top: clamp(1.75rem, 3.5vw, 2.75rem);
 }
 
 .prod__in {
   display: grid;
-  grid-template-columns: minmax(0, 1fr) minmax(0, 1.02fr);
-  gap: clamp(2rem, 5vw, 5rem);
-  align-items: center;
+  grid-template-columns: minmax(0, 0.95fr) minmax(0, 1.05fr);
+  gap: clamp(2rem, 4.5vw, 4.5rem);
+  /* start, not center: the copy column is always taller than the image, and
+     centring it was what left the old layout full of orphaned whitespace. */
+  align-items: start;
 }
 
-/* Reach reads right-to-left so the two products never feel like one template
-   printed twice. */
-.prod--reach .prod__in {
-  direction: rtl;
-}
-
-.prod--reach .prod__in > * {
-  direction: ltr;
-}
-
-.prod__title {
-  margin-top: 1.3rem;
-}
-
-.prod--go .prod__title .em {
+.prod__title .em {
   color: var(--teal-deep);
 }
 
@@ -1082,50 +1096,45 @@
 }
 
 .prod__lede {
-  margin-top: 1.35rem;
-  max-width: 36rem;
+  margin-top: 1.15rem;
+  max-width: 34rem;
 }
 
 .prod__points {
-  margin-top: clamp(2rem, 3.5vw, 2.75rem);
+  margin-top: clamp(1.5rem, 2.5vw, 2rem);
   display: grid;
 }
 
+/* One line per benefit. The long-form version of each of these lives on the
+   product page, which is where someone who wants it is already heading. */
 .prod__point {
   display: grid;
-  grid-template-columns: 2.75rem minmax(0, 1fr);
-  gap: 0.75rem;
-  padding-block: 1.15rem;
+  grid-template-columns: minmax(0, 13rem) minmax(0, 1fr);
+  gap: 0.35rem 1.25rem;
+  padding-block: 0.85rem;
   border-top: 1px solid var(--line-soft);
+  font-size: var(--t-sm);
 }
 
 .prod__point:last-child {
   border-bottom: 1px solid var(--line-soft);
 }
 
-.prod__point-n {
-  color: var(--ink-4);
-  padding-top: 0.4rem;
+.prod__point b {
+  font-weight: 500;
+  color: var(--ink);
 }
 
-.prod--go .prod__point-n {
-  color: var(--teal);
-}
-
-.prod--reach .prod__point-n {
-  color: var(--reach);
-}
-
-.prod__point h3 {
-  margin-bottom: 0.35rem;
+.prod__point span {
+  color: var(--ink-2);
 }
 
 .prod__foot {
   display: flex;
   flex-wrap: wrap;
   align-items: center;
-  gap: 1.5rem;
-  margin-top: clamp(1.75rem, 3vw, 2.5rem);
+  gap: 1rem 1.5rem;
+  margin-top: clamp(1.5rem, 2.5vw, 2rem);
 }
 
 .prod__spec {
@@ -1156,12 +1165,7 @@
   background: var(--reach);
 }
 
-/* --- product media --- */
-
-.prod__media {
-  position: relative;
-  padding-bottom: clamp(2rem, 5vw, 4rem);
-}
+/* --- panel media --- */
 
 .prod__shot {
   position: relative;
@@ -1169,34 +1173,14 @@
   overflow: hidden;
   border-radius: var(--r-md);
   background: var(--paper-3);
-}
-
-.prod__shot--big {
   aspect-ratio: 4 / 3;
   box-shadow: var(--sh-2);
 }
 
-.prod__shot--big img,
-.prod__shot--small img {
+.prod__shot img {
   width: 100%;
   height: 100%;
   object-fit: cover;
-}
-
-.prod__shot--small {
-  position: absolute;
-  width: clamp(8rem, 17vw, 13rem);
-  aspect-ratio: 1 / 1;
-  bottom: 0;
-  right: clamp(-1rem, -1.5vw, 0rem);
-  border: 6px solid var(--paper);
-  border-radius: 12px;
-  box-shadow: var(--sh-2);
-}
-
-.prod--reach .prod__shot--small {
-  right: auto;
-  left: clamp(-1rem, -1.5vw, 0rem);
 }
 
 .prod__badge {
@@ -1206,7 +1190,7 @@
   display: inline-flex;
   align-items: center;
   gap: 0.5rem;
-  padding: 0.4rem 0.7rem 0.4rem 0.4rem;
+  padding: 0.4rem 0.8rem 0.4rem 0.4rem;
   border-radius: var(--r-pill);
   background: rgba(255, 255, 255, 0.94);
   backdrop-filter: blur(8px);
@@ -1236,38 +1220,35 @@
   background: var(--reach);
 }
 
-.prod__index {
-  position: absolute;
-  top: -0.5rem;
-  right: 0;
-  font-size: clamp(3rem, 7vw, 5.5rem);
-  letter-spacing: -0.04em;
-  line-height: 1;
-  color: var(--ink);
-  opacity: 0.05;
-  pointer-events: none;
-}
-
-.prod--reach .prod__index {
-  right: auto;
-  left: 0;
-}
-
 @media (max-width: 900px) {
-  .prod__in,
-  .prod--reach .prod__in {
+  .prod__in {
     grid-template-columns: 1fr;
-    direction: ltr;
   }
 
-  .prod__media {
+  .prod__shot {
     order: -1;
-    margin-bottom: 1rem;
+  }
+}
+
+@media (max-width: 560px) {
+  .prods__switch {
+    display: grid;
+    grid-auto-flow: row;
+    width: 100%;
+    border-radius: var(--r-lg);
   }
 
-  .prod__shot--small {
-    width: 7.5rem;
-    border-width: 5px;
+  .prods__tab {
+    border-radius: var(--r-md);
+    text-align: left;
+  }
+
+  .prods__tab-bg {
+    border-radius: var(--r-md);
+  }
+
+  .prod__point {
+    grid-template-columns: 1fr;
   }
 }
 
@@ -1733,11 +1714,13 @@
   color: var(--ink-4);
 }
 
+/* Four commitments across four columns: one row, read at a glance, instead of
+   a 3x2 block that reads as another wall of paragraphs. */
 .trust__grid {
   display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: clamp(1.5rem, 3vw, 2.5rem) clamp(1.5rem, 3.5vw, 3rem);
-  margin-top: clamp(3rem, 6vw, 4.5rem);
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: clamp(1.5rem, 3vw, 2.5rem) clamp(1.5rem, 3vw, 2.5rem);
+  margin-top: clamp(2.5rem, 5vw, 4rem);
 }
 
 .trust__item {
@@ -1760,6 +1743,12 @@
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 
+  .trust__grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 560px) {
   .trust__grid {
     grid-template-columns: 1fr;
   }
@@ -1996,3 +1985,566 @@
     display: none;
   }
 }
+
+/* =============================================================== 14. STUDIO
+   The interactive demo. Controls on the left, result on the right — the shape
+   of the real tool, so the section explains itself by being it.
+   ========================================================================== */
+
+.studio {
+  position: relative;
+  overflow: hidden;
+}
+
+.studio__glow {
+  position: absolute;
+  top: -22%;
+  left: 50%;
+  transform: translateX(-50%);
+  width: min(70rem, 120%);
+  height: 30rem;
+  pointer-events: none;
+  background: radial-gradient(
+    circle,
+    rgba(13, 148, 136, 0.18) 0%,
+    rgba(124, 58, 237, 0.07) 48%,
+    rgba(10, 15, 30, 0) 70%
+  );
+}
+
+.studio .shell {
+  position: relative;
+}
+
+.studio__head {
+  max-width: 44rem;
+  margin-bottom: clamp(2rem, 4vw, 3rem);
+}
+
+.studio__head-t {
+  margin-top: 1.1rem;
+  color: #fff;
+}
+
+.studio__head-t .em {
+  color: var(--teal-bright);
+}
+
+.studio__head-p {
+  margin-top: 0.9rem;
+  color: var(--night-ink-2);
+  max-width: 42ch;
+}
+
+/* --- the two panels --- */
+
+.studio__grid {
+  display: grid;
+  grid-template-columns: minmax(0, 22rem) minmax(0, 1fr);
+  gap: clamp(1rem, 1.8vw, 1.5rem);
+  align-items: start;
+}
+
+.studio__panel {
+  border: 1px solid var(--night-line);
+  border-radius: var(--r-lg);
+  background: rgba(255, 255, 255, 0.03);
+  padding: clamp(1.15rem, 2vw, 1.6rem);
+}
+
+.studio__panel-t {
+  font-size: var(--t-d4);
+  font-weight: 500;
+  color: #fff;
+}
+
+.studio__form {
+  display: grid;
+  gap: 1.15rem;
+  align-content: start;
+}
+
+/* --- form fields --- */
+
+.sfield {
+  display: grid;
+  gap: 0.5rem;
+}
+
+.sfield__label {
+  font-family: var(--f-mono);
+  font-size: var(--t-label);
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--night-ink-3);
+}
+
+.sfield__hint,
+.sfield__value {
+  font-size: var(--t-xs);
+  color: var(--night-ink-2);
+}
+
+.sfield__value {
+  color: var(--night-ink);
+}
+
+.sfield__select {
+  position: relative;
+}
+
+.sfield__select select,
+.sfield textarea {
+  width: 100%;
+  padding: 0.7rem 0.85rem;
+  border: 1px solid var(--night-line);
+  border-radius: var(--r-sm);
+  background: rgba(0, 0, 0, 0.35);
+  color: var(--night-ink);
+  font-size: var(--t-sm);
+  transition: border-color 0.3s var(--ease);
+}
+
+.sfield__select select {
+  appearance: none;
+  padding-right: 2.25rem;
+  cursor: pointer;
+}
+
+/* The native option list is drawn by the OS, so it needs colours that do not
+   inherit the dark panel — otherwise it renders white-on-white on Windows. */
+.sfield__select option {
+  background: var(--night-2);
+  color: var(--night-ink);
+}
+
+.sfield textarea {
+  resize: vertical;
+  min-height: 6rem;
+  line-height: 1.5;
+  font-family: inherit;
+}
+
+.sfield textarea::placeholder {
+  color: var(--night-ink-3);
+}
+
+.sfield__select select:focus-visible,
+.sfield textarea:focus-visible {
+  border-color: var(--teal-bright);
+  outline: none;
+}
+
+.sfield__chev {
+  position: absolute;
+  right: 0.9rem;
+  top: 50%;
+  width: 0.45rem;
+  height: 0.45rem;
+  margin-top: -0.35rem;
+  border-right: 1.5px solid var(--night-ink-2);
+  border-bottom: 1.5px solid var(--night-ink-2);
+  transform: rotate(45deg);
+  pointer-events: none;
+}
+
+.studio__outputs {
+  display: grid;
+  gap: 1px;
+  border: 1px solid var(--night-line);
+  border-radius: var(--r-sm);
+  overflow: hidden;
+  background: var(--night-line);
+}
+
+.studio__outputs li {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 0.75rem;
+  padding: 0.6rem 0.85rem;
+  background: rgba(0, 0, 0, 0.35);
+  font-size: var(--t-xs);
+}
+
+.studio__outputs b {
+  color: var(--night-ink);
+  font-weight: 500;
+}
+
+.studio__outputs span {
+  color: var(--night-ink-3);
+  font-family: var(--f-mono);
+  font-size: var(--t-label);
+  letter-spacing: 0.06em;
+}
+
+.studio__go {
+  width: 100%;
+  justify-content: center;
+  margin-top: 0.25rem;
+}
+
+/* --- result panel --- */
+
+.studio__result {
+  display: grid;
+  gap: 1rem;
+  align-content: start;
+}
+
+.studio__result-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+}
+
+.studio__live {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  font-family: var(--f-mono);
+  font-size: var(--t-label);
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--night-ink-3);
+}
+
+.studio__live i {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--teal-bright);
+  box-shadow: 0 0 0 3px rgba(20, 184, 166, 0.16);
+}
+
+.studio__tabs {
+  display: inline-flex;
+  gap: 0.2rem;
+  padding: 0.25rem;
+  border: 1px solid var(--night-line);
+  border-radius: var(--r-pill);
+  background: rgba(0, 0, 0, 0.3);
+  justify-self: start;
+}
+
+.studio__tabs button {
+  padding: 0.45rem 1.1rem;
+  border-radius: var(--r-pill);
+  font-size: var(--t-sm);
+  font-weight: 500;
+  color: var(--night-ink-2);
+  transition: background 0.3s var(--ease), color 0.3s var(--ease);
+}
+
+.studio__tabs button:hover {
+  color: var(--night-ink);
+}
+
+.studio__tabs button[data-on="true"] {
+  background: var(--teal);
+  color: #fff;
+}
+
+/* One fixed stage height so switching channel never makes the page jump. */
+.studio__stage {
+  position: relative;
+  min-height: clamp(20rem, 34vw, 27rem);
+}
+
+.studio__stage-in {
+  height: 100%;
+  display: grid;
+  align-content: center;
+  justify-items: center;
+}
+
+.studio__stage-in > * {
+  width: 100%;
+}
+
+/* --- channel: screen --- */
+
+.screenad {
+  position: relative;
+  margin: 0;
+  border-radius: var(--r-md);
+  overflow: hidden;
+  background: #000;
+  border: 1px solid var(--night-line);
+  aspect-ratio: 16 / 10;
+}
+
+.screenad video {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  opacity: 0.92;
+}
+
+.screenad__over {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  padding: clamp(0.8rem, 1.6vw, 1.15rem);
+  background: linear-gradient(
+    to bottom,
+    rgba(0, 0, 0, 0.55) 0%,
+    rgba(0, 0, 0, 0.05) 38%,
+    rgba(0, 0, 0, 0.86) 100%
+  );
+}
+
+.screenad__top {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 0.75rem;
+}
+
+.screenad__store {
+  padding: 0.3rem 0.65rem;
+  border-radius: var(--r-sm);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  background: rgba(0, 0, 0, 0.7);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  font-size: var(--t-xs);
+  font-weight: 500;
+  color: #fff;
+}
+
+.screenad__price {
+  padding: 0.28rem 0.7rem;
+  border-radius: var(--r-pill);
+  background: var(--teal-bright);
+  color: #04211e;
+  font-size: var(--t-xs);
+  font-weight: 600;
+  letter-spacing: 0.03em;
+  white-space: nowrap;
+}
+
+/* The in-store card is deliberately loud: it is a mock of something that has
+   to be read from fifteen feet away across a shop floor. */
+.screenad__card {
+  display: grid;
+  gap: 0.15rem;
+  padding: 0.8rem 1rem;
+  border: 1.5px solid var(--teal-bright);
+  border-radius: var(--r-sm);
+  background: rgba(8, 12, 20, 0.94);
+  max-width: 26rem;
+}
+
+.screenad__badge {
+  color: var(--teal-bright);
+}
+
+.screenad__card strong {
+  font-size: clamp(1.05rem, 2vw, 1.4rem);
+  font-weight: 600;
+  line-height: 1.12;
+  letter-spacing: -0.02em;
+  color: #fff;
+}
+
+.screenad__card > span:last-child {
+  font-size: var(--t-xs);
+  color: rgba(255, 255, 255, 0.82);
+}
+
+.screenad__len {
+  position: absolute;
+  right: 0.6rem;
+  bottom: 0.6rem;
+  padding: 0.2rem 0.5rem;
+  border-radius: 4px;
+  background: rgba(0, 0, 0, 0.75);
+  color: rgba(255, 255, 255, 0.75);
+}
+
+/* --- channel: speaker --- */
+
+.voicead {
+  display: grid;
+  gap: 1.15rem;
+  align-content: start;
+  padding: clamp(1.15rem, 2.2vw, 1.75rem);
+  border: 1px solid var(--night-line);
+  border-radius: var(--r-md);
+  background: radial-gradient(
+    circle at 20% 0%,
+    rgba(13, 148, 136, 0.16) 0%,
+    rgba(6, 10, 18, 0.95) 62%
+  );
+}
+
+.voicead__head {
+  display: flex;
+  align-items: center;
+  gap: 0.85rem;
+}
+
+.voicead__play {
+  display: grid;
+  place-items: center;
+  width: 2.9rem;
+  height: 2.9rem;
+  flex: none;
+  border-radius: 50%;
+  background: var(--teal);
+  color: #fff;
+  font-size: 0.85rem;
+  transition: background 0.3s var(--ease), transform 0.3s var(--ease);
+}
+
+.voicead__play:hover {
+  transform: scale(1.06);
+}
+
+.voicead__play[data-on="true"] {
+  background: var(--teal-bright);
+  color: #04211e;
+}
+
+.voicead__who {
+  display: grid;
+  gap: 0.15rem;
+}
+
+.voicead__who b {
+  font-weight: 500;
+  color: #fff;
+}
+
+.voicead__who .mono {
+  color: var(--teal-bright);
+}
+
+.voicead__clock {
+  margin-left: auto;
+  color: var(--night-ink-3);
+}
+
+.voicead__script {
+  margin: 0;
+  padding: 1rem 1.15rem;
+  border: 1px solid var(--night-line);
+  border-radius: var(--r-sm);
+  background: rgba(0, 0, 0, 0.45);
+  color: rgba(255, 255, 255, 0.92);
+  font-size: var(--t-sm);
+  line-height: 1.6;
+  font-style: italic;
+}
+
+.voicead__wave {
+  display: flex;
+  align-items: center;
+  gap: 3px;
+  height: 3rem;
+}
+
+.voicead__wave i {
+  flex: 1;
+  height: 100%;
+  border-radius: 2px;
+  background: var(--teal-bright);
+  opacity: 0.75;
+  transform: scaleY(0.14);
+}
+
+.voicead__bed {
+  color: var(--night-ink-3);
+}
+
+/* --- channel: social --- */
+
+.socialad {
+  display: grid;
+  gap: 0.9rem;
+  align-content: start;
+  padding: clamp(1.15rem, 2.2vw, 1.5rem);
+  border: 1px solid var(--night-line);
+  border-radius: var(--r-md);
+  background: rgba(0, 0, 0, 0.4);
+  max-width: 26rem;
+}
+
+.socialad__head {
+  display: flex;
+  align-items: center;
+  gap: 0.7rem;
+}
+
+.socialad__av {
+  width: 2.25rem;
+  height: 2.25rem;
+  flex: none;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #f58529, #dd2a7b, #8134af);
+}
+
+.socialad__who {
+  display: grid;
+  gap: 0.1rem;
+}
+
+.socialad__who b {
+  font-weight: 500;
+  color: #fff;
+  font-size: var(--t-sm);
+}
+
+.socialad__who span {
+  font-size: var(--t-xs);
+  color: var(--night-ink-3);
+}
+
+.socialad__shot {
+  position: relative;
+  margin: 0;
+  border-radius: var(--r-sm);
+  overflow: hidden;
+  aspect-ratio: 1 / 1;
+  background: var(--night-2);
+}
+
+.socialad__shot img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.socialad__shot figcaption {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  padding: 1.75rem 0.9rem 0.7rem;
+  background: linear-gradient(to top, rgba(0, 0, 0, 0.88), transparent);
+  color: #fff;
+  font-size: var(--t-sm);
+  font-weight: 500;
+}
+
+.socialad__cap {
+  font-size: var(--t-sm);
+  line-height: 1.55;
+  color: rgba(255, 255, 255, 0.86);
+}
+
+@media (max-width: 900px) {
+  .studio__grid {
+    grid-template-columns: 1fr;
+  }
+
+  .studio__stage {
+    min-height: 0;
+  }
+}
+

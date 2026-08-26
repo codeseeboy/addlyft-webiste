@@ -9,6 +9,7 @@ import { Reveal, RevealGroup, RevealItem } from "@/components/site/Motion";
 import GoPlan from "@/components/pricing/GoPlan";
 import Channels, { TemplateLibrary } from "@/components/product/Channels";
 import Earnings from "@/components/product/Earnings";
+import AdStudio from "@/components/home/AdStudio";
 import { GO_PRICE, GUARANTEE_NOTE, money } from "@/lib/pricing";
 
 export const metadata: Metadata = {
@@ -105,9 +106,11 @@ export default function GoPage() {
           ["Guaranteed", `${money(GO_PRICE.guarantee)} / month`],
           ["Hardware", "TV device included"],
         ]}
-        image="store-live-cafe"
-        imageAlt="A shop's own promotion running on the screen above its counter"
+        image="store-counter-tv"
+        imageAlt="A convenience store checkout counter with TV displaying AI promotions"
       />
+
+      <AdStudio />
 
       <Channels />
 

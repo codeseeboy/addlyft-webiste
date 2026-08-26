@@ -57,13 +57,13 @@ const ADVERTISERS: Row[] = [
   {
     name: "Auto dealers",
     note: "Showroom visits and seasonal sales events, in front of people two minutes away.",
-    img: "reach-auto",
+    img: "reach-auto-showroom",
     alt: "A car on display in a dealership showroom",
   },
   {
     name: "Real estate agents",
     note: "New listings and Sunday open houses, in the shops the neighbourhood walks into.",
-    img: "reach-realestate",
+    img: "reach-realestate-house",
     alt: "A house with a for-sale sign in the front yard",
   },
   {

@@ -1,14 +1,9 @@
 import Hero from "@/components/home/Hero";
 import Moment from "@/components/home/Moment";
-import StoreRoom from "@/components/home/StoreRoom";
-import Cycle from "@/components/home/Cycle";
 import Products from "@/components/home/Products";
-import Ecosystem from "@/components/home/Ecosystem";
-import Venues from "@/components/home/Venues";
-import Network from "@/components/home/Network";
-import Measurement from "@/components/home/Measurement";
 import Trust from "@/components/home/Trust";
 import PricePeek from "@/components/home/PricePeek";
+import AdStudio from "@/components/home/AdStudio";
 import { FaqSection } from "@/components/site/Faq";
 import CtaBand from "@/components/site/CtaBand";
 
@@ -41,7 +36,7 @@ const FAQ = [
   {
     category: "Addlyft Reach",
     q: "Do I have to make a new ad every day?",
-    a: "No. Most advertisers run one ad for the month. A plan with 25 plays a day means the same spot is shown 25 times a day in each store, the way a television ad repeats through an evening.",
+    a: "No. Most advertisers run one ad for the month. A plan with 25 plays a day means the same spot is shown 25 times a day in each store, the way a television ad repeats through an evening. You create one video, and it plays on repeat — it is not 25 different videos.",
   },
   {
     category: "Pricing",
@@ -71,14 +66,9 @@ export default function HomePage() {
   return (
     <>
       <Hero />
-      <Moment />
-      <StoreRoom />
-      <Cycle />
+      <AdStudio />
       <Products />
-      <Ecosystem />
-      <Venues />
-      <Network />
-      <Measurement />
+      <Moment />
       <Trust />
       <PricePeek />
       <FaqSection

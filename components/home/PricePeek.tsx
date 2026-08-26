@@ -9,7 +9,7 @@ const cheapestReach = REACH_PLANS[0];
 
 export default function PricePeek() {
   return (
-    <section className="peek bay" id="pricing">
+    <section className="peek bay on-paper2" id="pricing">
       <div className="shell">
         <div className="sec-head sec-head--split">
           <div>

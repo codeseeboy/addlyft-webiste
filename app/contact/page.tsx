@@ -15,7 +15,7 @@ const ASIDE: [string, string][] = [
     "Tell us the type of business and roughly how busy a normal day is. We will come back with what a month on the network would look like for a store like yours.",
   ],
   [
-    "Brands",
+    "Advertisers",
     "Tell us who you are trying to reach and where. We will send back the stores that fit and what a first campaign would cost.",
   ],
   [

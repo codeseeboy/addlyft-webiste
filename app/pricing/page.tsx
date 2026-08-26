@@ -34,6 +34,14 @@ const FAQ = [
     a: "Each plan's headline price covers a base of five stores. For more stores you pay the plan price divided by five, multiplied by your store count — then the volume discount is applied automatically, up to 50% at a hundred stores.",
   },
   {
+    q: "Does '10 videos per day' mean I have to create 10 different videos?",
+    a: "No. It means your ad plays 10 times a day in each store — the same way a TV commercial repeats through an evening. Most advertisers create just one or two ads for the whole month. The plan number is plays, not creations.",
+  },
+  {
+    q: "Are the audio and video ads synchronised?",
+    a: "No, and that is by design. The screen runs 10-second video spots continuously with no sound. The audio ad is a separate 15-second spot that plays between songs on the store's speaker. Two channels, two schedules — they run independently.",
+  },
+  {
     q: "What happens when I run out of AI generations?",
     a: "Buy a top-up pack at any time: 10 for $9.90, 25 for $19.99, or 50 for $34.99. They are one-off purchases, not subscriptions. You can also use the free template library, which costs no generations at all.",
   },

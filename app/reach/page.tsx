@@ -9,6 +9,7 @@ import { Reveal, RevealGroup, RevealItem } from "@/components/site/Motion";
 import { ReachEstimator, ReachPlanGrid, VolumeTable } from "@/components/pricing/ReachPlans";
 import { REACH_BASE_STORES, REACH_PLANS, money } from "@/lib/pricing";
 import type { ImageKey } from "@/lib/images";
+import AdStudio from "@/components/home/AdStudio";
 
 export const metadata: Metadata = {
   title: "Addlyft Reach — for advertisers",
@@ -21,13 +22,13 @@ const WHO: { name: string; note: string; img: ImageKey; alt: string }[] = [
   {
     name: "Auto dealers",
     note: "Put the showroom in front of people two minutes down the road, every day of the week.",
-    img: "reach-auto",
+    img: "reach-auto-showroom",
     alt: "A car on display in a dealership showroom",
   },
   {
     name: "Real estate agents",
     note: "New listing, open house this Sunday — in the shops the neighbourhood actually walks into.",
-    img: "reach-realestate",
+    img: "reach-realestate-house",
     alt: "A house with a for-sale sign in the front yard",
   },
   {
@@ -138,9 +139,11 @@ export default function ReachPage() {
           ["Formats", "Cross Audio 15s · Cross Video 10s"],
           ["Volume discount", "Up to 50%"],
         ]}
-        image="store-live-realestate"
-        imageAlt="A local advertiser's spot playing on a screen inside a shop"
+        image="reach-auto-showroom"
+        imageAlt="A modern auto dealership showroom"
       />
+
+      <AdStudio />
 
       {/* --------------------------------------------------------- who it's for */}
       <section className="bay-sm shell">

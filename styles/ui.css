@@ -518,34 +518,60 @@ a:hover .shot--zoom img {
   --wm-ink: var(--night-ink);
 }
 
-/* Launch badge — sits beside the wordmark, hides before it can crowd the nav. */
-.hdr__badge {
+/* Status pill — one small, quiet place for a launch line or a state note.
+   It lives in the hero rather than the header: beside the wordmark it crowded
+   the nav, and a visitor reads the promise before they read the date. */
+.pill {
   display: inline-flex;
   align-items: center;
-  gap: 0.45rem;
-  padding: 0.32rem 0.7rem;
-  border: 1px solid var(--teal-line);
-  background: var(--teal-wash);
+  gap: 0.55rem;
+  padding: 0.4rem 0.5rem 0.4rem 0.85rem;
+  border: 1px solid var(--line);
+  background: var(--paper-2);
   border-radius: var(--r-pill);
-  font-size: 0.72rem;
+  font-size: var(--t-xs);
   font-weight: 500;
   letter-spacing: -0.005em;
-  color: var(--teal-deep);
+  color: var(--ink-2);
   white-space: nowrap;
-  flex: none;
 }
 
-.hdr__badge-dot {
-  width: 5px;
-  height: 5px;
+.pill b {
+  padding: 0.2rem 0.6rem;
+  border-radius: var(--r-pill);
+  background: var(--paper);
+  border: 1px solid var(--line-soft);
+  font-size: var(--t-label);
+  font-family: var(--f-mono);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  font-weight: 500;
+  color: var(--ink-3);
+}
+
+.pill--teal {
+  border-color: var(--teal-line);
+  background: var(--teal-wash);
+  color: var(--teal-ink);
+}
+
+.pill--teal b {
+  border-color: var(--teal-line);
+  color: var(--teal-deep);
+}
+
+.pill__dot {
+  width: 6px;
+  height: 6px;
   border-radius: 50%;
   background: var(--teal-bright);
   flex: none;
+  box-shadow: 0 0 0 3px rgba(20, 184, 166, 0.18);
 }
 
-@media (max-width: 1180px) {
-  .hdr__badge {
-    display: none;
+@media (max-width: 420px) {
+  .pill {
+    white-space: normal;
   }
 }
 

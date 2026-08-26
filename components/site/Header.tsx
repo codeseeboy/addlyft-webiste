@@ -23,6 +23,7 @@ const PRODUCTS = [
 ];
 
 const LINKS = [
+  { href: "/how-it-works", label: "How It Works" },
   { href: "/network", label: "Network" },
   { href: "/pricing", label: "Pricing" },
   { href: "/about", label: "Company" },
@@ -90,12 +91,6 @@ export default function Header() {
       <header className="hdr" data-solid={solid || open} data-hidden={hidden && !open}>
         <div className="hdr__in">
           <BrandLink />
-
-          {/* Requested on the call: a launch line in the header. */}
-          <span className="hdr__badge">
-            <span className="hdr__badge-dot" aria-hidden="true" />
-            AI-Powered Marketing &amp; Advertising · Launching 2026
-          </span>
 
           <nav className="nav" aria-label="Primary">
             <div

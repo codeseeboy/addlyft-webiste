@@ -23,30 +23,48 @@
  */
 
 import { Canvas, useFrame, useThree } from "@react-three/fiber";
-import { Html, Instance, Instances, MeshReflectorMaterial } from "@react-three/drei";
+import {
+  ContactShadows,
+  Environment,
+  Html,
+  Instance,
+  Instances,
+  Lightformer,
+  MeshReflectorMaterial,
+} from "@react-three/drei";
 import { useEffect, useMemo, useRef, useState } from "react";
 import * as THREE from "three";
 
 const C = {
-  bg: "#aab6c0",
-  floor: "#9d9a92",
-  wall: "#d8d3ca",
-  ceiling: "#e9e7e2",
-  counterTop: "#8a5c36",
-  counterBody: "#26333a",
-  shelf: "#c6c2b9",
-  shelfEdge: "#b0aca3",
-  daylight: "#fff4e2",
+  bg: "#9aa6b0",
+  floor: "#7d7b76",
+  wall: "#c3beb4",
+  ceiling: "#d6d3cd",
+  counterTop: "#7a4f2e",
+  counterBody: "#212c33",
+  shelf: "#b3afa6",
+  shelfEdge: "#9b978e",
+  daylight: "#ffeed2",
   cool: "#cfe3f2",
   audio: "#0d9488",
 };
 
-/* Convenience-store stock is loud. That is what makes it read as a shop. */
+/*
+ * Convenience-store stock is loud, but it is not a colour wheel. The first
+ * version used evenly spaced Flat-UI primaries at full saturation, which is
+ * exactly the palette a toy set uses — that was the "cartoonish" note.
+ *
+ * These are sampled off real packaging instead: mostly mid-value and muted,
+ * with a handful of saturated pops, and several near-neutral cartons. Value
+ * varies more than hue does, which is what real shelves actually look like.
+ */
 const GOODS = [
-  "#c0392b", "#e67e22", "#f1c40f", "#27ae60", "#2980b9",
-  "#8e44ad", "#d35400", "#16a085", "#c0546b", "#e8b33c",
+  "#9c3b32", "#b5642f", "#c9a24a", "#4f7346", "#3a5f7d",
+  "#6d5273", "#a8552c", "#3f7168", "#95566a", "#c4a06a",
+  "#d8d2c6", "#b9b3a6", "#8f8a80", "#e0d8c8", "#7a6f63",
+  "#2f3a42", "#c85a3c", "#d9c9a3",
 ];
-const COLD = ["#2f6f9f", "#3f9d8c", "#6a7fb0", "#4f8fa8", "#8ab4c9"];
+const COLD = ["#3d6a8c", "#4a8579", "#5d6d93", "#4b7d90", "#7fa2b5", "#c3d2da"];
 
 export type Tier = "high" | "mid" | "low";
 
@@ -189,6 +207,10 @@ function Aisles({ tier }: { tier: Tier }) {
     return out;
   }, [units, perShelf]);
 
+  /* Roughly a third of a real shelf is bottles and cans; the rest is board. */
+  const matte = useMemo(() => stock.filter((_, i) => i % 3 !== 0), [stock]);
+  const gloss = useMemo(() => stock.filter((_, i) => i % 3 === 0), [stock]);
+
   return (
     <group>
       <Instances limit={geo.backs.length} range={geo.backs.length}>
@@ -209,16 +231,30 @@ function Aisles({ tier }: { tier: Tier }) {
 
       <Instances limit={geo.decks.length} range={geo.decks.length}>
         <boxGeometry args={[0.5, 0.04, 2.12]} />
-        <meshStandardMaterial color="#efece6" roughness={0.7} metalness={0.1} />
+        <meshStandardMaterial color="#d5d1c8" roughness={0.55} metalness={0.08} envMapIntensity={1.1} />
         {geo.decks.map((p, i) => (
           <Instance key={i} position={p} />
         ))}
       </Instances>
 
-      <Instances limit={stock.length} range={stock.length}>
+      {/*
+       * Two material groups, not one. A single matte material made every item
+       * the same plastic brick; cartons and bottles reflect very differently,
+       * and that contrast is most of what separates a shelf you believe from
+       * one you do not.
+       */}
+      <Instances limit={matte.length} range={matte.length}>
         <boxGeometry />
-        <meshStandardMaterial roughness={0.68} />
-        {stock.map((s, i) => (
+        <meshStandardMaterial roughness={0.82} metalness={0.02} envMapIntensity={0.7} />
+        {matte.map((s, i) => (
+          <Instance key={i} position={s.pos} scale={s.scale} color={s.color} />
+        ))}
+      </Instances>
+
+      <Instances limit={gloss.length} range={gloss.length}>
+        <boxGeometry />
+        <meshStandardMaterial roughness={0.2} metalness={0.14} envMapIntensity={1.6} />
+        {gloss.map((s, i) => (
           <Instance key={i} position={s.pos} scale={s.scale} color={s.color} />
         ))}
       </Instances>
@@ -252,11 +288,11 @@ function Counter({ tier }: { tier: Tier }) {
       {/* counter body + overhanging top */}
       <mesh position={[0, 0.5, COUNTER_Z]} castShadow={false}>
         <boxGeometry args={[3.6, 1.0, 0.8]} />
-        <meshStandardMaterial color={C.counterBody} roughness={0.6} metalness={0.15} />
+        <meshStandardMaterial color={C.counterBody} roughness={0.45} metalness={0.2} envMapIntensity={1.1} />
       </mesh>
       <mesh position={[0, 1.03, COUNTER_Z]}>
         <boxGeometry args={[3.85, 0.07, 0.95]} />
-        <meshStandardMaterial color={C.counterTop} roughness={0.42} metalness={0.06} />
+        <meshStandardMaterial color={C.counterTop} roughness={0.3} metalness={0.05} envMapIntensity={1.2} />
       </mesh>
       {/* kick rail — a small real-world detail that sells the scale */}
       <mesh position={[0, 0.06, COUNTER_Z + 0.38]}>
@@ -312,7 +348,7 @@ function Counter({ tier }: { tier: Tier }) {
       {[0.5, 1.02].map((y) => (
         <mesh key={y} position={[0, y, BACK_Z + 0.48]}>
           <boxGeometry args={[5.2, 0.04, 0.32]} />
-          <meshStandardMaterial color="#efece6" roughness={0.7} metalness={0.1} />
+          <meshStandardMaterial color="#d5d1c8" roughness={0.55} metalness={0.08} envMapIntensity={1.1} />
         </mesh>
       ))}
       <Instances limit={bottles.length} range={bottles.length}>
@@ -502,18 +538,18 @@ function Room({ tier }: { tier: Tier }) {
             mirror={0}
           />
         ) : (
-          <meshStandardMaterial color={C.floor} roughness={0.85} />
+          <meshStandardMaterial color={C.floor} roughness={0.62} metalness={0.06} envMapIntensity={0.9} />
         )}
       </mesh>
 
       {/* ceiling and walls */}
       <mesh rotation={[Math.PI / 2, 0, 0]} position={[0, 3.2, 0]}>
         <planeGeometry args={[40, 48]} />
-        <meshStandardMaterial color={C.ceiling} roughness={1} />
+        <meshStandardMaterial color={C.ceiling} roughness={0.92} envMapIntensity={0.5} />
       </mesh>
       <mesh position={[0, 1.6, BACK_Z]}>
         <planeGeometry args={[16, 3.2]} />
-        <meshStandardMaterial color={C.wall} roughness={0.95} />
+        <meshStandardMaterial color={C.wall} roughness={0.88} envMapIntensity={0.6} />
       </mesh>
 
       {/* ceiling light panels */}
@@ -535,12 +571,23 @@ function Room({ tier }: { tier: Tier }) {
       <Aisles tier={tier} />
       <Counter tier={tier} />
 
+      <ContactShadows
+        position={[0, 0.01, COUNTER_Z]}
+        scale={14}
+        resolution={tier === "low" ? 256 : 512}
+        blur={2.6}
+        opacity={0.42}
+        far={2.2}
+        color="#1a1f24"
+        frames={1}
+      />
+
       {/* Daylight-ish store lighting: five lamps for the whole room. */}
       <pointLight position={[0, 3.0, 6.0]} color={C.daylight} intensity={13} distance={15} decay={2} />
       <pointLight position={[0, 3.0, 1.2]} color={C.daylight} intensity={13} distance={15} decay={2} />
       <pointLight position={[0, 2.9, -3.2]} color={C.daylight} intensity={12} distance={14} decay={2} />
-      <pointLight position={[-3.0, 2.2, 3.0]} color="#ffffff" intensity={5} distance={10} decay={2} />
-      <pointLight position={[3.0, 2.2, 3.0]} color="#ffffff" intensity={5} distance={10} decay={2} />
+      <pointLight position={[-3.0, 2.2, 3.0]} color="#ffffff" intensity={3} distance={10} decay={2} />
+      <pointLight position={[3.0, 2.2, 3.0]} color="#ffffff" intensity={3} distance={10} decay={2} />
     </group>
   );
 }
@@ -569,7 +616,14 @@ export default function RoomScene({
       frameloop={visible ? "always" : "never"}
       dpr={dpr}
       camera={{ position: [0, 1.62, 8.6], fov: 54, near: 0.1, far: 60 }}
-      gl={{ antialias: tier === "high", powerPreference: "high-performance", alpha: false }}
+      shadows={tier === "high" ? "soft" : false}
+      gl={{
+        antialias: tier === "high",
+        powerPreference: "high-performance",
+        alpha: false,
+        toneMapping: THREE.ACESFilmicToneMapping,
+        toneMappingExposure: 0.98,
+      }}
       onCreated={({ gl }) => {
         /* WebGL dithers by default and Intel drivers draw it as a visible
            crosshatch over gradients. Nothing here needs it. */
@@ -581,8 +635,32 @@ export default function RoomScene({
     >
       <color attach="background" args={[C.bg]} />
       <fog attach="fog" args={[C.bg, 22, 46]} />
-      <ambientLight intensity={0.55} color="#e8eef3" />
-      <hemisphereLight args={["#eaf1f6", "#8d8880", 0.55]} />
+      <ambientLight intensity={0.32} color="#e8eef3" />
+      <hemisphereLight args={["#eaf1f6", "#8d8880", 0.4]} />
+
+      {/*
+       * Built in-engine rather than fetched: drei's HDRI presets pull from a
+       * CDN, and this scene must not depend on a third-party download to stop
+       * looking like plastic. Four soft strips mimic the ceiling runs, so every
+       * bottle and chiller door gets a real highlight to roll across it.
+       */}
+      <Environment resolution={256} frames={1}>
+        <color attach="background" args={["#20262b"]} />
+        {[6.2, 2.6, -1.0, -4.4].map((z) => (
+          <Lightformer
+            key={z}
+            form="rect"
+            intensity={2.4}
+            color="#fff4e2"
+            position={[0, 3.1, z]}
+            rotation={[Math.PI / 2, 0, 0]}
+            scale={[5, 1.6, 1]}
+          />
+        ))}
+        <Lightformer form="rect" intensity={0.7} color="#cfe3f2" position={[-6, 2, 2]} rotation={[0, Math.PI / 2, 0]} scale={[8, 4, 1]} />
+        <Lightformer form="rect" intensity={0.7} color="#cfe3f2" position={[6, 2, 2]} rotation={[0, -Math.PI / 2, 0]} scale={[8, 4, 1]} />
+      </Environment>
+
       <Room tier={tier} />
       <Speaker progress={progress} />
       <CounterScreen progress={progress} playing={visible} />

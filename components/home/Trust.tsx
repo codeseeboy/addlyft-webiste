@@ -31,30 +31,27 @@ const FACES: { img: ImageKey; alt: string; role: string; note: string }[] = [
   },
 ];
 
+/*
+ * Four, not six. Every one of these was a paragraph; the ones that survived are
+ * the four an owner actually asks about on the first call, cut to a sentence.
+ * The rest are answered in the FAQ below, where someone looking for them looks.
+ */
 const COMMITMENTS: [string, string][] = [
   [
-    "A revenue floor we carry, not you",
-    "Every active Addlyft Go store is paid a guaranteed $49 a month. If advertiser demand for that store falls short in a given month, the difference is Addlyft's cost to absorb.",
+    "A revenue floor we carry",
+    "Every active store is paid $49 a month. If advertiser demand falls short, the difference is ours to absorb.",
   ],
   [
-    "No competitor in your own aisle",
-    "Stores are automatically removed from the target list of any advertiser in their category. A café never carries a rival café. It is enforced by the network, not negotiated store by store.",
+    "No competitor in your aisle",
+    "Same-category advertisers are removed from your store automatically. A café never carries a rival café.",
   ],
   [
     "Nothing plays unreviewed",
-    "Every message is checked before it goes live in somebody's business. Rejections come with a reason, not a silence.",
+    "Every message is checked before it goes live in somebody's business, and rejections come with a reason.",
   ],
   [
-    "The room stays the owner's room",
-    "Genre, language, mood and favourite artists are set per store, and explicit lyrics are off unless an owner turns them on.",
-  ],
-  [
-    "Seven days before a single charge",
-    "The trial runs a full week and the payment method is not touched until it ends. The first charge date is shown before anyone confirms.",
-  ],
-  [
-    "One read, then the music",
-    "A break is a single fifteen-second read, not a commercial block. We would rather sell less airtime than turn a neighbourhood shop into commercial radio.",
+    "The room stays yours",
+    "Genre, language and mood are set per store. Explicit lyrics stay off unless the owner turns them on.",
   ],
 ];
 

@@ -3,7 +3,6 @@
 import Link from "next/link";
 import { motion, useReducedMotion, useScroll, useTransform } from "framer-motion";
 import { useRef } from "react";
-import Img from "@/components/site/Img";
 import LoopVideo from "@/components/site/LoopVideo";
 import { Arrow } from "@/components/site/Brand";
 import { EASE, LineReveal, Magnetic } from "@/components/site/Motion";
@@ -31,7 +30,6 @@ export default function Hero() {
   // The frame drifts up slower than the page and gives back a little scale —
   // the depth cue that makes a still photograph feel like a held shot.
   const yBig = useTransform(scrollYProgress, [0, 1], [0, -70]);
-  const ySmall = useTransform(scrollYProgress, [0, 1], [0, 46]);
   const scale = useTransform(scrollYProgress, [0, 1], [1, 1.07]);
   const copyY = useTransform(scrollYProgress, [0, 1], [0, 62]);
   const fade = useTransform(scrollYProgress, [0, 0.85], [1, 0]);
@@ -43,11 +41,12 @@ export default function Hero() {
       <div className="shell-wide hero__in">
         <motion.div className="hero__copy" style={reduce ? undefined : { y: copyY, opacity: fade }}>
           <motion.span
-            className="kicker kicker--teal"
+            className="pill pill--teal"
             initial={{ opacity: 0, y: 12 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8, ease: EASE, delay: 0.15 }}
           >
+            <span className="pill__dot" aria-hidden="true" />
             AI-powered marketing for small retail
           </motion.span>
 
@@ -84,13 +83,13 @@ export default function Hero() {
           >
             <Magnetic strength={0.22}>
               <Link href="/go" className="btn btn--teal btn--lg">
-                I'm a store
+                I own a store
                 <Arrow className="btn__ico" />
               </Link>
             </Magnetic>
             <Magnetic strength={0.22}>
               <Link href="/reach" className="btn btn--ghost btn--lg">
-                I'm an advertiser
+                I want to advertise
                 <Arrow className="btn__ico" />
               </Link>
             </Magnetic>
@@ -126,20 +125,6 @@ export default function Hero() {
               />
             </motion.div>
             <FormatSlate />
-          </motion.figure>
-
-          <motion.figure
-            className="hero__frame hero__frame--small"
-            style={reduce ? undefined : { y: ySmall }}
-            initial={{ opacity: 0, y: 40, scale: 0.94 }}
-            animate={{ opacity: 1, y: 0, scale: 1 }}
-            transition={{ duration: 1.2, ease: EASE, delay: 0.85 }}
-          >
-            <Img
-              name="store-live-counter"
-              alt="A digital board above a service counter running a local ad"
-              sizes="(max-width: 900px) 40vw, 20vw"
-            />
           </motion.figure>
         </div>
       </div>

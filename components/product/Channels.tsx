@@ -107,9 +107,102 @@ export default function Channels() {
             <Reveal className="chan__row" key={c.id} y={22} delay={0.04}>
               <article data-flip={i % 2 === 1} id={c.id}>
                 <div className="chan__media">
-                  <div className="shot shot--wide shot--zoom">
-                    <Img name={c.img} alt={c.alt} sizes="(max-width: 900px) 100vw, 42vw" />
-                  </div>
+                  {c.id === "video" ? (
+                    <div
+                      className="shot shot--wide"
+                      style={{
+                        position: "relative",
+                        background: "#000000",
+                        borderRadius: "var(--r-md)",
+                        overflow: "hidden",
+                      }}
+                    >
+                      <video
+                        src="/media/store-screen.mp4"
+                        poster="/media/store-screen-poster.jpg"
+                        autoPlay
+                        muted
+                        loop
+                        playsInline
+                        style={{ width: "100%", height: "100%", objectFit: "cover", opacity: 0.9 }}
+                      />
+                      <div
+                        style={{
+                          position: "absolute",
+                          bottom: "1rem",
+                          left: "1rem",
+                          right: "1rem",
+                          background: "rgba(10, 15, 30, 0.92)",
+                          border: "1.5px solid var(--teal-bright)",
+                          borderRadius: "var(--r-sm)",
+                          padding: "0.65rem 0.9rem",
+                          backdropFilter: "blur(8px)",
+                        }}
+                      >
+                        <span className="mono" style={{ fontSize: "0.68rem", color: "var(--teal-bright)", fontWeight: 700, display: "block" }}>
+                          AI TV AD · 10s LOOP
+                        </span>
+                        <p style={{ margin: 0, fontSize: "0.85rem", fontWeight: 700, color: "#FFFFFF" }}>
+                          WEEKEND SALE — 20% OFF COLD DRINKS
+                        </p>
+                      </div>
+                    </div>
+                  ) : c.id === "audio" ? (
+                    <div
+                      className="shot shot--wide"
+                      style={{
+                        position: "relative",
+                        background: "radial-gradient(circle at center, rgba(13,148,136,0.2) 0%, #060A12 100%)",
+                        borderRadius: "var(--r-md)",
+                        display: "flex",
+                        flexDirection: "column",
+                        justifyContent: "center",
+                        alignItems: "center",
+                        padding: "1.5rem",
+                        border: "1px solid rgba(255,255,255,0.1)",
+                      }}
+                    >
+                      <div
+                        style={{
+                          width: 52,
+                          height: 52,
+                          borderRadius: "50%",
+                          background: "var(--teal)",
+                          display: "flex",
+                          alignItems: "center",
+                          justifyContent: "center",
+                          fontSize: "1.5rem",
+                          marginBottom: "1rem",
+                          boxShadow: "0 0 20px rgba(13,148,136,0.4)",
+                        }}
+                      >
+                        🔊
+                      </div>
+                      <span className="mono" style={{ fontSize: "0.78rem", color: "var(--teal-bright)", marginBottom: "0.5rem" }}>
+                        AI AUDIO SPOT · 15.000s
+                      </span>
+                      <p style={{ fontStyle: "italic", fontSize: "0.85rem", color: "#FFFFFF", textAlign: "center", maxWidth: "260px", marginBottom: "1rem" }}>
+                        &ldquo;Weekend special! Grab any two cold drinks for five dollars...&rdquo;
+                      </p>
+                      <div style={{ display: "flex", gap: "3px", width: "80%", height: "24px", alignItems: "center" }}>
+                        {Array.from({ length: 24 }).map((_, idx) => (
+                          <span
+                            key={idx}
+                            style={{
+                              flex: 1,
+                              height: `${Math.max(4, Math.sin(idx * 0.5) * 16 + 12)}px`,
+                              background: "var(--teal-bright)",
+                              borderRadius: "2px",
+                            }}
+                          />
+                        ))}
+                      </div>
+                    </div>
+                  ) : (
+                    <div className="shot shot--wide shot--zoom">
+                      <Img name={c.img} alt={c.alt} sizes="(max-width: 900px) 100vw, 42vw" />
+                    </div>
+                  )}
                   {c.badge && <span className="chan__badge">{c.badge}</span>}
                 </div>
 
