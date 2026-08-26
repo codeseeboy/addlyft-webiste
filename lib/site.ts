@@ -60,7 +60,7 @@ export function organizationJsonLd() {
     slogan: SITE_TAGLINE,
     description: SITE_DESCRIPTION,
     email: CONTACT_EMAIL,
-    logo: `${SITE_URL}/icon.svg`,
+    logo: `${SITE_URL}/icon-512.png`,
     areaServed: { "@type": "Country", name: "United States" },
     knowsAbout: [
       "local retail media",

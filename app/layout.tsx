@@ -76,9 +76,21 @@ export const metadata: Metadata = {
     description: "Measurable local retail media, built for store owners and brands.",
   },
   icons: {
-    icon: "/icon.png",
-    shortcut: "/icon.png",
-    apple: "/icon.png",
+    /*
+     * Each size is its own file. The previous version pointed every size at
+     * one 1254px, 1.3MB source image, so a browser asking for a 32px tab icon
+     * downloaded the same megabyte-plus file as the 512px one.
+     */
+    icon: [
+      { url: "/favicon.ico", sizes: "any" },
+      { url: "/icon-32.png", sizes: "32x32", type: "image/png" },
+      { url: "/icon-192.png", sizes: "192x192", type: "image/png" },
+      { url: "/icon-512.png", sizes: "512x512", type: "image/png" },
+    ],
+    shortcut: "/favicon.ico",
+    apple: [
+      { url: "/apple-touch-icon.png", sizes: "180x180", type: "image/png" },
+    ],
   },
   robots: {
     index: true,

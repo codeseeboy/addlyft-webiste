@@ -1,4 +1,5 @@
 import Link from "next/link";
+import Image from "next/image";
 
 /**
  * The Addlyft lockup.
@@ -18,11 +19,18 @@ import Link from "next/link";
 export function BrandMark({ className = "brand__mark" }: { className?: string }) {
   return (
     <span className={className}>
-      <img
-        src="/images/image.png"
+      {/*
+       * The mark never renders past ~26px anywhere on the site (.wm is fixed
+       * at 1.22rem, no larger context exists) — a 128px source is generous
+       * headroom for retina and a fraction of the 2MB original, which was the
+       * literal 1254px export loaded, unresized, on every single page.
+       */}
+      <Image
+        src="/images/brand-mark.png"
         alt="A"
-        width={32}
-        height={32}
+        width={128}
+        height={128}
+        priority
         style={{
           width: "1.24em",
           height: "1.24em",

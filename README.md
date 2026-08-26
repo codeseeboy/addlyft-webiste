@@ -1,9 +1,9 @@
-# ADD-LYFT — commercial website
+# Addlyft — commercial website
 
-The public marketing site for ADD-LYFT. Next.js 15 (App Router), React 19, TypeScript.
+The public marketing site for Addlyft. Next.js 15 (App Router), React 19, TypeScript.
 
-**Grow Local. Reach Further.** — ADD-LYFT is the company; **Go** (store owners) and
-**Reach** (brands) are the products.
+**Grow Local. Reach Further.** — Addlyft is the company; **Go** (store owners) and
+**Reach** (advertisers) are the products.
 
 ```bash
 npm install
@@ -43,15 +43,16 @@ reference for writing accurate commercial copy — it is not published.
 
 | Route | Purpose |
 | --- | --- |
-| `/` | Homepage — hero, the moment, the 3D room, the cycle, both products, venues, network, measurement, commitments, pricing, FAQ, CTA |
-| `/go` | ADD-LYFT Go — store owners |
-| `/reach` | ADD-LYFT Reach — brands |
+| `/` | Homepage — hero, live AI ad studio, products overview, philosophy, trust, pricing glance, FAQs, CTA |
+| `/how-it-works` | How it works — 3D store room, two-channel cycle clock, ecosystem loop, measurement |
+| `/go` | Addlyft Go — store owners |
+| `/reach` | Addlyft Reach — advertisers |
 | `/network` | Markets, venue types, how a store joins |
-| `/pricing` | Go plans, comparison table, Reach model |
+| `/pricing` | Go plans, comparison table, Reach model, volume estimator, top-ups |
 | `/about` | Story, principles, team |
 | `/contact` | Intent-aware contact form |
 | `/legal/privacy`, `/legal/terms` | Plain-language summaries |
-| `/api/contact` | Form endpoint (validates; **delivery not yet wired** — see below) |
+| `/api/contact` | Form endpoint |
 
 ## Structure
 
@@ -67,7 +68,7 @@ styles/              base tokens · shared UI · homepage · inner pages
 
 ## Design system
 
-Brand colours are fixed and must not be restyled: ADD-LYFT teal `#0d9488` /
+Brand colours are fixed and must not be restyled: Addlyft teal `#0d9488` /
 `#14b8a6`, Reach purple `#7c3aed`. Neutrals are deliberately warm (ivory paper, warm
 ink) rather than blue-grey. Type is Inter Tight for UI, Instrument Serif italic for
 editorial emphasis only (`.em`), JetBrains Mono for labels and data. All tokens live in
